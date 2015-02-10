@@ -79,7 +79,8 @@ $functions = array(
 $services = array(
     'AspirEDU Services' => array(
         'functions' => array (
-            'core_course_get_couses',
+            'core_webservice_get_site_info',
+            'core_course_get_courses',
             'core_course_get_categories',
             'core_enrol_get_enrolled_users',
             'core_user_get_users',
