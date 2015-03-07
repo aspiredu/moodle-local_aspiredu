@@ -81,6 +81,14 @@ $functions = array(
         'type'          => 'read',
         'capabilities'  => '',
     ),
+    'local_aspiredu_core_get_legacy_logs' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'core_get_legacy_logs',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns a list of log entries for the course and parameters specified.',
+        'type'          => 'read',
+        'capabilities'  => '',
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -103,6 +111,7 @@ $services = array(
             'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_core_group_get_course_user_groups',
             'local_aspiredu_core_course_get_category_courses',
+            'local_aspiredu_core_get_legacy_logs',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,

@@ -1353,4 +1353,113 @@ class local_aspiredu_external extends external_api {
         );
     }
 
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function core_get_legacy_logs_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, 'course id (0 for site logs)', VALUE_DEFAULT, 0),
+                'userid' => new external_value(PARAM_INT, 'user id, 0 for alls', VALUE_DEFAULT, 0),
+                'groupid' => new external_value(PARAM_INT, 'group id (for filtering by groups)', VALUE_DEFAULT, 0),
+                'date' => new external_value(PARAM_INT, 'timestamp for date, 0 all days', VALUE_DEFAULT, 0),
+                'modname' => new external_value(PARAM_PLUGIN, 'module name', VALUE_DEFAULT, ''),
+                'modid' => new external_value(PARAM_FILE, 'mod id or "site_errors"', VALUE_DEFAULT, 0),
+                'modaction' => new external_value(PARAM_PATH, 'action (view, read)', VALUE_DEFAULT, ''),
+                'page' => new external_value(PARAM_INT, 'page to show', VALUE_DEFAULT, 0),
+                'perpage' => new external_value(PARAM_INT, 'entries per page', VALUE_DEFAULT, 100),
+                'order' => new external_value(PARAM_ALPHA, 'time order (ASC or DESC)', VALUE_DEFAULT, 'ASC'),
+            )
+        );
+    }
+
+    /**
+     * Return log entries
+     *
+     * @param int $categoryid id of the category
+     * @return array of course objects (id, name ...) and warnings
+     */
+    public static function core_get_legacy_logs($courseid = 0, $userid = 0, $groupid = 0, $date = 0, $modname = '',
+                                                $modid = 0, $modaction = '', $page = 0, $perpage = 100, $order = 'ASC') {
+        global $CFG;
+
+        $warnings = array();
+
+        $params = array(
+          'courseid' => $courseid,
+          'userid' => $userid,
+          'groupid' => $groupid,
+          'date' => $date,
+          'modname' => $modname,
+          'modid' => $modid,
+          'modaction' => $modaction,
+          'page' => $page,
+          'perpage' => $perpage,
+          'order' => $order,
+        );
+        $params = self::validate_parameters(self::core_get_legacy_logs_parameters(), $params);
+
+        if ($params['order'] != 'ASC' and $params['order'] != 'DESC') {
+            throw new invalid_parameter_exception('Invalid order parameter');
+        }
+
+        if (empty($params['courseid'])) {
+            $site = get_site();
+            $params['courseid'] = $site->id;
+            $context = context_system::instance();
+        } else {
+            $context = context_course::instance($params['courseid']);
+        }
+
+        $course = get_course($params['courseid']);
+
+        self::validate_context($context);
+        require_capability('report/log:view', $context);
+
+        require_once($CFG->dirroot . '/course/lib.php');
+
+        $logsresult = build_logs_array($course, $params['userid'], $params['date'],
+                                                "l.time " . $params['order'], $params['page'] * $params['perpage'],
+                                                $params['perpage'], $params['modname'], $params['modid'], $params['modaction'],
+                                                $params['groupid']);
+        $results = array(
+            'logs' => $logsresult['logs'],
+            'total' => $logsresult['totalcount'],
+            'warnings' => $warnings
+        );
+        return $results;
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function core_get_legacy_logs_returns() {
+        return new external_single_structure(
+            array(
+                'logs' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'id' => new external_value(PARAM_INT, ''),
+                            'time' => new external_value(PARAM_INT, ''),
+                            'userid' => new external_value(PARAM_INT, ''),
+                            'ip' => new external_value(PARAM_RAW, ''),
+                            'course' => new external_value(PARAM_INT, ''),
+                            'module' => new external_value(PARAM_RAW, ''),
+                            'cmid' => new external_value(PARAM_RAW, ''),
+                            'action' => new external_value(PARAM_TEXT, ''),
+                            'url' => new external_value(PARAM_RAW, ''),
+                            'info' => new external_value(PARAM_RAW, ''),
+                        )
+                    )
+                ),
+                'total' => new external_value(PARAM_INT, 'total number of logs'),
+                'warnings' => new external_warnings(),
+            )
+        );
+    }
+
 }
