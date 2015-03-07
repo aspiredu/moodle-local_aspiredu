@@ -22,6 +22,7 @@
  */
 
 require_once($CFG->libdir . "/externallib.php");
+require_once($CFG->dirroot . "/course/externallib.php");
 require_once("$CFG->dirroot/local/aspiredu/futurelib.php");
 
 class local_aspiredu_external extends external_api {
@@ -956,7 +957,6 @@ class local_aspiredu_external extends external_api {
      * Returns description of method parameters
      *
      * @return external_function_parameters
-     * @since Moodle 2.9
      */
     public static function core_group_get_course_user_groups_parameters() {
         return new external_function_parameters(
@@ -973,7 +973,6 @@ class local_aspiredu_external extends external_api {
      * @param int $courseid id of course
      * @param int $userid id of user
      * @return array of group objects (id, name ...)
-     * @since Moodle 2.9
      */
     public static function core_group_get_course_user_groups($courseid, $userid) {
         global $USER;
@@ -1036,7 +1035,6 @@ class local_aspiredu_external extends external_api {
      * Returns description of method result value
      *
      * @return external_description
-     * @since Moodle 2.9
      */
     public static function core_group_get_course_user_groups_returns() {
         return new external_single_structure(
@@ -1276,6 +1274,81 @@ class local_aspiredu_external extends external_api {
                     )
                 ),
                 'warnings' => new external_warnings()
+            )
+        );
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function core_course_get_category_courses_parameters() {
+        return new external_function_parameters(
+            array(
+                'categoryid' => new external_value(PARAM_INT, 'id of the category')
+            )
+        );
+    }
+
+    /**
+     * Get all courses in the specified category
+     *
+     * @param int $categoryid id of the category
+     * @return array of course objects (id, name ...) and warnings
+     */
+    public static function core_course_get_category_courses($categoryid) {
+        $warnings = array();
+
+        $params = array(
+            'categoryid' => $categoryid
+        );
+        $params = self::validate_parameters(self::core_course_get_category_courses_parameters(), $params);
+        $categoryid = $params['categoryid'];
+
+        // Security checks.
+        $context = context_coursecat::instance($categoryid);
+        self::validate_context($context);
+
+        $courses = get_courses($categoryid, 'c.sortorder ASC', 'c.id');
+        $courseids = array_keys($courses);
+
+        foreach ($courseids as $key => $cid) {
+            $coursecontext = context_course::instance($cid);
+            try {
+                self::validate_context($coursecontext);
+            } catch (Exception $e) {
+                unset($courseids[$key]);
+                continue;
+            }
+            if (!has_capability('moodle/course:view', $coursecontext)) {
+                unset($courseids[$key]);
+            }
+        }
+
+        $options = array(
+            'ids' => $courseids
+        );
+        // Call the core function for retrieving the complete course information.
+        $courses = core_course_external::get_courses($options);
+
+        $results = array(
+            'courses' => $courses,
+            'warnings' => $warnings
+        );
+        return $results;
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function core_course_get_category_courses_returns() {
+        return new external_single_structure(
+            array(
+                'courses' => core_course_external::get_courses_returns(),
+                'warnings' => new external_warnings(),
             )
         );
     }

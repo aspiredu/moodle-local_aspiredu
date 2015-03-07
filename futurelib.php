@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Backported functions that in a future exists.
+ * Some functions needed for future compatibility.
  *
  * @package    local_aspiredu
  * @copyright  AspirEDU
@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-if (!class_exists("core_user")) {
+if (!file_exists($CFG->dirroot . '/lib/classes/user.php') and !class_exists("core_user")) {
 
     /**
      * User class to access user details.

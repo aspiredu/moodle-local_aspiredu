@@ -1,5 +1,6 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -72,7 +73,14 @@ $functions = array(
         'type'          => 'read',
         'capabilities'  => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ),
-
+    'local_aspiredu_core_course_get_category_courses' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'core_course_get_category_courses',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns a list of courses in a category (or subcategories of the main category).',
+        'type'          => 'read',
+        'capabilities'  => '',
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -94,6 +102,7 @@ $services = array(
             'local_aspiredu_gradereport_user_get_grades_table',
             'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_core_group_get_course_user_groups',
+            'local_aspiredu_core_course_get_category_courses',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,
