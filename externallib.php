@@ -1424,8 +1424,13 @@ class local_aspiredu_external extends external_api {
                                                 "l.time " . $params['order'], $params['page'] * $params['perpage'],
                                                 $params['perpage'], $params['modname'], $params['modid'], $params['modaction'],
                                                 $params['groupid']);
+
+        $arraycast = function($el) {
+            return (array) $el;
+        };
+
         $results = array(
-            'logs' => $logsresult['logs'],
+            'logs' => array_map($arraycast, $logsresult['logs']),
             'total' => $logsresult['totalcount'],
             'warnings' => $warnings
         );
@@ -1535,7 +1540,6 @@ class local_aspiredu_external extends external_api {
 
         self::validate_context($context);
         require_capability('report/log:view', $context);
-
 
         // Check if we are in 2.7 or above.
         if (class_exists('report_log_renderable')) {
