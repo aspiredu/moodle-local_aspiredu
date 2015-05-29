@@ -108,7 +108,7 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                         $grade->feedback       = $grade_grades[$userid]->feedback;
                         $grade->feedbackformat = $grade_grades[$userid]->feedbackformat;
                         $grade->usermodified   = $grade_grades[$userid]->usermodified;
-                        $grade->datesubmitted  = $grade_item->timecreated;
+                        $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
                         $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
                         // create text representation of grade
                         if ($grade_item->gradetype == GRADE_TYPE_TEXT or $grade_item->gradetype == GRADE_TYPE_NONE) {
