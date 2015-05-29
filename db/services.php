@@ -111,7 +111,7 @@ $services = array(
             'core_enrol_get_enrolled_users_with_capability',
             'core_group_get_groups',
             'core_group_get_groupings',
-            'core_grades_get_grades',
+            'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_mod_forum_get_forums_by_courses',
             'local_aspiredu_mod_forum_get_forum_discussions_paginated',
             'local_aspiredu_mod_forum_get_forum_discussion_posts',

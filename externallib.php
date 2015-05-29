@@ -23,6 +23,7 @@
 
 require_once($CFG->libdir . "/externallib.php");
 require_once($CFG->dirroot . "/course/externallib.php");
+require_once("$CFG->dirroot/local/aspiredu/locallib.php");
 require_once("$CFG->dirroot/local/aspiredu/futurelib.php");
 
 class local_aspiredu_external extends external_api {
