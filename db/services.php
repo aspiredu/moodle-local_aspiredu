@@ -121,6 +121,8 @@ $services = array(
             'local_aspiredu_core_course_get_category_courses',
             'local_aspiredu_core_get_legacy_logs',
             'local_aspiredu_report_log_get_log_records',
+            'mod_assign_get_assignments',
+            'mod_assign_get_submissions',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,
