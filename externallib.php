@@ -213,6 +213,8 @@ class local_aspiredu_external extends external_api {
                 $gradesarray['items'][$modulecm->id] = $gradeitemarray;
                 // Add the activity ID as some WS clients can't access the array key.
                 $gradesarray['items'][$modulecm->id]['activityid'] = $modulecm->id;
+                $gradesarray['items'][$modulecm->id]['instance'] = $modulecm->instance;
+                $gradesarray['items'][$modulecm->id]['modname'] = $modulecm->modname;
             }
         }
 
@@ -305,6 +307,8 @@ class local_aspiredu_external extends external_api {
                             'itemnumber'  => new external_value(PARAM_INT, 'Will be 0 unless the module has multiple grades'),
                             'scaleid' => new external_value(PARAM_INT, 'The ID of the custom scale or 0'),
                             'name' => new external_value(PARAM_RAW, 'The module name'),
+                            'modname' => new external_value(PARAM_RAW, 'The module name', VALUE_OPTIONAL),
+                            'instance' => new external_value(PARAM_INT, 'module instance id', VALUE_OPTIONAL),
                             'grademin' => new external_value(PARAM_FLOAT, 'Minimum grade'),
                             'grademax' => new external_value(PARAM_FLOAT, 'Maximum grade'),
                             'gradepass' => new external_value(PARAM_FLOAT, 'The passing grade threshold'),
