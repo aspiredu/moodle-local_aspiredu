@@ -1670,7 +1670,7 @@ class local_aspiredu_external extends external_api {
         require_once("$CFG->dirroot/mod/assign/locallib.php");
 
         $params = self::validate_parameters(
-            self::get_assignments_parameters(),
+            self::mod_assign_get_assignments_parameters(),
             array('courseids' => $courseids, 'capabilities' => $capabilities)
         );
 
