@@ -88,7 +88,8 @@ $functions = array(
         'description'   => 'Returns a list of log entries for the course and parameters specified using the legacy system.',
         'type'          => 'read',
         'capabilities'  => '',
-    ),'local_aspiredu_report_log_get_log_records' => array(
+    ),
+    'local_aspiredu_report_log_get_log_records' => array(
         'classname'     => 'local_aspiredu_external',
         'methodname'    => 'report_log_get_log_records',
         'classpath'     => 'local/aspiredu/externallib.php',
@@ -96,6 +97,20 @@ $functions = array(
         'type'          => 'read',
         'capabilities'  => '',
     ),
+    'local_aspiredu_mod_assign_get_assignments' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'mod_assign_get_assignments',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns the submissions for assignments',
+        'type'          => 'read'
+    ),
+    'local_aspiredu_mod_assign_get_submissions' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'mod_assign_get_submissions',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns the submissions for assignments',
+        'type'          => 'read'
+    )
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -121,8 +136,8 @@ $services = array(
             'local_aspiredu_core_course_get_category_courses',
             'local_aspiredu_core_get_legacy_logs',
             'local_aspiredu_report_log_get_log_records',
-            'mod_assign_get_assignments',
-            'mod_assign_get_submissions',
+            'local_aspiredu_mod_assign_get_assignments',
+            'local_aspiredu_mod_assign_get_submissions',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,
