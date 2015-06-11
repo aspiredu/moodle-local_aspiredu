@@ -1950,7 +1950,7 @@ class local_aspiredu_external extends external_api {
             $sql = "SELECT mas.id, mas.assignment,mas.userid,".
                    "mas.timecreated,mas.timemodified,mas.status,mas.groupid ".
                    "FROM {assign_submission} mas ".
-                   "WHERE mas.assignment = :assignid2 AND mas.attemptnumber = smx.maxattempt";
+                   "WHERE mas.assignment = :assignid2";
 
             if (!empty($params['status'])) {
                 $placeholders['status'] = $params['status'];
