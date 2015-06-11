@@ -1666,51 +1666,50 @@ class local_aspiredu_external extends external_api {
      * @since  Moodle 2.4
      */
     public static function mod_assign_get_assignments($courseids = array(), $capabilities = array()) {
-        global $USER, $DB;
+        global $USER, $DB, $CFG;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
 
         $params = self::validate_parameters(
-            self::mod_assign_get_assignments_parameters(),
+            self::get_assignments_parameters(),
             array('courseids' => $courseids, 'capabilities' => $capabilities)
         );
 
         $warnings = array();
-        $fields = 'sortorder,shortname,fullname,timemodified';
-        $courses = enrol_get_users_courses($USER->id, true, $fields);
-        // Used to test for ids that have been requested but can't be returned.
-        if (count($params['courseids']) > 0) {
-            foreach ($params['courseids'] as $courseid) {
-                if (!in_array($courseid, array_keys($courses))) {
-                    unset($courses[$courseid]);
-                    $warnings[] = array(
-                        'item' => 'course',
-                        'itemid' => $courseid,
-                        'warningcode' => '2',
-                        'message' => 'User is not enrolled or does not have requested capability'
-                    );
-                }
-            }
+
+        if (!empty($params['courseids'])) {
+            $courses = array();
+            $courseids = $params['courseids'];
+        } else {
+            $fields = 'sortorder,shortname,fullname,timemodified';
+            $courses = enrol_get_users_courses($USER->id, true, $fields);
+            $courseids = array_keys($courses);
         }
-        foreach ($courses as $id => $course) {
-            if (count($params['courseids']) > 0 && !in_array($id, $params['courseids'])) {
-                unset($courses[$id]);
-            }
-            $context = context_course::instance($id);
+
+        foreach ($courseids as $cid) {
+
             try {
+                $context = context_course::instance($cid);
                 self::validate_context($context);
+
+                // Check if this course was already loaded (by enrol_get_users_courses).
+                if (!isset($courses[$cid])) {
+                    $courses[$cid] = get_course($cid);
+                }
             } catch (Exception $e) {
-                unset($courses[$id]);
+                unset($courses[$cid]);
                 $warnings[] = array(
                     'item' => 'course',
-                    'itemid' => $id,
+                    'itemid' => $cid,
                     'warningcode' => '1',
-                    'message' => 'No access rights in course context '.$e->getMessage().$e->getTraceAsString()
+                    'message' => 'No access rights in course context '.$e->getMessage()
                 );
                 continue;
             }
             if (count($params['capabilities']) > 0 && !has_all_capabilities($params['capabilities'], $context)) {
-                unset($courses[$id]);
+                unset($courses[$cid]);
             }
         }
+
         $extrafields='m.id as assignmentid, m.course, m.nosubmissions, m.submissiondrafts, m.sendnotifications, '.
                      'm.sendlatenotifications, m.duedate, m.allowsubmissionsfromdate, m.grade, m.timemodified, '.
                      'm.completionsubmit, m.cutoffdate, m.teamsubmission, m.requireallteammemberssubmit, '.
@@ -1948,14 +1947,9 @@ class local_aspiredu_external extends external_api {
             $placeholders = array('assignid1' => $assign->get_instance()->id,
                                   'assignid2' => $assign->get_instance()->id);
 
-            $submissionmaxattempt = 'SELECT mxs.userid, MAX(mxs.attemptnumber) AS maxattempt
-                                     FROM {assign_submission} mxs
-                                     WHERE mxs.assignment = :assignid1 GROUP BY mxs.userid';
-
             $sql = "SELECT mas.id, mas.assignment,mas.userid,".
                    "mas.timecreated,mas.timemodified,mas.status,mas.groupid ".
                    "FROM {assign_submission} mas ".
-                   "JOIN ( " . $submissionmaxattempt . " ) smx ON mas.userid = smx.userid ".
                    "WHERE mas.assignment = :assignid2 AND mas.attemptnumber = smx.maxattempt";
 
             if (!empty($params['status'])) {
