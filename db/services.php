@@ -110,6 +110,13 @@ $functions = array(
         'classpath'     => 'local/aspiredu/externallib.php',
         'description'   => 'Returns the submissions for assignments',
         'type'          => 'read'
+    ),
+    'local_aspiredu_get_custom_course_settings' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'get_custom_course_settings',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Get all custom course settings',
+        'type'          => 'read'
     )
 );
 
@@ -138,6 +145,7 @@ $services = array(
             'local_aspiredu_report_log_get_log_records',
             'local_aspiredu_mod_assign_get_assignments',
             'local_aspiredu_mod_assign_get_submissions',
+            'local_aspiredu_get_custom_course_settings',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,

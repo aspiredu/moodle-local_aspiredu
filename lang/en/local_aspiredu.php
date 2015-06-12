@@ -22,3 +22,7 @@
  */
 
 $string['pluginname'] = 'AspirEDU Integration';
+$string['coursesettings'] = 'AspirEDU settings';
+$string['coursestartdate'] = 'Course start date';
+$string['courseenddate'] = 'Course end date';
+$string['courseenddaterror'] = 'The end date must be higher than the start date';

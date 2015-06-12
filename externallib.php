@@ -2117,4 +2117,107 @@ class local_aspiredu_external extends external_api {
         );
     }
 
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function get_custom_course_settings_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, 'id of course, 0 for all', VALUE_DEFAULT, 0),
+            )
+        );
+    }
+
+    /**
+     * Get all custom course settings
+     *
+     * @param int $courseid id of course
+     * @return array of settings
+     */
+    public static function get_custom_course_settings($courseid = 0) {
+
+        // Warnings array, it can be empty at the end but is mandatory.
+        $warnings = array();
+        $settings = array();
+
+        $params = array(
+            'courseid' => $courseid
+        );
+        $params = self::validate_parameters(self::get_custom_course_settings_parameters(), $params);
+        $courseid = $params['courseid'];
+
+        if ($courseid) {
+            $courses[] = $courseid;
+            $settings[$courseid] = get_config('local_aspiredu', 'course' . $courseid);
+        } else {
+            $coursesettings = get_config('local_aspiredu');
+            foreach ($coursesettings as $key => $val) {
+                if (strpos($key, 'course') !== false) {
+                    $courseid = str_replace('course', '', $key);
+                    $courses[] = $courseid;
+                    $settings[$courseid] = $val;
+                }
+            }
+        }
+
+        foreach ($courses as $id) {
+            try {
+                $context = context_course::instance($id);
+                self::validate_context($context);
+                require_capability('moodle/course:update', $context);
+
+            } catch (Exception $e) {
+                $warnings[] = array(
+                    'item' => 'course',
+                    'itemid' => $id,
+                    'warningcode' => '1',
+                    'message' => 'No access rights in course context'
+                );
+                unset($settings[$id]);
+            }
+        }
+
+        $finalsettings = array();
+        foreach ($settings as $courseid => $settingjson) {
+            $settingjson = json_decode($settingjson);
+            foreach ($settingjson as $name => $value) {
+                $finalsettings[] = array(
+                    'courseid' => $courseid,
+                    'name' => $name,
+                    'value' => $value,
+                );
+            }
+        }
+
+        $results = array(
+            'settings' => $finalsettings,
+            'warnings' => $warnings
+        );
+        return $results;
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function get_custom_course_settings_returns() {
+        return new external_single_structure(
+            array(
+                'settings' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'courseid' => new external_value(PARAM_INT, 'course id'),
+                            'name' => new external_value(PARAM_NOTAGS, 'setting name'),
+                            'value' => new external_value(PARAM_NOTAGS, 'setting value'),
+                        )
+                    )
+                ),
+                'warnings' => new external_warnings(),
+            )
+        );
+    }
+
 }

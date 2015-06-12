@@ -1,6 +1,5 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
+
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -22,8 +21,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2015010110;
-$plugin->requires = 2012120300;
-$plugin->component = 'local_aspiredu';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_STABLE;
+/**
+ * Display the AspirEdu settings in the course settings block
+ *
+ * @param  settings_navigation $nav     The settings navigatin object
+ * @param  stdclass            $context Course context
+ */
+function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $context) {
+    if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
+            and has_capability('moodle/course:update', $context)) {
+
+        $url = new moodle_url('/local/aspiredu/course.php', array('id' => $context->instanceid));
+        $branch->add(get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
+    }
+}
