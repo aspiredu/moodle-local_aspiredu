@@ -22,8 +22,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2015010111;
-$plugin->requires = 2012120300;
-$plugin->component = 'local_aspiredu';
-$plugin->release = '1.0';
-$plugin->maturity = MATURITY_STABLE;
+defined('MOODLE_INTERNAL') || die;
+
+if ($hassiteconfig) { // needs this condition or there is error on login page
+
+    $settings = new admin_settingpage('local_aspiredu', new lang_string('pluginname', 'local_aspiredu'));
+    $ADMIN->add('localplugins', $settings);
+
+    $settings->add(new admin_setting_configtext('local_aspiredu/launchurl',
+        get_string('launchurl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+
+    $settings->add(new admin_setting_configtext('local_aspiredu/key',
+        get_string('key', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+
+    $settings->add(new admin_setting_configtext('local_aspiredu/secret',
+        get_string('secret', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+
+}

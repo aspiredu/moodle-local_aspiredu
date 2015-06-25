@@ -34,4 +34,11 @@ function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $c
         $url = new moodle_url('/local/aspiredu/course.php', array('id' => $context->instanceid));
         $branch->add(get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
     }
+
+    if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
+            and has_capability('local/aspiredu:launchlti', $context)) {
+
+        $url = new moodle_url('/local/aspiredu/lti.php', array('id' => $context->instanceid));
+        $branch->add(get_string('pluginname', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredulti'.$context->instanceid);
+    }
 }

@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service template plugin related strings
- * @package   local_aspiredu
- * @author    AspirEDU
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'AspirEDU Integration';
-$string['coursesettings'] = 'AspirEDU settings';
-$string['coursestartdate'] = 'Course start date';
-$string['courseenddate'] = 'Course end date';
-$string['courseenddaterror'] = 'The end date must be higher than the start date';
-$string['launchurl'] = 'Launch URL';
-$string['key'] = 'Key';
-$string['secret'] = 'Secret';
+
+defined('MOODLE_INTERNAL') || die;
+
+$capabilities = array(
+
+    'local/aspiredu:launchlti' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    )
+);
