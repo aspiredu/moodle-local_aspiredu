@@ -29,14 +29,21 @@ require_once($CFG->dirroot . '/mod/lti/OAuth.php');
 use moodle\mod\lti as lti;
 
 $id = required_param('id', PARAM_INT);
+$product = required_param('product', PARAM_ALPHA);
 
 $course = get_course($id);
 $context = context_course::instance($course->id);
 
 require_login($course);
-require_capability('local/aspiredu:viewdropoutdetective', $context);
 
-$launchurl = get_config('local_aspiredu', 'launchurl');
+if ($product == 'dd') {
+    require_capability('local/aspiredu:viewdropoutdetective', $context);
+    $launchurl = get_config('local_aspiredu', 'dropoutdetectiveurl');
+} else {
+    require_capability('local/aspiredu:viewinstructorinsight', $context);
+    $launchurl = get_config('local_aspiredu', 'instructorinsighturl');
+}
+
 $key = get_config('local_aspiredu', 'key');
 $secret = get_config('local_aspiredu', 'secret');
 

@@ -29,8 +29,11 @@ if ($hassiteconfig) { // needs this condition or there is error on login page
     $settings = new admin_settingpage('local_aspiredu', new lang_string('pluginname', 'local_aspiredu'));
     $ADMIN->add('localplugins', $settings);
 
-    $settings->add(new admin_setting_configtext('local_aspiredu/launchurl',
-        get_string('launchurl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+    $settings->add(new admin_setting_configtext('local_aspiredu/dropoutdetectiveurl',
+        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+
+    $settings->add(new admin_setting_configtext('local_aspiredu/instructorinsighturl',
+        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/key',
         get_string('key', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));

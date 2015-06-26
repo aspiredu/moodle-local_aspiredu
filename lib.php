@@ -38,7 +38,13 @@ function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $c
     if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
             and has_capability('local/aspiredu:viewdropoutdetective', $context)) {
 
-        $url = new moodle_url('/local/aspiredu/lti.php', array('id' => $context->instanceid));
-        $branch->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredulti'.$context->instanceid);
+        $url = new moodle_url('/local/aspiredu/lti.php', array('id' => $context->instanceid, 'product' => 'dd'));
+        $branch->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$context->instanceid);
+    }
+    if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
+            and has_capability('local/aspiredu:viewinstructorinsight', $context)) {
+
+        $url = new moodle_url('/local/aspiredu/lti.php', array('id' => $context->instanceid, 'product' => 'ii'));
+        $branch->add(get_string('instructorinsight', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspireduii'.$context->instanceid);
     }
 }

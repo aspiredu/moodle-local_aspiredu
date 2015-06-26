@@ -21,12 +21,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'AspirEDU Integration';
-$string['coursesettings'] = 'Additional settings';
+$string['pluginname'] = 'AspirEDU';
+$string['coursesettings'] = 'AspirEDU course settings';
 $string['coursestartdate'] = 'Course start date';
 $string['courseenddate'] = 'Course end date';
 $string['courseenddaterror'] = 'The end date must be higher than the start date';
 $string['dropoutdetective'] = 'Dropout Detective';
-$string['launchurl'] = 'Launch URL';
+$string['dropoutdetectiveurl'] = 'Dropout Detective URL';
+$string['instructorinsight'] = 'Instructor Insight';
+$string['instructorinsighturl'] = 'Instructor Insight URL';
 $string['key'] = 'Key';
 $string['secret'] = 'Secret';
