@@ -22,10 +22,11 @@
  */
 
 $string['pluginname'] = 'AspirEDU Integration';
-$string['coursesettings'] = 'AspirEDU settings';
+$string['coursesettings'] = 'Additional settings';
 $string['coursestartdate'] = 'Course start date';
 $string['courseenddate'] = 'Course end date';
 $string['courseenddaterror'] = 'The end date must be higher than the start date';
+$string['dropoutdetective'] = 'Dropout Detective';
 $string['launchurl'] = 'Launch URL';
 $string['key'] = 'Key';
 $string['secret'] = 'Secret';

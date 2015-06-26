@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $capabilities = array(
 
-    'local/aspiredu:launchlti' => array(
+    'local/aspiredu:viewdropoutdetective' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(

@@ -33,7 +33,7 @@ $course = get_course($id);
 $context = context_course::instance($course->id);
 
 require_login($course);
-require_capability('local/aspiredu:launchlti', $context);
+require_capability('local/aspiredu:viewdropoutdetective', $context);
 
 $launchurl = get_config('local_aspiredu', 'launchurl');
 $key = get_config('local_aspiredu', 'key');

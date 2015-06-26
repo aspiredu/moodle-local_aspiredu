@@ -36,9 +36,9 @@ function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $c
     }
 
     if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
-            and has_capability('local/aspiredu:launchlti', $context)) {
+            and has_capability('local/aspiredu:viewdropoutdetective', $context)) {
 
         $url = new moodle_url('/local/aspiredu/lti.php', array('id' => $context->instanceid));
-        $branch->add(get_string('pluginname', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredulti'.$context->instanceid);
+        $branch->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredulti'.$context->instanceid);
     }
 }
