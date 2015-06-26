@@ -54,7 +54,7 @@ if ($launchurl and $key and $secret) {
         'resource_link_title' => $course->fullname,
         'resource_link_description' => $course->summary,
         'user_id' => $USER->id,
-        'roles' => 'urn:lti:sysrole:ims/lis/Administrator',
+        'roles' => 'urn:lti:instrole:ims/lis/Administrator',
         'context_id' => 1,
         'context_label' => $SITE->shortname,
         'context_title' => $SITE->fullname,
