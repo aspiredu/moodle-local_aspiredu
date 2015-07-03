@@ -31,10 +31,16 @@ use moodle\mod\lti as lti;
 $id = required_param('id', PARAM_INT);
 $product = required_param('product', PARAM_ALPHA);
 
-$course = get_course($id);
-$context = context_course::instance($course->id);
+if ($id == SITEID) {
+    $course = get_site();
+    $context = context_system::instance();
+    require_login();
+} else {
+    $course = get_course($id);
+    $context = context_course::instance($course->id);
+    require_login($course);
+}
 
-require_login($course);
 
 if ($product == 'dd') {
     require_capability('local/aspiredu:viewdropoutdetective', $context);
@@ -49,11 +55,23 @@ $secret = get_config('local_aspiredu', 'secret');
 
 // Ensure parameters set.
 if ($launchurl and $key and $secret) {
+
+    $resourcelinkid = 0;
+    $userid = 0;
+
+    // Account level.
+    if ($id == SITEID) {
+        $userid = $USER->id;
+    } else {
+        // Course level.
+        $resourcelinkid = $course->id;
+    }
+
     $requestparams = array(
-        'resource_link_id' => $course->id,
+        'resource_link_id' => $resourcelinkid,
         'resource_link_title' => $course->fullname,
         'resource_link_description' => $course->summary,
-        'user_id' => $USER->id,
+        'user_id' => $userid,
         'roles' => 'urn:lti:instrole:ims/lis/Administrator',
         'context_id' => 1,
         'context_label' => $SITE->shortname,
@@ -61,7 +79,7 @@ if ($launchurl and $key and $secret) {
         'launch_presentation_locale' => current_language(),
         'ext_lms' => 'moodle-2',
         'tool_consumer_info_product_family_code' => 'moodle',
-        'tool_consumer_info_version' => strval($CFG->version),
+        'tool_consumer_info_version' => get_config('local_aspiredu', 'version'),
         'oauth_callback' => 'about:blank',
         'lti_version' => 'LTI-1p0',
         'lti_message_type' => 'basic-lti-launch-request',
