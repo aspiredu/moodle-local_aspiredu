@@ -56,12 +56,9 @@ $secret = get_config('local_aspiredu', 'secret');
 // Ensure parameters set.
 if ($launchurl and $key and $secret) {
 
-    $resourcelinkid = 0;
-    $userid = 0;
-
     // Account level.
     if ($id == SITEID) {
-        $userid = $USER->id;
+        $resourcelinkid = 0;
     } else {
         // Course level.
         $resourcelinkid = $course->id;
@@ -71,7 +68,7 @@ if ($launchurl and $key and $secret) {
         'resource_link_id' => $resourcelinkid,
         'resource_link_title' => $course->fullname,
         'resource_link_description' => $course->summary,
-        'user_id' => $userid,
+        'user_id' => $USER->id,
         'roles' => 'urn:lti:instrole:ims/lis/Administrator',
         'context_id' => 1,
         'context_label' => $SITE->shortname,

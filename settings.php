@@ -41,4 +41,21 @@ if ($hassiteconfig) { // needs this condition or there is error on login page
     $settings->add(new admin_setting_configtext('local_aspiredu/secret',
         get_string('secret', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
 
+    $options = array(
+        0 => get_string('disabled', 'local_aspiredu'),
+        1 => get_string('adminacccourseinstcourse', 'local_aspiredu'),
+        2 => get_string('adminacccinstcourse', 'local_aspiredu'),
+        3 => get_string('admincourseinstcourse', 'local_aspiredu'),
+        4 => get_string('adminacccourse', 'local_aspiredu'),
+        5 => get_string('adminacc', 'local_aspiredu'),
+        6 => get_string('instcourse', 'local_aspiredu'),
+    );
+    $default = 1;
+
+    $settings->add(new admin_setting_configselect('local_aspiredu/dropoutdetectivelinks',
+        get_string('dropoutdetectivelinks', 'local_aspiredu'), '', $default, $options));
+
+    $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
+        get_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
+
 }
