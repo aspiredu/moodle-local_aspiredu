@@ -101,15 +101,20 @@ function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $c
     $reportsnode = null;
 
     if (local_aspiredu_check_links_visibility_permission($context, $dropoutdetectivelinks)) {
+        $displayed = false;
         $canview = has_capability('local/aspiredu:viewdropoutdetective', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
+
         if ($branch and $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
                 $subbranch->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$context->instanceid, new pix_icon('i/stats', ''));
+                $displayed = true;
             }
-        } else if ($canview){
+        }
+
+        if ($canview and !$displayed) {
             $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
             $reportsnode->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$context->instanceid, new pix_icon('i/stats', ''));
@@ -117,15 +122,20 @@ function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $c
     }
 
     if (local_aspiredu_check_links_visibility_permission($context, $instructorinsightlinks)) {
+        $displayed = false;
         $canview = has_capability('local/aspiredu:viewinstructorinsight', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
+
         if ($branch and $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'ii'));
                 $subbranch->add(get_string('instructorinsight', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspireduii'.$context->instanceid, new pix_icon('i/stats', ''));
+                $displayed = true;
             }
-        } else if($canview){
+        }
+
+        if ($canview and !$displayed) {
             if (!$reportsnode) {
                 $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             }
