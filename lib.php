@@ -49,6 +49,7 @@ function local_aspiredu_extends_navigation ($nav) {
 }
 
 function local_aspiredu_check_links_visibility_permission($context, $settings) {
+    global $COURSE;
     $isadmin = has_capability('moodle/site:config', context_system::instance());
 
     if (!$settings) {
@@ -61,7 +62,7 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
     }
 
     // Course permissions.
-    if ($context->contextlevel >= CONTEXT_COURSE) {
+    if ($context->contextlevel >= CONTEXT_COURSE and $COURSE->id != SITEID) {
         if ($isadmin and $settings != LOCAL_ASPIREDU_ADMINACC and $settings != LOCAL_ASPIREDU_ADMINACCCINSTCOURSE) {
             return true;
         }
@@ -71,7 +72,7 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
     }
 
     // Site permissions.
-    if ($context->contextlevel == CONTEXT_SYSTEM) {
+    if ($context->contextlevel == CONTEXT_SYSTEM or $COURSE->id == SITEID) {
         if ($isadmin and $settings != LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE) {
             return true;
         }
