@@ -66,9 +66,11 @@ if ($launchurl and $key and $secret) {
 
     $requestparams = array(
         'resource_link_id' => $resourcelinkid,
+        'custom_moodle_course_id' => $resourcelinkid,
         'resource_link_title' => $course->fullname,
         'resource_link_description' => $course->summary,
         'user_id' => $USER->id,
+        'custom_moodle_user_id' => $USER->id,
         'roles' => 'urn:lti:instrole:ims/lis/Administrator',
         'context_id' => 1,
         'context_label' => $SITE->shortname,
