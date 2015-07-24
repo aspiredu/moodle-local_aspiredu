@@ -1,5 +1,4 @@
 <?php
-
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -133,7 +132,7 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                                 $grade->str_long_grade = get_string('gradelong', 'grades', $a);
                             }
                         }
-                        // create html representation of feedback
+                        // Create html representation of feedback.
                         if (is_null($grade->feedback)) {
                             $grade->str_feedback = '';
                         } else {
@@ -144,7 +143,7 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                 }
                 $return->items[$item->id] = $item;
             } else {
-                if (!$grade_outcome = grade_outcome::fetch(array('id'=>$grade_item->outcomeid))) {
+                if (!$grade_outcome = grade_outcome::fetch(array('id' => $grade_item->outcomeid))) {
                     debugging('Incorect outcomeid found');
                     continue;
                 }
@@ -201,7 +200,7 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                 if (isset($return->outcomes[$grade_item->itemnumber])) {
                     // itemnumber duplicates - lets fix them!
                     $newnumber = $grade_item->itemnumber + 1;
-                    while(grade_item::fetch(array('itemtype'=>$itemtype, 'itemmodule'=>$itemmodule, 'iteminstance'=>$iteminstance, 'courseid'=>$courseid, 'itemnumber'=>$newnumber))) {
+                    while(grade_item::fetch(array('itemtype' => $itemtype, 'itemmodule' => $itemmodule, 'iteminstance'=>$iteminstance, 'courseid' => $courseid, 'itemnumber' => $newnumber))) {
                         $newnumber++;
                     }
                     $outcome->itemnumber    = $newnumber;

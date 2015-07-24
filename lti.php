@@ -105,7 +105,7 @@ if ($launchurl and $key and $secret) {
 
     // Print form.
     echo "<form action=\"".$launchurl."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" encType=\"application/x-www-form-urlencoded\">\n";
-    // Contruct html for the launch parameters
+    // Contruct html for the launch parameters.
     foreach ($parms as $key => $value) {
         $key = htmlspecialchars($key);
         $value = htmlspecialchars($value);

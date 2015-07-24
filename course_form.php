@@ -1,5 +1,4 @@
 <?php
-
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -27,7 +26,7 @@ require_once($CFG->dirroot.'/lib/formslib.php');
 
 class course_form extends moodleform {
 
-    // Define the form
+    // Define the form.
     public function definition () {
         global $USER, $CFG, $COURSE;
 
@@ -35,10 +34,12 @@ class course_form extends moodleform {
 
         $mform->addElement('header', 'settingsheader', get_string('coursesettings', 'local_aspiredu'));
 
-        $mform->addElement('date_selector', 'coursestartdate', get_string('coursestartdate', 'local_aspiredu'), array('optional' => true));
+        $mform->addElement('date_selector', 'coursestartdate', get_string('coursestartdate', 'local_aspiredu'),
+                            array('optional' => true));
         $mform->setDefault('coursestartdate', 0);
 
-        $mform->addElement('date_selector', 'courseenddate', get_string('courseenddate', 'local_aspiredu'), array('optional' => true));
+        $mform->addElement('date_selector', 'courseenddate', get_string('courseenddate', 'local_aspiredu'),
+                            array('optional' => true));
         $mform->setDefault('courseenddate', 0);
 
         $mform->addElement('hidden', 'id');

@@ -1,5 +1,6 @@
 <?php
-
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -168,8 +169,8 @@ class local_aspiredu_external extends external_api {
             }
 
             // Format mixed bool/integer parameters.
-            $gradeitem->hidden = (!$gradeitem->hidden)? 0 : $gradeitem->hidden;
-            $gradeitem->locked = (!$gradeitem->locked)? 0 : $gradeitem->locked;
+            $gradeitem->hidden = (!$gradeitem->hidden) ? 0 : $gradeitem->hidden;
+            $gradeitem->locked = (!$gradeitem->locked) ? 0 : $gradeitem->locked;
 
             $gradeitemarray = (array)$gradeitem;
             $gradeitemarray['grades'] = array();
@@ -191,9 +192,9 @@ class local_aspiredu_external extends external_api {
                     }
 
                     // Format mixed bool/integer parameters.
-                    $studentgrade->hidden = (!$studentgrade->hidden)? 0 : $studentgrade->hidden;
-                    $studentgrade->locked = (!$studentgrade->locked)? 0 : $studentgrade->locked;
-                    $studentgrade->overridden = (!$studentgrade->overridden)? 0 : $studentgrade->overridden;
+                    $studentgrade->hidden = (!$studentgrade->hidden) ? 0 : $studentgrade->hidden;
+                    $studentgrade->locked = (!$studentgrade->locked) ? 0 : $studentgrade->locked;
+                    $studentgrade->overridden = (!$studentgrade->overridden) ? 0 : $studentgrade->overridden;
 
                     $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
                     // Add the student ID as some WS clients can't access the array key.
@@ -226,8 +227,8 @@ class local_aspiredu_external extends external_api {
             }
 
             // Format mixed bool/integer parameters.
-            $outcome->hidden = (!$outcome->hidden)? 0 : $outcome->hidden;
-            $outcome->locked = (!$outcome->locked)? 0 : $outcome->locked;
+            $outcome->hidden = (!$outcome->hidden) ? 0 : $outcome->hidden;
+            $outcome->locked = (!$outcome->locked) ? 0 : $outcome->locked;
 
             $gradesarray['outcomes'][$modulecm->id] = (array)$outcome;
             $gradesarray['outcomes'][$modulecm->id]['activityid'] = $modulecm->id;
@@ -252,8 +253,8 @@ class local_aspiredu_external extends external_api {
                     }
 
                     // Format mixed bool/integer parameters.
-                    $studentgrade->hidden = (!$studentgrade->hidden)? 0 : $studentgrade->hidden;
-                    $studentgrade->locked = (!$studentgrade->locked)? 0 : $studentgrade->locked;
+                    $studentgrade->hidden = (!$studentgrade->hidden) ? 0 : $studentgrade->hidden;
+                    $studentgrade->locked = (!$studentgrade->locked) ? 0 : $studentgrade->locked;
 
                     $gradesarray['outcomes'][$modulecm->id]['grades'][$studentid] = (array)$studentgrade;
 
@@ -275,7 +276,8 @@ class local_aspiredu_external extends external_api {
      * @param  int $itemnumber      Item number
      * @return grade_item           A grade_item instance
      */
-    private static function core_grades_get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null, $itemnumber = null) {
+    private static function core_grades_get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
+                                                        $itemnumber = null) {
         global $CFG;
         require_once($CFG->libdir . '/gradelib.php');
 
@@ -1632,7 +1634,7 @@ class local_aspiredu_external extends external_api {
         );
     }
 
-        /**
+    /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
@@ -1710,7 +1712,7 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $extrafields='m.id as assignmentid, m.course, m.nosubmissions, m.submissiondrafts, m.sendnotifications, '.
+        $extrafields = 'm.id as assignmentid, m.course, m.nosubmissions, m.submissiondrafts, m.sendnotifications, '.
                      'm.sendlatenotifications, m.duedate, m.allowsubmissionsfromdate, m.grade, m.timemodified, '.
                      'm.completionsubmit, m.cutoffdate, m.teamsubmission, m.requireallteammemberssubmit, '.
                      'm.teamsubmissiongroupingid, m.blindmarking, m.revealidentities, m.requiresubmissionstatement';
@@ -1772,7 +1774,7 @@ class local_aspiredu_external extends external_api {
                     );
                 }
             }
-            $coursearray[]= array(
+            $coursearray[] = array(
                 'id' => $courses[$id]->id,
                 'fullname' => $courses[$id]->fullname,
                 'shortname' => $courses[$id]->shortname,
