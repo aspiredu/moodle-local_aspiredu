@@ -58,4 +58,13 @@ if ($hassiteconfig) { // needs this condition or there is error on login page
     $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
         get_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
 
+
+    $default = 1;
+    $options = array(
+        0 => get_string('no'),
+        1 => get_string('yes')
+    );
+    $settings->add(new admin_setting_configselect('local_aspiredu/showcoursesettings',
+        get_string('showcoursesettings', 'local_aspiredu'), '', $default, $options));
+
 }

@@ -88,8 +88,10 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
 function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $context) {
     global $COURSE;
 
-    if ($context->contextlevel >= CONTEXT_COURSE and ($branch = $nav->get('courseadmin'))
-            and has_capability('moodle/course:update', $context)) {
+    $showcoursesettings = get_config('local_aspiredu', 'showcoursesettings');
+
+    if ($showcoursesettings and $context->contextlevel >= CONTEXT_COURSE and
+            ($branch = $nav->get('courseadmin')) and has_capability('moodle/course:update', $context)) {
 
         $url = new moodle_url('/local/aspiredu/course.php', array('id' => $context->instanceid));
         $branch->add(get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
