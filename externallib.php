@@ -581,7 +581,7 @@ class local_aspiredu_external extends external_api {
                         new external_single_structure(
                             array(
                                 'id' => new external_value(PARAM_INT, 'Post id'),
-                                'name' => new external_value(PARAM_TEXT, 'Discussion name'),
+                                'name' => new external_value(PARAM_RAW, 'Discussion name'),
                                 'groupid' => new external_value(PARAM_INT, 'Group id'),
                                 'timemodified' => new external_value(PARAM_INT, 'Time modified'),
                                 'usermodified' => new external_value(PARAM_INT, 'The id of the user who last modified'),
