@@ -932,7 +932,7 @@ class local_aspiredu_external extends external_api {
                     'id' => new external_value(PARAM_INT, 'Forum id'),
                     'course' => new external_value(PARAM_TEXT, 'Course id'),
                     'type' => new external_value(PARAM_TEXT, 'The forum type'),
-                    'name' => new external_value(PARAM_TEXT, 'Forum name'),
+                    'name' => new external_value(PARAM_RAW, 'Forum name'),
                     'intro' => new external_value(PARAM_RAW, 'The forum intro'),
                     'introformat' => new external_format_value('intro'),
                     'assessed' => new external_value(PARAM_INT, 'Aggregate type'),
@@ -1801,7 +1801,7 @@ class local_aspiredu_external extends external_api {
             array(
                 'id' => new external_value(PARAM_INT, 'assignment id'),
                 'course' => new external_value(PARAM_INT, 'course id'),
-                'name' => new external_value(PARAM_TEXT, 'assignment name'),
+                'name' => new external_value(PARAM_RAW, 'assignment name'),
                 'nosubmissions' => new external_value(PARAM_INT, 'no submissions'),
                 'submissiondrafts' => new external_value(PARAM_INT, 'submissions drafts'),
                 'sendnotifications' => new external_value(PARAM_INT, 'send notifications'),
