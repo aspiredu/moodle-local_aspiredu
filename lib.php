@@ -49,7 +49,11 @@ function local_aspiredu_extends_navigation ($nav) {
 
 function local_aspiredu_check_links_visibility_permission($context, $settings) {
     global $COURSE;
-    $isadmin = has_capability('moodle/site:config', context_system::instance());
+
+    $context = context_system::instance();
+    $isadmin = (has_capability('moodle/site:config', $context) ||
+                has_capability('local/aspiredu:viewdropoutdetective', $context) ||
+                has_capability('local/aspiredu:viewinstructorinsight', $context)) ? true : false;
 
     if (!$settings) {
         return false;
