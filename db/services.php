@@ -117,7 +117,23 @@ $functions = array(
         'classpath'     => 'local/aspiredu/externallib.php',
         'description'   => 'Get all custom course settings',
         'type'          => 'read'
-    )
+    ),
+
+    'local_aspiredu_core_course_get_course_module' => array(
+        'classname'   => 'local_aspiredu_external',
+        'methodname'  => 'core_course_get_course_module',
+        'classpath'   => 'local/aspiredu/externallib.php',
+        'description' => 'Return information about a course module',
+        'type'        => 'read'
+    ),
+
+    'local_aspiredu_core_course_get_course_module_from_instance' => array(
+        'classname'   => 'local_aspiredu_external',
+        'methodname'  => 'core_course_get_course_module_from_instance',
+        'classpath'   => 'local/aspiredu/externallib.php',
+        'description' => 'Return information about a course module',
+        'type'        => 'read'
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -146,6 +162,8 @@ $services = array(
             'local_aspiredu_mod_assign_get_assignments',
             'local_aspiredu_mod_assign_get_submissions',
             'local_aspiredu_get_custom_course_settings',
+            'local_aspiredu_core_course_get_course_module',
+            'local_aspiredu_core_course_get_course_module_from_instance',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,
