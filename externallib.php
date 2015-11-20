@@ -160,6 +160,10 @@ class local_aspiredu_external extends external_api {
         $gradesarray['items'] = array();
 
         foreach ($grades->items as $gradeitem) {
+            // Avoid to process manual or category items (they are going to fail).
+            if ($gradeitem->itemtype != 'course' and $gradeitem->itemtype != 'mod') {
+                continue;
+            }
             // Switch the stdClass instance for a grade item instance so we can call is_hidden() and use the ID.
             $gradeiteminstance = self::core_grades_get_grade_item(
                 $course->id, $gradeitem->itemtype, $gradeitem->itemmodule, $gradeitem->iteminstance, $gradeitem->itemnumber);
