@@ -42,6 +42,6 @@ $string['adminacccourse'] = 'Only Administrators with account plus course';
 $string['adminacc'] = 'Only Administrators with account';
 $string['instcourse'] = 'Only instructors with course';
 $string['showcoursesettings'] = 'Show AspirEDU specific course settings?';
-$string['aspiredu:viewdropoutdetective'] = 'View Droupout Detective';
+$string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
 $string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
 
