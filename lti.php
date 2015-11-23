@@ -82,6 +82,8 @@ if ($launchurl and $key and $secret) {
         'oauth_callback' => 'about:blank',
         'lti_version' => 'LTI-1p0',
         'lti_message_type' => 'basic-lti-launch-request',
+        'lis_person_name_given' => $USER->firstname,
+        'lis_person_name_family' => $USER->lastname,
     );
 
     $hmacmethod = new lti\OAuthSignatureMethod_HMAC_SHA1();
