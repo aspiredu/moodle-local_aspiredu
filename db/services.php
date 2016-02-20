@@ -134,6 +134,14 @@ $functions = array(
         'description' => 'Return information about a course module',
         'type'        => 'read'
     ),
+
+    'local_aspiredu_core_grades_get_course_grades' => array(
+        'classname'   => 'local_aspiredu_external',
+        'methodname'  => 'core_grades_get_course_grades',
+        'classpath'   => 'local/aspiredu/externallib.php',
+        'description' => 'Return the final course grade for the given users',
+        'type'        => 'read'
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -149,7 +157,6 @@ $services = array(
             'core_enrol_get_enrolled_users_with_capability',
             'core_group_get_groups',
             'core_group_get_groupings',
-            'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_mod_forum_get_forums_by_courses',
             'local_aspiredu_mod_forum_get_forum_discussions_paginated',
             'local_aspiredu_mod_forum_get_forum_discussion_posts',
@@ -164,6 +171,7 @@ $services = array(
             'local_aspiredu_get_custom_course_settings',
             'local_aspiredu_core_course_get_course_module',
             'local_aspiredu_core_course_get_course_module_from_instance',
+            'local_aspiredu_core_grades_get_course_grades'
         ),
         'restrictedusers' => 1,
         'enabled' => 1,

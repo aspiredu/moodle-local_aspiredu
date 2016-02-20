@@ -2431,4 +2431,190 @@ class local_aspiredu_external extends external_api {
         );
     }
 
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function core_grades_get_course_grades_parameters() {
+        return new external_function_parameters(
+            array(
+                'courseid' => new external_value(PARAM_INT, 'id of course'),
+                'userids' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'user ID'),
+                    'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, array()
+                )
+            )
+        );
+    }
+
+    /**
+     * Retrieve the final course grade for the given users.
+     *
+     * @param  int $courseid        Course id
+     * @param  array  $userids      Array of user ids
+     * @return array                Array of grades
+     */
+    public static function core_grades_get_course_grades($courseid, $userids = array()) {
+        global $CFG, $USER, $DB;
+        require_once($CFG->libdir  . "/gradelib.php");
+
+        $params = self::validate_parameters(self::core_grades_get_grades_parameters(),
+            array('courseid' => $courseid, 'userids' => $userids));
+
+        $courseid = $params['courseid'];
+        $userids = $params['userids'];
+
+        $coursecontext = context_course::instance($courseid);
+        self::validate_context($coursecontext);
+
+        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
+        require_capability('moodle/grade:viewall', $coursecontext);
+
+        $grade_item = grade_item::fetch_course_item($courseid);
+
+        if ($grade_item->needsupdate) {
+            grade_regrade_final_grades($courseid);
+        }
+
+        $item = new stdClass();
+        $item->scaleid    = $grade_item->scaleid;
+        $item->name       = $grade_item->get_name();
+        $item->grademin   = $grade_item->grademin;
+        $item->grademax   = $grade_item->grademax;
+        $item->gradepass  = $grade_item->gradepass;
+        $item->locked     = $grade_item->is_locked();
+        $item->locked     = (empty($item->locked)) ? 0 : 1;
+        $item->hidden     = $grade_item->is_hidden();
+        $item->hidden     = (empty($item->hidden)) ? 0 : 1;
+        $item->grades     = array();
+
+        switch ($grade_item->gradetype) {
+            case GRADE_TYPE_NONE:
+                continue;
+
+            case GRADE_TYPE_VALUE:
+                $item->scaleid = 0;
+                break;
+
+            case GRADE_TYPE_TEXT:
+                $item->scaleid   = 0;
+                $item->grademin   = 0;
+                $item->grademax   = 0;
+                $item->gradepass  = 0;
+                break;
+        }
+
+        if ($userids) {
+            $grade_grades = grade_grade::fetch_users_grades($grade_item, $userids, true);
+            foreach ($userids as $userid) {
+                $grade_grades[$userid]->grade_item =& $grade_item;
+
+                $grade = new stdClass();
+                $grade->grade          = $grade_grades[$userid]->finalgrade;
+                $grade->locked         = $grade_grades[$userid]->is_locked();
+                $grade->hidden         = $grade_grades[$userid]->is_hidden();
+                $grade->locked         = (empty($grade->locked)) ? 0 : 1;
+                $grade->hidden         = (empty($grade->hidden)) ? 0 : 1;
+                $grade->overridden     = $grade_grades[$userid]->overridden;
+                $grade->feedback       = $grade_grades[$userid]->feedback;
+                $grade->feedbackformat = $grade_grades[$userid]->feedbackformat;
+                $grade->usermodified   = $grade_grades[$userid]->usermodified;
+                $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
+                $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
+
+                // create text representation of grade
+                if ($grade_item->needsupdate) {
+                    $grade->grade          = false;
+                    $grade->str_grade      = get_string('error');
+                    $grade->str_long_grade = $grade->str_grade;
+
+                } else if (is_null($grade->grade)) {
+                    $grade->str_grade      = '-';
+                    $grade->str_long_grade = $grade->str_grade;
+
+                } else {
+
+                    // 2.8.7 and 2.9.1 onwards.
+                    if (method_exists($grade_grades[$userid], 'get_grade_max')) {
+                        $grade_item->grademax = $grade_grades[$userid]->get_grade_max();
+                        $grade_item->grademin = $grade_grades[$userid]->get_grade_min();
+                    }
+
+                    $grade->str_grade = grade_format_gradevalue($grade->grade, $grade_item);
+                    if ($grade_item->gradetype == GRADE_TYPE_SCALE or $grade_item->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
+                        $grade->str_long_grade = $grade->str_grade;
+                    } else {
+                        $a = new stdClass();
+                        $a->grade = $grade->str_grade;
+                        $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
+                        $grade->str_long_grade = get_string('gradelong', 'grades', $a);
+                    }
+                }
+
+                // create html representation of feedback
+                if (is_null($grade->feedback)) {
+                    $grade->str_feedback = '';
+                } else {
+                    $grade->str_feedback = format_text($grade->feedback, $grade->feedbackformat);
+                }
+                $grade->userid = $userid;
+
+                $item->grades[] = $grade;
+            }
+        }
+        return $item;
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function core_grades_get_course_grades_returns() {
+        return new external_single_structure(
+            array(
+                'scaleid' => new external_value(PARAM_INT, 'The ID of the custom scale or 0'),
+                'name' => new external_value(PARAM_RAW, 'The module name'),
+                'grademin' => new external_value(PARAM_FLOAT, 'Minimum grade'),
+                'grademax' => new external_value(PARAM_FLOAT, 'Maximum grade'),
+                'gradepass' => new external_value(PARAM_FLOAT, 'The passing grade threshold'),
+                'locked' => new external_value(PARAM_INT, '0 means not locked, > 1 is a date to lock until'),
+                'hidden' => new external_value(PARAM_INT, '0 means not hidden, > 1 is a date to hide until'),
+                'grades' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'userid' => new external_value(
+                                PARAM_INT, 'Student ID'),
+                            'grade' => new external_value(
+                                PARAM_FLOAT, 'Student grade'),
+                            'locked' => new external_value(
+                                PARAM_INT, '0 means not locked, > 1 is a date to lock until'),
+                            'hidden' => new external_value(
+                                PARAM_INT, '0 means not hidden, 1 hidden, > 1 is a date to hide until'),
+                            'overridden' => new external_value(
+                                PARAM_INT, '0 means not overridden, > 1 means overridden'),
+                            'feedback' => new external_value(
+                                PARAM_RAW, 'Feedback from the grader'),
+                            'feedbackformat' => new external_value(
+                                PARAM_INT, 'The format of the feedback'),
+                            'usermodified' => new external_value(
+                                PARAM_INT, 'The ID of the last user to modify this student grade'),
+                            'datesubmitted' => new external_value(
+                                PARAM_INT, 'A timestamp indicating when the student submitted the activity'),
+                            'dategraded' => new external_value(
+                                PARAM_INT, 'A timestamp indicating when the assignment was grades'),
+                            'str_grade' => new external_value(
+                                PARAM_RAW, 'A string representation of the grade'),
+                            'str_long_grade' => new external_value(
+                                PARAM_RAW, 'A nicely formatted string representation of the grade'),
+                            'str_feedback' => new external_value(
+                                PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
+                        )
+                    ), 'user grades', VALUE_OPTIONAL
+                ),
+            )
+        );
+    }
+
 }
