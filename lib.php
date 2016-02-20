@@ -27,7 +27,7 @@ define('LOCAL_ASPIREDU_ADMINACCCOURSE', 4);
 define('LOCAL_ASPIREDU_ADMINACC', 5);
 define('LOCAL_ASPIREDU_INSTCOURSE', 6);
 
-function local_aspiredu_extends_navigation ($nav) {
+function local_aspiredu_extend_navigation ($nav) {
     global $PAGE;
 
     /*
@@ -89,7 +89,7 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
  * @param  settings_navigation $nav     The settings navigatin object
  * @param  stdclass            $context Course context
  */
-function local_aspiredu_extends_settings_navigation(settings_navigation $nav, $context) {
+function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $context) {
     global $COURSE;
 
     $showcoursesettings = get_config('local_aspiredu', 'showcoursesettings');

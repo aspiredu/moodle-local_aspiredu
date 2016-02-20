@@ -23,7 +23,7 @@
  */
 
 $plugin->version  = 2015010127;
-$plugin->requires = 2012120300;
+$plugin->requires = 2015111600; // 3.0
 $plugin->component = 'local_aspiredu';
-$plugin->release = '2.1';
+$plugin->release = '3.0';
 $plugin->maturity = MATURITY_STABLE;
