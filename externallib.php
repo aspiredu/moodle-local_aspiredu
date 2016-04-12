@@ -2522,6 +2522,7 @@ class local_aspiredu_external extends external_api {
                 $grade->usermodified   = $grade_grades[$userid]->usermodified;
                 $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
                 $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
+                $grade->grademax       = $item->grademax;
 
                 // create text representation of grade
                 if ($grade_item->needsupdate) {
@@ -2539,6 +2540,10 @@ class local_aspiredu_external extends external_api {
                     if (method_exists($grade_grades[$userid], 'get_grade_max')) {
                         $grade_item->grademax = $grade_grades[$userid]->get_grade_max();
                         $grade_item->grademin = $grade_grades[$userid]->get_grade_min();
+                    }
+
+                    if (isset($grade_item->grademax)) {
+                        $grade->grademax = $grade_item->grademax;
                     }
 
                     $grade->str_grade = grade_format_gradevalue($grade->grade, $grade_item);
@@ -2588,6 +2593,8 @@ class local_aspiredu_external extends external_api {
                                 PARAM_INT, 'Student ID'),
                             'grade' => new external_value(
                                 PARAM_FLOAT, 'Student grade'),
+                            'grademax' => new external_value(
+                                PARAM_FLOAT, 'Max student grade'),
                             'locked' => new external_value(
                                 PARAM_INT, '0 means not locked, > 1 is a date to lock until'),
                             'hidden' => new external_value(
