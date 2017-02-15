@@ -150,7 +150,7 @@ $services = array(
         'functions' => array (
             'core_webservice_get_site_info',
             'core_course_get_courses',
-            'core_course_get_course_contents',
+            'core_course_get_contents',
             'core_course_get_categories',
             'core_enrol_get_enrolled_users',
             'core_user_get_users',
