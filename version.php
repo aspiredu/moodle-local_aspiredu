@@ -22,8 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2016021903;
+$plugin->version  = 2019060400;
 $plugin->requires = 2015111600; // 3.0
 $plugin->component = 'local_aspiredu';
-$plugin->release = '3.1.2';
+$plugin->release = '3.2.0';
 $plugin->maturity = MATURITY_STABLE;
