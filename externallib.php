@@ -26,6 +26,7 @@ require_once($CFG->libdir . "/externallib.php");
 require_once($CFG->dirroot . "/course/externallib.php");
 require_once("$CFG->dirroot/local/aspiredu/locallib.php");
 require_once("$CFG->dirroot/local/aspiredu/futurelib.php");
+require_once("$CFG->dirroot/local/aspiredu/renderable.php");
 
 class local_aspiredu_external extends external_api {
 
@@ -1553,8 +1554,8 @@ class local_aspiredu_external extends external_api {
         require_capability('report/log:view', $context);
 
         // Check if we are in 2.7 or above.
-        if (class_exists('report_log_renderable')) {
-            $reportlog = new report_log_renderable($params['logreader'], $course, $params['userid'], $params['modid'],
+        if (class_exists('local_report_log_renderable')) {
+            $reportlog = new local_report_log_renderable($params['logreader'], $course, $params['userid'], $params['modid'],
                                                     $params['modaction'],
                                                     $params['group'], $params['edulevel'], true, true,
                                                     false, true, '', $params['date'], '',
