@@ -30,16 +30,16 @@ if ($hassiteconfig) { // needs this condition or there is error on login page
     $ADMIN->add('localplugins', $settings);
 
     $settings->add(new admin_setting_configtext('local_aspiredu/dropoutdetectiveurl',
-        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/instructorinsighturl',
-        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/key',
-        get_string('key', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+        get_string('key', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/secret',
-        get_string('secret', 'local_aspiredu'), '', '', PARAM_RAW_TRIMMED));
+        get_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $options = array(
         0 => get_string('disabled', 'local_aspiredu'),
