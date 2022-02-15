@@ -1,4 +1,6 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -26,7 +28,7 @@ require_once($CFG->dirroot.'/report/log/classes/renderable.php');
 
 class local_report_log_renderable extends report_log_renderable {
 
-      /**
+    /**
      * Setup table log.
      */
     public function setup_table() {

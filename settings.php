@@ -24,7 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-if ($hassiteconfig) { // needs this condition or there is error on login page
+// Needs $hassiteconfig or there is error on login page.
+if ($hassiteconfig) {
 
     $settings = new admin_settingpage('local_aspiredu', new lang_string('pluginname', 'local_aspiredu'));
     $ADMIN->add('localplugins', $settings);

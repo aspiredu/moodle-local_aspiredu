@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 $functions = array(
     'local_aspiredu_core_grades_get_grades' => array(
         'classname'     => 'local_aspiredu_external',
