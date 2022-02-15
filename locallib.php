@@ -1,4 +1,6 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -30,17 +32,20 @@
  * @param string $itemtype Type of grade item. For example, 'mod' or 'block'
  * @param string $itemmodule More specific then $itemtype. For example, 'forum' or 'quiz'. May be NULL for some item types
  * @param int    $iteminstance ID of the item module
- * @param mixed  $userid_or_ids Either a single user ID, an array of user IDs or null. If user ID or IDs are not supplied returns information about grade_item
+ * @param mixed  $userIdOrIds Either a single user ID, an array of user IDs or null. If user ID or IDs are not supplied 
+ *               returns information about gradeItem
  * @return array Array of grade information objects (scaleid, name, grade and locked status, etc.) indexed with itemnumbers
  */
-function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodule = null, $iteminstance = null, $userid_or_ids=null) {
+function local_aspiredu_grade_get_grades(
+    $courseid, $itemtype = null, $itemmodule = null, $iteminstance = null, $userIdOrIds=null
+) {
     global $CFG;
     $return = new stdClass();
     $return->items    = array();
     $return->outcomes = array();
-    $course_item = grade_item::fetch_course_item($courseid);
+    $courseItem = grade_item::fetch_course_item($courseid);
     $needsupdate = array();
-    if ($course_item->needsupdate) {
+    if ($courseItem->needsupdate) {
         $result = grade_regrade_final_grades($courseid);
         if ($result !== true) {
             $needsupdate = array_keys($result);
@@ -56,28 +61,28 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
     if (!empty($iteminstance)) {
         $params['iteminstance'] = $iteminstance;
     }
-    if ($grade_items = grade_item::fetch_all($params)) {
-        foreach ($grade_items as $grade_item) {
+    if ($gradeItems = grade_item::fetch_all($params)) {
+        foreach ($gradeItems as $gradeItem) {
             $decimalpoints = null;
-            if (empty($grade_item->outcomeid)) {
-                // prepare information about grade item
+            if (empty($gradeItem->outcomeid)) {
+                // Prepare information about grade item.
                 $item = new stdClass();
-                $item->id = $grade_item->id;
-                $item->itemnumber = $grade_item->itemnumber;
-                $item->itemtype  = $grade_item->itemtype;
-                $item->itemmodule = $grade_item->itemmodule;
-                $item->iteminstance = $grade_item->iteminstance;
-                $item->scaleid    = $grade_item->scaleid;
-                $item->name       = $grade_item->get_name();
-                $item->grademin   = $grade_item->grademin;
-                $item->grademax   = $grade_item->grademax;
-                $item->gradepass  = $grade_item->gradepass;
-                $item->locked     = $grade_item->is_locked();
-                $item->hidden     = $grade_item->is_hidden();
+                $item->id = $gradeItem->id;
+                $item->itemnumber = $gradeItem->itemnumber;
+                $item->itemtype  = $gradeItem->itemtype;
+                $item->itemmodule = $gradeItem->itemmodule;
+                $item->iteminstance = $gradeItem->iteminstance;
+                $item->scaleid    = $gradeItem->scaleid;
+                $item->name       = $gradeItem->get_name();
+                $item->grademin   = $gradeItem->grademin;
+                $item->grademax   = $gradeItem->grademax;
+                $item->gradepass  = $gradeItem->gradepass;
+                $item->locked     = $gradeItem->is_locked();
+                $item->hidden     = $gradeItem->is_hidden();
                 $item->grades     = array();
-                switch ($grade_item->gradetype) {
+                switch ($gradeItem->gradetype) {
                     case GRADE_TYPE_NONE:
-                        continue;
+                        break;
                     case GRADE_TYPE_VALUE:
                         $item->scaleid = 0;
                         break;
@@ -88,33 +93,33 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                         $item->gradepass  = 0;
                         break;
                 }
-                if (empty($userid_or_ids)) {
+                if (empty($userIdOrIds)) {
                     $userids = array();
-                } else if (is_array($userid_or_ids)) {
-                    $userids = $userid_or_ids;
+                } else if (is_array($userIdOrIds)) {
+                    $userids = $userIdOrIds;
                 } else {
-                    $userids = array($userid_or_ids);
+                    $userids = array($userIdOrIds);
                 }
                 if ($userids) {
-                    $grade_grades = grade_grade::fetch_users_grades($grade_item, $userids, true);
+                    $gradeGrades = grade_grade::fetch_users_grades($gradeItem, $userids, true);
                     foreach ($userids as $userid) {
-                        $grade_grades[$userid]->grade_item =& $grade_item;
+                        $gradeGrades[$userid]->gradeItem =& $gradeItem;
                         $grade = new stdClass();
-                        $grade->grade          = $grade_grades[$userid]->finalgrade;
-                        $grade->locked         = $grade_grades[$userid]->is_locked();
-                        $grade->hidden         = $grade_grades[$userid]->is_hidden();
-                        $grade->overridden     = $grade_grades[$userid]->overridden;
-                        $grade->feedback       = $grade_grades[$userid]->feedback;
-                        $grade->feedbackformat = $grade_grades[$userid]->feedbackformat;
-                        $grade->usermodified   = $grade_grades[$userid]->usermodified;
-                        $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
-                        $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
-                        // create text representation of grade
-                        if ($grade_item->gradetype == GRADE_TYPE_TEXT or $grade_item->gradetype == GRADE_TYPE_NONE) {
+                        $grade->grade          = $gradeGrades[$userid]->finalgrade;
+                        $grade->locked         = $gradeGrades[$userid]->is_locked();
+                        $grade->hidden         = $gradeGrades[$userid]->is_hidden();
+                        $grade->overridden     = $gradeGrades[$userid]->overridden;
+                        $grade->feedback       = $gradeGrades[$userid]->feedback;
+                        $grade->feedbackformat = $gradeGrades[$userid]->feedbackformat;
+                        $grade->usermodified   = $gradeGrades[$userid]->usermodified;
+                        $grade->datesubmitted  = $gradeGrades[$userid]->get_datesubmitted();
+                        $grade->dategraded     = $gradeGrades[$userid]->get_dategraded();
+                        // Create text representation of grade.
+                        if ($gradeItem->gradetype == GRADE_TYPE_TEXT or $gradeItem->gradetype == GRADE_TYPE_NONE) {
                             $grade->grade          = null;
                             $grade->str_grade      = '-';
                             $grade->str_long_grade = $grade->str_grade;
-                        } else if (in_array($grade_item->id, $needsupdate)) {
+                        } else if (in_array($gradeItem->id, $needsupdate)) {
                             $grade->grade          = false;
                             $grade->str_grade      = get_string('error');
                             $grade->str_long_grade = $grade->str_grade;
@@ -122,13 +127,16 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                             $grade->str_grade      = '-';
                             $grade->str_long_grade = $grade->str_grade;
                         } else {
-                            $grade->str_grade = grade_format_gradevalue($grade->grade, $grade_item);
-                            if ($grade_item->gradetype == GRADE_TYPE_SCALE or $grade_item->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
+                            $grade->str_grade = grade_format_gradevalue($grade->grade, $gradeItem);
+                            if (
+                                $gradeItem->gradetype == GRADE_TYPE_SCALE or
+                                $gradeItem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL
+                            ) {
                                 $grade->str_long_grade = $grade->str_grade;
                             } else {
                                 $a = new stdClass();
                                 $a->grade = $grade->str_grade;
-                                $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
+                                $a->max   = grade_format_gradevalue($gradeItem->grademax, $gradeItem);
                                 $grade->str_long_grade = get_string('gradelong', 'grades', $a);
                             }
                         }
@@ -143,41 +151,41 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                 }
                 $return->items[$item->id] = $item;
             } else {
-                if (!$grade_outcome = grade_outcome::fetch(array('id' => $grade_item->outcomeid))) {
+                if (!$gradeOutcome = grade_outcome::fetch(array('id' => $gradeItem->outcomeid))) {
                     debugging('Incorect outcomeid found');
                     continue;
                 }
-                // outcome info
+                // Outcome info.
                 $outcome = new stdClass();
-                $outcome->id = $grade_item->id;
-                $outcome->itemnumber = $grade_item->itemnumber;
-                $outcome->itemtype   = $grade_item->itemtype;
-                $outcome->itemmodule = $grade_item->itemmodule;
-                $outcome->iteminstance = $grade_item->iteminstance;
-                $outcome->scaleid    = $grade_outcome->scaleid;
-                $outcome->name       = $grade_outcome->get_name();
-                $outcome->locked     = $grade_item->is_locked();
-                $outcome->hidden     = $grade_item->is_hidden();
-                if (empty($userid_or_ids)) {
+                $outcome->id = $gradeItem->id;
+                $outcome->itemnumber = $gradeItem->itemnumber;
+                $outcome->itemtype   = $gradeItem->itemtype;
+                $outcome->itemmodule = $gradeItem->itemmodule;
+                $outcome->iteminstance = $gradeItem->iteminstance;
+                $outcome->scaleid    = $gradeOutcome->scaleid;
+                $outcome->name       = $gradeOutcome->get_name();
+                $outcome->locked     = $gradeItem->is_locked();
+                $outcome->hidden     = $gradeItem->is_hidden();
+                if (empty($userIdOrIds)) {
                     $userids = array();
-                } else if (is_array($userid_or_ids)) {
-                    $userids = $userid_or_ids;
+                } else if (is_array($userIdOrIds)) {
+                    $userids = $userIdOrIds;
                 } else {
-                    $userids = array($userid_or_ids);
+                    $userids = array($userIdOrIds);
                 }
                 if ($userids) {
-                    $grade_grades = grade_grade::fetch_users_grades($grade_item, $userids, true);
+                    $gradeGrades = grade_grade::fetch_users_grades($gradeItem, $userids, true);
                     foreach ($userids as $userid) {
-                        $grade_grades[$userid]->grade_item =& $grade_item;
+                        $gradeGrades[$userid]->gradeItem =& $gradeItem;
                         $grade = new stdClass();
-                        $grade->grade          = $grade_grades[$userid]->finalgrade;
-                        $grade->locked         = $grade_grades[$userid]->is_locked();
-                        $grade->hidden         = $grade_grades[$userid]->is_hidden();
-                        $grade->feedback       = $grade_grades[$userid]->feedback;
-                        $grade->feedbackformat = $grade_grades[$userid]->feedbackformat;
-                        $grade->usermodified   = $grade_grades[$userid]->usermodified;
-                        // create text representation of grade
-                        if (in_array($grade_item->id, $needsupdate)) {
+                        $grade->grade          = $gradeGrades[$userid]->finalgrade;
+                        $grade->locked         = $gradeGrades[$userid]->is_locked();
+                        $grade->hidden         = $gradeGrades[$userid]->is_hidden();
+                        $grade->feedback       = $gradeGrades[$userid]->feedback;
+                        $grade->feedbackformat = $gradeGrades[$userid]->feedbackformat;
+                        $grade->usermodified   = $gradeGrades[$userid]->usermodified;
+                        // Create text representation of grade.
+                        if (in_array($gradeItem->id, $needsupdate)) {
                             $grade->grade     = false;
                             $grade->str_grade = get_string('error');
                         } else if (is_null($grade->grade)) {
@@ -185,10 +193,10 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                             $grade->str_grade = get_string('nooutcome', 'grades');
                         } else {
                             $grade->grade = (int)$grade->grade;
-                            $scale = $grade_item->load_scale();
-                            $grade->str_grade = format_string($scale->scale_items[(int)$grade->grade-1]);
+                            $scale = $gradeItem->load_scale();
+                            $grade->str_grade = format_string($scale->scale_items[(int)$grade->grade - 1]);
                         }
-                        // create html representation of feedback
+                        // Create html representation of feedback.
                         if (is_null($grade->feedback)) {
                             $grade->str_feedback = '';
                         } else {
@@ -197,21 +205,31 @@ function local_aspiredu_grade_get_grades($courseid, $itemtype = null, $itemmodul
                         $outcome->grades[$userid] = $grade;
                     }
                 }
-                if (isset($return->outcomes[$grade_item->itemnumber])) {
-                    // itemnumber duplicates - lets fix them!
-                    $newnumber = $grade_item->itemnumber + 1;
-                    while(grade_item::fetch(array('itemtype' => $itemtype, 'itemmodule' => $itemmodule, 'iteminstance'=>$iteminstance, 'courseid' => $courseid, 'itemnumber' => $newnumber))) {
+                if (isset($return->outcomes[$gradeItem->itemnumber])) {
+                    // Fix all itemnumber duplicates.
+                    $newnumber = $gradeItem->itemnumber + 1;
+                    while (
+                        grade_item::fetch(
+                            array(
+                                'itemtype' => $itemtype,
+                                'itemmodule' => $itemmodule,
+                                'iteminstance' => $iteminstance,
+                                'courseid' => $courseid,
+                                'itemnumber' => $newnumber
+                            )
+                        )
+                    ) {
                         $newnumber++;
                     }
                     $outcome->itemnumber    = $newnumber;
-                    $grade_item->itemnumber = $newnumber;
-                    $grade_item->update('system');
+                    $gradeItem->itemnumber = $newnumber;
+                    $gradeItem->update('system');
                 }
                 $return->outcomes[$outcome->id] = $outcome;
             }
         }
     }
-    // sort results using itemnumbers
+    // Sort results using itemnumbers.
     ksort($return->items, SORT_NUMERIC);
     ksort($return->outcomes, SORT_NUMERIC);
     return $return;

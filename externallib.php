@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->libdir . "/externallib.php");
 require_once($CFG->dirroot . "/course/externallib.php");
 require_once("$CFG->dirroot/local/aspiredu/locallib.php");
@@ -279,7 +281,7 @@ class local_aspiredu_external extends external_api {
      * @param  string $itemmodule   Item module
      * @param  int $iteminstance    Item instance
      * @param  int $itemnumber      Item number
-     * @return grade_item           A grade_item instance
+     * @return gradeItem           A gradeItem instance
      */
     private static function core_grades_get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
                                                         $itemnumber = null) {
@@ -1680,7 +1682,7 @@ class local_aspiredu_external extends external_api {
                     }
                     $configrecords->close();
 
-                    $assignmentarray[]= array(
+                    $assignmentarray[] = array(
                         'id' => $module->assignmentid,
                         'cmid' => $module->id,
                         'course' => $module->course,
@@ -1749,7 +1751,8 @@ class local_aspiredu_external extends external_api {
                 'blindmarking' => new external_value(PARAM_INT, 'if enabled, hide identities until reveal identities actioned'),
                 'revealidentities' => new external_value(PARAM_INT, 'show identities for a blind marking assignment'),
                 'requiresubmissionstatement' => new external_value(PARAM_INT, 'student must accept submission statement'),
-                'configs' => new external_multiple_structure(self::mod_assign_get_assignments_config_structure(), 'configuration settings')
+                'configs' => new external_multiple_structure(
+                    self::mod_assign_get_assignments_config_structure(), 'configuration settings')
             ), 'assignment information object');
     }
 
@@ -1785,7 +1788,8 @@ class local_aspiredu_external extends external_api {
                 'fullname' => new external_value(PARAM_TEXT, 'course full name'),
                 'shortname' => new external_value(PARAM_TEXT, 'course short name'),
                 'timemodified' => new external_value(PARAM_INT, 'last time modified'),
-                'assignments' => new external_multiple_structure(self::mod_assign_get_assignments_assignment_structure(), 'assignment info')
+                'assignments' => new external_multiple_structure(
+                    self::mod_assign_get_assignments_assignment_structure(), 'assignment info')
               ), 'course information object'
         );
     }
@@ -1799,7 +1803,8 @@ class local_aspiredu_external extends external_api {
     public static function mod_assign_get_assignments_returns() {
         return new external_single_structure(
             array(
-                'courses' => new external_multiple_structure(self::mod_assign_get_assignments_course_structure(), 'list of courses'),
+                'courses' => new external_multiple_structure(
+                    self::mod_assign_get_assignments_course_structure(), 'list of courses'),
                 'warnings'  => new external_warnings('item can be \'course\' (errorcode 1 or 2) or \'module\' (errorcode 1)',
                     'When item is a course then itemid is a course id. When the item is a module then itemid is a module id',
                     'errorcode can be 1 (no access rights) or 2 (not enrolled or no permissions)')
@@ -2044,7 +2049,8 @@ class local_aspiredu_external extends external_api {
     public static function mod_assign_get_submissions_returns() {
         return new external_single_structure(
             array(
-                'assignments' => new external_multiple_structure(self::mod_assign_get_submissions_structure(), 'assignment submissions'),
+                'assignments' => new external_multiple_structure(
+                    self::mod_assign_get_submissions_structure(), 'assignment submissions'),
                 'warnings' => new external_warnings()
             )
         );
@@ -2398,27 +2404,27 @@ class local_aspiredu_external extends external_api {
         $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
         require_capability('moodle/grade:viewall', $coursecontext);
 
-        $grade_item = grade_item::fetch_course_item($courseid);
+        $gradeItem = grade_item::fetch_course_item($courseid);
 
-        if ($grade_item->needsupdate) {
+        if ($gradeItem->needsupdate) {
             grade_regrade_final_grades($courseid);
         }
 
         $item = new stdClass();
-        $item->scaleid    = $grade_item->scaleid;
-        $item->name       = $grade_item->get_name();
-        $item->grademin   = $grade_item->grademin;
-        $item->grademax   = $grade_item->grademax;
-        $item->gradepass  = $grade_item->gradepass;
-        $item->locked     = $grade_item->is_locked();
+        $item->scaleid    = $gradeItem->scaleid;
+        $item->name       = $gradeItem->get_name();
+        $item->grademin   = $gradeItem->grademin;
+        $item->grademax   = $gradeItem->grademax;
+        $item->gradepass  = $gradeItem->gradepass;
+        $item->locked     = $gradeItem->is_locked();
         $item->locked     = (empty($item->locked)) ? 0 : 1;
-        $item->hidden     = $grade_item->is_hidden();
+        $item->hidden     = $gradeItem->is_hidden();
         $item->hidden     = (empty($item->hidden)) ? 0 : 1;
         $item->grades     = array();
 
-        switch ($grade_item->gradetype) {
+        switch ($gradeItem->gradetype) {
             case GRADE_TYPE_NONE:
-                continue;
+                break;
 
             case GRADE_TYPE_VALUE:
                 $item->scaleid = 0;
@@ -2433,26 +2439,26 @@ class local_aspiredu_external extends external_api {
         }
 
         if ($userids) {
-            $grade_grades = grade_grade::fetch_users_grades($grade_item, $userids, true);
+            $gradeGrades = grade_grade::fetch_users_grades($gradeItem, $userids, true);
             foreach ($userids as $userid) {
-                $grade_grades[$userid]->grade_item =& $grade_item;
+                $gradeGrades[$userid]->gradeItem =& $gradeItem;
 
                 $grade = new stdClass();
-                $grade->grade          = $grade_grades[$userid]->finalgrade;
-                $grade->locked         = $grade_grades[$userid]->is_locked();
-                $grade->hidden         = $grade_grades[$userid]->is_hidden();
+                $grade->grade          = $gradeGrades[$userid]->finalgrade;
+                $grade->locked         = $gradeGrades[$userid]->is_locked();
+                $grade->hidden         = $gradeGrades[$userid]->is_hidden();
                 $grade->locked         = (empty($grade->locked)) ? 0 : 1;
                 $grade->hidden         = (empty($grade->hidden)) ? 0 : 1;
-                $grade->overridden     = $grade_grades[$userid]->overridden;
-                $grade->feedback       = $grade_grades[$userid]->feedback;
-                $grade->feedbackformat = $grade_grades[$userid]->feedbackformat;
-                $grade->usermodified   = $grade_grades[$userid]->usermodified;
-                $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
-                $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
+                $grade->overridden     = $gradeGrades[$userid]->overridden;
+                $grade->feedback       = $gradeGrades[$userid]->feedback;
+                $grade->feedbackformat = $gradeGrades[$userid]->feedbackformat;
+                $grade->usermodified   = $gradeGrades[$userid]->usermodified;
+                $grade->dategraded     = $gradeGrades[$userid]->get_dategraded();
+                $grade->datesubmitted  = $gradeGrades[$userid]->get_datesubmitted();
                 $grade->grademax       = $item->grademax;
 
-                // create text representation of grade
-                if ($grade_item->needsupdate) {
+                // Create text representation of grade.
+                if ($gradeItem->needsupdate) {
                     $grade->grade          = false;
                     $grade->str_grade      = get_string('error');
                     $grade->str_long_grade = $grade->str_grade;
@@ -2464,27 +2470,27 @@ class local_aspiredu_external extends external_api {
                 } else {
 
                     // 2.8.7 and 2.9.1 onwards.
-                    if (method_exists($grade_grades[$userid], 'get_grade_max')) {
-                        $grade_item->grademax = $grade_grades[$userid]->get_grade_max();
-                        $grade_item->grademin = $grade_grades[$userid]->get_grade_min();
+                    if (method_exists($gradeGrades[$userid], 'get_grade_max')) {
+                        $gradeItem->grademax = $gradeGrades[$userid]->get_grade_max();
+                        $gradeItem->grademin = $gradeGrades[$userid]->get_grade_min();
                     }
 
-                    if (isset($grade_item->grademax)) {
-                        $grade->grademax = $grade_item->grademax;
+                    if (isset($gradeItem->grademax)) {
+                        $grade->grademax = $gradeItem->grademax;
                     }
 
-                    $grade->str_grade = grade_format_gradevalue($grade->grade, $grade_item);
-                    if ($grade_item->gradetype == GRADE_TYPE_SCALE or $grade_item->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
+                    $grade->str_grade = grade_format_gradevalue($grade->grade, $gradeItem);
+                    if ($gradeItem->gradetype == GRADE_TYPE_SCALE or $gradeItem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
                         $grade->str_long_grade = $grade->str_grade;
                     } else {
                         $a = new stdClass();
                         $a->grade = $grade->str_grade;
-                        $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
+                        $a->max   = grade_format_gradevalue($gradeItem->grademax, $gradeItem);
                         $grade->str_long_grade = get_string('gradelong', 'grades', $a);
                     }
                 }
 
-                // create html representation of feedback
+                // Create html representation of feedback.
                 if (is_null($grade->feedback)) {
                     $grade->str_feedback = '';
                 } else {

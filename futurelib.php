@@ -60,7 +60,8 @@ if (!file_exists($CFG->dirroot . '/lib/classes/user.php') and !class_exists("cor
          * @param int $userid user id
          * @param string $fields A comma separated list of user fields to be returned, support and noreply user
          *                       will not be filtered by this.
-         * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message if more found;
+         * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug
+         *                        message if more found;
          *                        IGNORE_MULTIPLE means return first user, ignore multiple user records found(not recommended);
          *                        MUST_EXIST means throw an exception if no user record or multiple records found.
          * @return stdClass|bool user record if found, else false.
@@ -89,7 +90,8 @@ if (!file_exists($CFG->dirroot . '/lib/classes/user.php') and !class_exists("cor
          * @param string $username The username of the user searched.
          * @param string $fields A comma separated list of user fields to be returned, support and noreply user.
          * @param int $mnethostid The id of the remote host.
-         * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message if more found;
+         * @param int $strictness IGNORE_MISSING means compatible mode, false returned if user not found, debug message
+         *                        if more found;
          *                        IGNORE_MULTIPLE means return first user, ignore multiple user records found(not recommended);
          *                        MUST_EXIST means throw an exception if no user record or multiple records found.
          * @return stdClass|bool user record if found, else false.

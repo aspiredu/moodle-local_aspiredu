@@ -1,4 +1,6 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -27,25 +29,6 @@ define('LOCAL_ASPIREDU_ADMINACCCOURSE', 4);
 define('LOCAL_ASPIREDU_ADMINACC', 5);
 define('LOCAL_ASPIREDU_INSTCOURSE', 6);
 
-function local_aspiredu_extend_navigation ($nav) {
-    global $PAGE;
-
-    /*
-    if ($PAGE->course->id and $PAGE->course->id != SITEID) {
-
-        $coursenode = $nav->find($PAGE->course->id, $nav::TYPE_COURSE);
-        if (has_capability('local/aspiredu:viewdropoutdetective', $PAGE->context)) {
-
-            $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $PAGE->course->id, 'product' => 'dd'));
-            $coursenode->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$PAGE->course->id);
-        }
-        if (has_capability('local/aspiredu:viewinstructorinsight', $PAGE->context)) {
-
-            $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $PAGE->course->id, 'product' => 'ii'));
-            $coursenode->add(get_string('instructorinsight', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspireduii'.$PAGE->course->id);
-        }
-    */
-}
 
 function local_aspiredu_check_links_visibility_permission($context, $settings) {
     global $COURSE;
@@ -98,7 +81,8 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
             ($branch = $nav->get('courseadmin')) and has_capability('moodle/course:update', $context)) {
 
         $url = new moodle_url('/local/aspiredu/course.php', array('id' => $context->instanceid));
-        $branch->add(get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
+        $branch->add(
+            get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
     }
 
     $dropoutdetectivelinks = get_config('local_aspiredu', 'dropoutdetectivelinks');
@@ -114,7 +98,14 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
-                $subbranch->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$context->instanceid, new pix_icon('i/stats', ''));
+                $subbranch->add(
+                    get_string('dropoutdetective', 'local_aspiredu'),
+                    $url,
+                    $nav::TYPE_CONTAINER,
+                    null,
+                    'aspiredudd'.$context->instanceid,
+                    new pix_icon('i/stats', '')
+                );
                 $displayed = true;
             }
         }
@@ -122,7 +113,14 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
         if ($canview and !$displayed) {
             $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
-            $reportsnode->add(get_string('dropoutdetective', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredudd'.$context->instanceid, new pix_icon('i/stats', ''));
+            $reportsnode->add(
+                get_string('dropoutdetective', 'local_aspiredu'),
+                $url,
+                $nav::TYPE_CONTAINER,
+                null,
+                'aspiredudd'.$context->instanceid,
+                new pix_icon('i/stats', '')
+            );
         }
     }
 
@@ -135,7 +133,14 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'ii'));
-                $subbranch->add(get_string('instructorinsight', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspireduii'.$context->instanceid, new pix_icon('i/stats', ''));
+                $subbranch->add(
+                    get_string('instructorinsight', 'local_aspiredu'),
+                    $url,
+                    $nav::TYPE_CONTAINER,
+                    null, 
+                    'aspireduii'.$context->instanceid,
+                    new pix_icon('i/stats', '')
+                );
                 $displayed = true;
             }
         }
@@ -145,7 +150,14 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
                 $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             }
             $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'ii'));
-            $reportsnode->add(get_string('instructorinsight', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspireduii'.$context->instanceid, new pix_icon('i/stats', ''));
+            $reportsnode->add(
+                get_string('instructorinsight', 'local_aspiredu'),
+                $url,
+                $nav::TYPE_CONTAINER,
+                null,
+                'aspireduii'.$context->instanceid,
+                new pix_icon('i/stats', '')
+            );
         }
     }
 }
