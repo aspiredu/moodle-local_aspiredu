@@ -137,7 +137,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
                     get_string('instructorinsight', 'local_aspiredu'),
                     $url,
                     $nav::TYPE_CONTAINER,
-                    null, 
+                    null,
                     'aspireduii'.$context->instanceid,
                     new pix_icon('i/stats', '')
                 );

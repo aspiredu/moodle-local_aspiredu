@@ -44,7 +44,7 @@ $string['instcourse'] = 'Only instructors with course';
 $string['showcoursesettings'] = 'Show AspirEDU specific course settings?';
 $string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
 $string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
-// Privacy
+// Privacy.
 $string['privacy:metadata:aspiredu_provider'] = 'The AspirEDU plugin provides user information and context to the AspirEDU servers.';
 $string['privacy:metadata:aspiredu_provider:courseid'] = 'The ID of the course the user is enrolled.';
 $string['privacy:metadata:aspiredu_provider:discussionid'] = 'The ID of the discussion the user has participated.';

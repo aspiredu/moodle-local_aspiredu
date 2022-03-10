@@ -418,10 +418,10 @@ if (!function_exists("groups_get_my_groups")) {
     function groups_get_my_groups() {
         global $DB, $USER;
         return $DB->get_records_sql("SELECT *
-                                       FROM {groups_members} gm
-                                       JOIN {groups} g
-                                        ON g.id = gm.groupid
-                                      WHERE gm.userid = ?
+                                           FROM {groups_members} gm
+                                           JOIN {groups} g
+                                             ON g.id = gm.groupid
+                                          WHERE gm.userid = ?
                                        ORDER BY name ASC", array($USER->id));
     }
 }

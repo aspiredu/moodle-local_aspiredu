@@ -1949,7 +1949,8 @@ class local_aspiredu_external extends external_api {
                             $editorfieldinfo = array(
                                 'name' => $name,
                                 'description' => $description,
-                                'text' => format_text($submissionplugin->get_editor_text($name, $submissionrecord->id), $textformat),
+                                'text' => format_text($submissionplugin->get_editor_text($name, $submissionrecord->id),
+                                    $textformat),
                                 'format' => $textformat
                             );
                             $plugin['editorfields'][] = $editorfieldinfo;
@@ -2406,25 +2407,25 @@ class local_aspiredu_external extends external_api {
         $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
         require_capability('moodle/grade:viewall', $coursecontext);
 
-        $gradeItem = grade_item::fetch_course_item($courseid);
+        $gradeitem = grade_item::fetch_course_item($courseid);
 
-        if ($gradeItem->needsupdate) {
+        if ($gradeitem->needsupdate) {
             grade_regrade_final_grades($courseid);
         }
 
         $item = new stdClass();
-        $item->scaleid    = $gradeItem->scaleid;
-        $item->name       = $gradeItem->get_name();
-        $item->grademin   = $gradeItem->grademin;
-        $item->grademax   = $gradeItem->grademax;
-        $item->gradepass  = $gradeItem->gradepass;
-        $item->locked     = $gradeItem->is_locked();
+        $item->scaleid    = $gradeitem->scaleid;
+        $item->name       = $gradeitem->get_name();
+        $item->grademin   = $gradeitem->grademin;
+        $item->grademax   = $gradeitem->grademax;
+        $item->gradepass  = $gradeitem->gradepass;
+        $item->locked     = $gradeitem->is_locked();
         $item->locked     = (empty($item->locked)) ? 0 : 1;
-        $item->hidden     = $gradeItem->is_hidden();
+        $item->hidden     = $gradeitem->is_hidden();
         $item->hidden     = (empty($item->hidden)) ? 0 : 1;
         $item->grades     = array();
 
-        switch ($gradeItem->gradetype) {
+        switch ($gradeitem->gradetype) {
             case GRADE_TYPE_NONE:
                 break;
 
@@ -2441,26 +2442,26 @@ class local_aspiredu_external extends external_api {
         }
 
         if ($userids) {
-            $gradeGrades = grade_grade::fetch_users_grades($gradeItem, $userids, true);
+            $gradegrades = grade_grade::fetch_users_grades($gradeitem, $userids, true);
             foreach ($userids as $userid) {
-                $gradeGrades[$userid]->gradeItem =& $gradeItem;
+                $gradegrades[$userid]->gradeItem =& $gradeitem;
 
                 $grade = new stdClass();
-                $grade->grade          = $gradeGrades[$userid]->finalgrade;
-                $grade->locked         = $gradeGrades[$userid]->is_locked();
-                $grade->hidden         = $gradeGrades[$userid]->is_hidden();
+                $grade->grade          = $gradegrades[$userid]->finalgrade;
+                $grade->locked         = $gradegrades[$userid]->is_locked();
+                $grade->hidden         = $gradegrades[$userid]->is_hidden();
                 $grade->locked         = (empty($grade->locked)) ? 0 : 1;
                 $grade->hidden         = (empty($grade->hidden)) ? 0 : 1;
-                $grade->overridden     = $gradeGrades[$userid]->overridden;
-                $grade->feedback       = $gradeGrades[$userid]->feedback;
-                $grade->feedbackformat = $gradeGrades[$userid]->feedbackformat;
-                $grade->usermodified   = $gradeGrades[$userid]->usermodified;
-                $grade->dategraded     = $gradeGrades[$userid]->get_dategraded();
-                $grade->datesubmitted  = $gradeGrades[$userid]->get_datesubmitted();
+                $grade->overridden     = $gradegrades[$userid]->overridden;
+                $grade->feedback       = $gradegrades[$userid]->feedback;
+                $grade->feedbackformat = $gradegrades[$userid]->feedbackformat;
+                $grade->usermodified   = $gradegrades[$userid]->usermodified;
+                $grade->dategraded     = $gradegrades[$userid]->get_dategraded();
+                $grade->datesubmitted  = $gradegrades[$userid]->get_datesubmitted();
                 $grade->grademax       = $item->grademax;
 
                 // Create text representation of grade.
-                if ($gradeItem->needsupdate) {
+                if ($gradeitem->needsupdate) {
                     $grade->grade          = false;
                     $grade->str_grade      = get_string('error');
                     $grade->str_long_grade = $grade->str_grade;
@@ -2472,22 +2473,22 @@ class local_aspiredu_external extends external_api {
                 } else {
 
                     // 2.8.7 and 2.9.1 onwards.
-                    if (method_exists($gradeGrades[$userid], 'get_grade_max')) {
-                        $gradeItem->grademax = $gradeGrades[$userid]->get_grade_max();
-                        $gradeItem->grademin = $gradeGrades[$userid]->get_grade_min();
+                    if (method_exists($gradegrades[$userid], 'get_grade_max')) {
+                        $gradeitem->grademax = $gradegrades[$userid]->get_grade_max();
+                        $gradeitem->grademin = $gradegrades[$userid]->get_grade_min();
                     }
 
-                    if (isset($gradeItem->grademax)) {
-                        $grade->grademax = $gradeItem->grademax;
+                    if (isset($gradeitem->grademax)) {
+                        $grade->grademax = $gradeitem->grademax;
                     }
 
-                    $grade->str_grade = grade_format_gradevalue($grade->grade, $gradeItem);
-                    if ($gradeItem->gradetype == GRADE_TYPE_SCALE or $gradeItem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
+                    $grade->str_grade = grade_format_gradevalue($grade->grade, $gradeitem);
+                    if ($gradeitem->gradetype == GRADE_TYPE_SCALE or $gradeitem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
                         $grade->str_long_grade = $grade->str_grade;
                     } else {
                         $a = new stdClass();
                         $a->grade = $grade->str_grade;
-                        $a->max   = grade_format_gradevalue($gradeItem->grademax, $gradeItem);
+                        $a->max   = grade_format_gradevalue($gradeitem->grademax, $gradeitem);
                         $grade->str_long_grade = get_string('gradelong', 'grades', $a);
                     }
                 }
