@@ -31,10 +31,10 @@ if ($hassiteconfig) {
     $ADMIN->add('localplugins', $settings);
 
     $settings->add(new admin_setting_configtext('local_aspiredu/dropoutdetectiveurl',
-        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_TEXT));
+        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_URL));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/instructorinsighturl',
-        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_TEXT));
+        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_URL));
 
     $settings->add(new admin_setting_configtext('local_aspiredu/key',
         get_string('key', 'local_aspiredu'), '', '', PARAM_TEXT));
