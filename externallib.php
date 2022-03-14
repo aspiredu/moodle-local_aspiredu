@@ -110,7 +110,7 @@ class local_aspiredu_external extends external_api {
         $itemtype = null;
         $itemmodule = null;
         if (!empty($params['component'])) {
-            list($itemtype, $itemmodule) = normalize_component($params['component']);
+            list($itemtype, $itemmodule) = \core_component::normalize_component($params['component']);
         }
 
         $cm = null;
@@ -148,7 +148,7 @@ class local_aspiredu_external extends external_api {
             // Make student feedback ready for output.
             foreach ($gradeitem->grades as $studentgrade) {
                 if (!empty($studentgrade->feedback)) {
-                    list($studentgrade->feedback, $categoryinfo->feedbackformat) =
+                    list($studentgrade->feedback, $studentgrade->feedbackformat) =
                         external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
                         $modulecm->id, $params['component'], 'feedback', null);
                 }
@@ -281,7 +281,7 @@ class local_aspiredu_external extends external_api {
      * @param  string $itemmodule   Item module
      * @param  int $iteminstance    Item instance
      * @param  int $itemnumber      Item number
-     * @return gradeItem           A gradeItem instance
+     * @return grade_item           A gradeItem instance
      */
     private static function core_grades_get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
                                                         $itemnumber = null) {
@@ -403,7 +403,7 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the parameters for mod_forum_get_forum_discussions_paginated.
      *
-     * @return external_external_function_parameters
+     * @return external_function_parameters
      * @since Moodle 2.5
      */
     public static function mod_forum_get_forum_discussions_paginated_parameters() {
@@ -522,7 +522,7 @@ class local_aspiredu_external extends external_api {
                 $user = new stdclass();
                 $user->id = $discussion->userid;
                 $user = username_load_fields_from_object($user, $discussion);
-                $discussion->userfullname = fullname($user, $canviewfullname);
+                $discussion->userfullname = fullname($user);
                 $discussion->userpictureurl = moodle_url::make_pluginfile_url(
                     context_user::instance($user->id)->id, 'user', 'icon', null, '/', 'f1');
                 // Fix the pluginfile.php link.
@@ -532,7 +532,7 @@ class local_aspiredu_external extends external_api {
                 $usermodified = new stdclass();
                 $usermodified->id = $discussion->usermodified;
                 $usermodified = username_load_fields_from_object($usermodified, $discussion, 'um');
-                $discussion->usermodifiedfullname = fullname($usermodified, $canviewfullname);
+                $discussion->usermodifiedfullname = fullname($usermodified);
                 $discussion->usermodifiedpictureurl = moodle_url::make_pluginfile_url(
                     context_user::instance($usermodified->id)->id, 'user', 'icon', null, '/', 'f1');
                 // Fix the pluginfile.php link.
@@ -557,8 +557,8 @@ class local_aspiredu_external extends external_api {
                             $discussion->attachments[] = array(
                                 'filename' => $filename,
                                 'mimetype' => $file->get_mimetype(),
-                                'fileurl'  => file_encode_url($CFG->wwwroot.'/webservice/pluginfile.php',
-                                                '/'.$modcontext->id.'/mod_forum/attachment/'.$discussion->id.'/'.$filename)
+                                'fileurl' => \moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
+                                    'attachment', $discussion->id, '/', $filename),
                             );
                         }
                     }
@@ -635,7 +635,7 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the parameters for get_forum_discussion_posts.
      *
-     * @return external_external_function_parameters
+     * @return external_function_parameters
      * @since Moodle 2.7
      */
     public static function mod_forum_get_forum_discussion_posts_parameters() {
@@ -776,8 +776,8 @@ class local_aspiredu_external extends external_api {
                         $post->attachments[] = array(
                             'filename' => $filename,
                             'mimetype' => $file->get_mimetype(),
-                            'fileurl'  => file_encode_url($CFG->wwwroot.'/webservice/pluginfile.php',
-                                            '/'.$modcontext->id.'/mod_forum/attachment/'.$post->id.'/'.$filename)
+                            'fileurl' => \moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
+                                'attachment', $post->id, '/', $filename),
                         );
                     }
                 }
@@ -843,14 +843,14 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the parameters for get_forum.
      *
-     * @return external_external_function_parameters
+     * @return external_function_parameters
      * @since Moodle 2.5
      */
     public static function mod_forum_get_forums_by_courses_parameters() {
         return new external_function_parameters (
             array(
                 'courseids' => new external_multiple_structure(new external_value(PARAM_INT, 'course ID',
-                        '', VALUE_REQUIRED, '', NULL_NOT_ALLOWED), 'Array of Course IDs', VALUE_DEFAULT, array()),
+                    VALUE_REQUIRED, '', NULL_NOT_ALLOWED), 'Array of Course IDs', VALUE_DEFAULT, array()),
             )
         );
     }
@@ -929,7 +929,7 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the get_forum return value.
      *
-     * @return external_single_structure
+     * @return external_multiple_structure
      * @since Moodle 2.5
      */
     public static function mod_forum_get_forums_by_courses_returns() {
@@ -1072,7 +1072,7 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the parameters for get_grades_table.
      *
-     * @return external_external_function_parameters
+     * @return external_function_parameters
      * @since Moodle 2.8
      */
     public static function gradereport_user_get_grades_table_parameters() {
@@ -1597,7 +1597,7 @@ class local_aspiredu_external extends external_api {
      * @param array $courseids An optional array of course ids. If provided only assignments within the given course
      * will be returned. If the user is not enrolled in a given course a warning will be generated and returned.
      * @param array $capabilities An array of additional capability checks you wish to be made on the course context.
-     * @return An array of courses and warnings.
+     * @return array An array of courses and warnings.
      * @since  Moodle 2.4
      */
     public static function mod_assign_get_assignments($courseids = array(), $capabilities = array()) {
@@ -1815,7 +1815,7 @@ class local_aspiredu_external extends external_api {
     /**
      * Describes the parameters for get_submissions
      *
-     * @return external_external_function_parameters
+     * @return external_function_parameters
      * @since Moodle 2.5
      */
     public static function mod_assign_get_submissions_parameters() {
@@ -2389,7 +2389,7 @@ class local_aspiredu_external extends external_api {
      *
      * @param  int $courseid        Course id
      * @param  array  $userids      Array of user ids
-     * @return array                Array of grades
+     * @return stdClass             Array of grades
      */
     public static function core_grades_get_course_grades($courseid, $userids = array()) {
         global $CFG, $USER, $DB;
