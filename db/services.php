@@ -75,14 +75,6 @@ $functions = array(
         'type'          => 'read',
         'capabilities'  => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ),
-    'local_aspiredu_core_get_legacy_logs' => array(
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'core_get_legacy_logs',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of log entries for the course and parameters specified using the legacy system.',
-        'type'          => 'read',
-        'capabilities'  => '',
-    ),
     'local_aspiredu_report_log_get_log_records' => array(
         'classname'     => 'local_aspiredu_external',
         'methodname'    => 'report_log_get_log_records',
@@ -160,7 +152,6 @@ $services = array(
             'local_aspiredu_gradereport_user_get_grades_table',
             'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_core_group_get_course_user_groups',
-            'local_aspiredu_core_get_legacy_logs',
             'local_aspiredu_report_log_get_log_records',
             'local_aspiredu_mod_assign_get_assignments',
             'local_aspiredu_mod_assign_get_submissions',
