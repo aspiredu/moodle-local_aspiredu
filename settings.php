@@ -27,45 +27,83 @@ defined('MOODLE_INTERNAL') || die;
 // Needs $hassiteconfig or there is error on login page.
 if ($hassiteconfig) {
 
-    $settings = new admin_settingpage('local_aspiredu', new lang_string('pluginname', 'local_aspiredu'));
+    $settings = new admin_settingpage(
+        'local_aspiredu',
+        new lang_string('pluginname', 'local_aspiredu', null, 'en')
+    );
     $ADMIN->add('localplugins', $settings);
 
-    $settings->add(new admin_setting_configtext('local_aspiredu/dropoutdetectiveurl',
-        get_string('dropoutdetectiveurl', 'local_aspiredu'), '', '', PARAM_URL));
+    $settings->add(new admin_setting_configtext(
+        'local_aspiredu/dropoutdetectiveurl',
+        new lang_string('dropoutdetectiveurl', 'local_aspiredu', null, 'en'),
+        '',
+        '',
+        PARAM_URL
+    ));
 
-    $settings->add(new admin_setting_configtext('local_aspiredu/instructorinsighturl',
-        get_string('instructorinsighturl', 'local_aspiredu'), '', '', PARAM_URL));
+    $settings->add(new admin_setting_configtext(
+        'local_aspiredu/instructorinsighturl',
+        new lang_string('instructorinsighturl', 'local_aspiredu', null, 'en'),
+        '',
+        '',
+        PARAM_URL
+    ));
 
-    $settings->add(new admin_setting_configtext('local_aspiredu/key',
-        get_string('key', 'local_aspiredu'), '', '', PARAM_TEXT));
+    $settings->add(new admin_setting_configtext(
+        'local_aspiredu/key',
+        new lang_string('key', 'local_aspiredu', null, 'en'),
+        '',
+        '',
+        PARAM_TEXT
+    ));
 
-    $settings->add(new admin_setting_configtext('local_aspiredu/secret',
-        get_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
+    $settings->add(new admin_setting_configtext(
+        'local_aspiredu/secret',
+        new lang_string('secret', 'local_aspiredu', null, 'en'),
+        '',
+        '',
+        PARAM_TEXT
+    ));
 
     $options = array(
-        0 => get_string('disabled', 'local_aspiredu'),
-        1 => get_string('adminacccourseinstcourse', 'local_aspiredu'),
-        2 => get_string('adminacccinstcourse', 'local_aspiredu'),
-        3 => get_string('admincourseinstcourse', 'local_aspiredu'),
-        4 => get_string('adminacccourse', 'local_aspiredu'),
-        5 => get_string('adminacc', 'local_aspiredu'),
-        6 => get_string('instcourse', 'local_aspiredu'),
+        0 => new lang_string('disabled', 'local_aspiredu', null, 'en'),
+        1 => new lang_string('adminacccourseinstcourse', 'local_aspiredu', null, 'en'),
+        2 => new lang_string('adminacccinstcourse', 'local_aspiredu', null, 'en'),
+        3 => new lang_string('admincourseinstcourse', 'local_aspiredu', null, 'en'),
+        4 => new lang_string('adminacccourse', 'local_aspiredu', null, 'en'),
+        5 => new lang_string('adminacc', 'local_aspiredu', null, 'en'),
+        6 => new lang_string('instcourse', 'local_aspiredu', null, 'en'),
     );
     $default = 1;
 
-    $settings->add(new admin_setting_configselect('local_aspiredu/dropoutdetectivelinks',
-        get_string('dropoutdetectivelinks', 'local_aspiredu'), '', $default, $options));
+    $settings->add(new admin_setting_configselect(
+        'local_aspiredu/dropoutdetectivelinks',
+        new lang_string('dropoutdetectivelinks', 'local_aspiredu', null, 'en'),
+        '',
+        $default,
+        $options
+    ));
 
-    $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
-        get_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
+    $settings->add(new admin_setting_configselect(
+        'local_aspiredu/instructorinsightlinks',
+        new lang_string('instructorinsightlinks', 'local_aspiredu', null, 'en'),
+        '',
+        $default,
+        $options
+    ));
 
 
     $default = 1;
     $options = array(
-        0 => get_string('no'),
-        1 => get_string('yes')
+        0 => new lang_string('no'),
+        1 => new lang_string('yes')
     );
-    $settings->add(new admin_setting_configselect('local_aspiredu/showcoursesettings',
-        get_string('showcoursesettings', 'local_aspiredu'), '', $default, $options));
+    $settings->add(new admin_setting_configselect(
+        'local_aspiredu/showcoursesettings',
+        new lang_string('showcoursesettings', 'local_aspiredu', null, 'en'),
+        '',
+        $default,
+        $options
+    ));
 
 }
