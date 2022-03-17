@@ -451,18 +451,3 @@ if (!function_exists("get_course")) {
         }
     }
 }
-
-if (!function_exists('get_course')) {
-
-    function get_course($courseid, $clone = true) {
-        global $DB, $COURSE, $SITE;
-        if (!empty($COURSE->id) && $COURSE->id == $courseid) {
-            return $clone ? clone($COURSE) : $COURSE;
-        } else if (!empty($SITE->id) && $SITE->id == $courseid) {
-            return $clone ? clone($SITE) : $SITE;
-        } else {
-            return $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-        }
-    }
-
-}
