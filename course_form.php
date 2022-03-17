@@ -30,8 +30,6 @@ class course_form extends moodleform {
 
     // Define the form.
     public function definition () {
-        global $USER, $CFG, $COURSE;
-
         $mform =& $this->_form;
 
         $mform->addElement('header', 'settingsheader', get_string('coursesettings', 'local_aspiredu'));
@@ -51,8 +49,6 @@ class course_form extends moodleform {
     }
 
     public function validation($data, $files) {
-        global $COURSE, $DB, $CFG;
-
         $errors = parent::validation($data, $files);
 
         if (!empty($data['courseenddate']) and $data['courseenddate'] < $data['coursestartdate']) {
