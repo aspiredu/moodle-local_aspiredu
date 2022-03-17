@@ -1003,8 +1003,8 @@ class local_aspiredu_external extends external_api {
         $userid = $params['userid'];
 
         // Validate course and user. get_course throws an exception if the course does not exists.
-        $course = get_course($courseid);
-        $user = core_user::get_user($userid, 'id', MUST_EXIST);
+        get_course($courseid);
+        core_user::get_user($userid, 'id', MUST_EXIST);
 
         // Security checks.
         $context = context_course::instance($courseid);
