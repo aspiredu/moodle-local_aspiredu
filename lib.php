@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
 define('LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE', 1);
 define('LOCAL_ASPIREDU_ADMINACCCINSTCOURSE', 2);
 define('LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE', 3);
