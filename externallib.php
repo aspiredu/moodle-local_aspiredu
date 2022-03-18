@@ -337,7 +337,7 @@ class local_aspiredu_external extends external_api {
                                         'overridden' => new external_value(
                                             PARAM_INT, '0 means not overridden, > 1 means overridden'),
                                         'feedback' => new external_value(
-                                            PARAM_CLEANHTML, 'Feedback from the grader'),
+                                            PARAM_RAW, 'Feedback from the grader'),
                                         'feedbackformat' => new external_value(
                                             PARAM_INT, 'The format of the feedback'),
                                         'usermodified' => new external_value(
@@ -351,7 +351,7 @@ class local_aspiredu_external extends external_api {
                                         'str_long_grade' => new external_value(
                                             PARAM_TEXT, 'A nicely formatted string representation of the grade'),
                                         'str_feedback' => new external_value(
-                                            PARAM_CLEANHTML, 'A formatted string representation of the feedback from the grader'),
+                                            PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
                                     )
                                 )
                             ),
@@ -380,7 +380,7 @@ class local_aspiredu_external extends external_api {
                                         'hidden' => new external_value(
                                             PARAM_INT, '0 means not hidden, 1 hidden, > 1 is a date to hide until'),
                                         'feedback' => new external_value(
-                                            PARAM_CLEANHTML, 'Feedback from the grader'),
+                                            PARAM_RAW, 'Feedback from the grader'),
                                         'feedbackformat' => new external_value(
                                             PARAM_INT, 'The feedback format'),
                                         'usermodified' => new external_value(
@@ -388,7 +388,7 @@ class local_aspiredu_external extends external_api {
                                         'str_grade' => new external_value(
                                             PARAM_TEXT, 'A string representation of the grade'),
                                         'str_feedback' => new external_value(
-                                            PARAM_CLEANHTML, 'A formatted string representation of the feedback from the grader'),
+                                            PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
                                     )
                                 )
                             ),
@@ -600,8 +600,8 @@ class local_aspiredu_external extends external_api {
                                 'created' => new external_value(PARAM_INT, 'Creation time'),
                                 'modified' => new external_value(PARAM_INT, 'Time modified'),
                                 'mailed' => new external_value(PARAM_INT, 'Mailed?'),
-                                'subject' => new external_value(PARAM_CLEANHTML, 'The post subject'),
-                                'message' => new external_value(PARAM_CLEANHTML, 'The post message'),
+                                'subject' => new external_value(PARAM_RAW, 'The post subject'),
+                                'message' => new external_value(PARAM_RAW, 'The post message'),
                                 'messageformat' => new external_format_value('message'),
                                 'messagetrust' => new external_value(PARAM_INT, 'Can we trust?'),
                                 'attachment' => new external_value(PARAM_TEXT, 'Has attachments?'),
@@ -811,8 +811,8 @@ class local_aspiredu_external extends external_api {
                                 'created' => new external_value(PARAM_INT, 'Creation time'),
                                 'modified' => new external_value(PARAM_INT, 'Time modified'),
                                 'mailed' => new external_value(PARAM_INT, 'Mailed?'),
-                                'subject' => new external_value(PARAM_CLEANHTML, 'The post subject'),
-                                'message' => new external_value(PARAM_CLEANHTML, 'The post message'),
+                                'subject' => new external_value(PARAM_RAW, 'The post subject'),
+                                'message' => new external_value(PARAM_RAW, 'The post message'),
                                 'messageformat' => new external_format_value('message'),
                                 'messagetrust' => new external_value(PARAM_INT, 'Can we trust?'),
                                 'attachment' => new external_value(PARAM_TEXT, 'Has attachments?'),
@@ -940,7 +940,7 @@ class local_aspiredu_external extends external_api {
                     'course' => new external_value(PARAM_TEXT, 'Course id'),
                     'type' => new external_value(PARAM_TEXT, 'The forum type'),
                     'name' => new external_value(PARAM_TEXT, 'Forum name'),
-                    'intro' => new external_value(PARAM_CLEANHTML, 'The forum intro'),
+                    'intro' => new external_value(PARAM_RAW, 'The forum intro'),
                     'introformat' => new external_format_value('intro'),
                     'assessed' => new external_value(PARAM_INT, 'Aggregate type'),
                     'assesstimestart' => new external_value(PARAM_INT, 'Assess start time'),
@@ -1058,7 +1058,7 @@ class local_aspiredu_external extends external_api {
                         array(
                             'id' => new external_value(PARAM_INT, 'group record id'),
                             'name' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
-                            'description' => new external_value(PARAM_CLEANHTML, 'group description text'),
+                            'description' => new external_value(PARAM_RAW, 'group description text'),
                             'descriptionformat' => new external_format_value('description')
                         )
                     )
@@ -1215,8 +1215,8 @@ class local_aspiredu_external extends external_api {
     private static function grades_table_column() {
         return array (
             'class'   => new external_value(PARAM_TEXT, 'class'),
-            'content' => new external_value(PARAM_TEXT, 'cell content'),
-            'headers' => new external_value(PARAM_TEXT, 'headers')
+            'content' => new external_value(PARAM_RAW, 'cell content'),
+            'headers' => new external_value(PARAM_RAW, 'headers')
         );
     }
 
@@ -1243,7 +1243,7 @@ class local_aspiredu_external extends external_api {
                                             array (
                                                 'class' => new external_value(PARAM_TEXT, 'file name'),
                                                 'colspan' => new external_value(PARAM_INT, 'mime type'),
-                                                'content'  => new external_value(PARAM_CLEANHTML, ''),
+                                                'content'  => new external_value(PARAM_RAW, ''),
                                                 'celltype'  => new external_value(PARAM_TEXT, ''),
                                                 'id'  => new external_value(PARAM_ALPHANUMEXT, '')
                                             ), 'The item returned data', VALUE_OPTIONAL
@@ -1911,7 +1911,7 @@ class local_aspiredu_external extends external_api {
                                                 array(
                                                     'name' => new external_value(PARAM_TEXT, 'field name'),
                                                     'description' => new external_value(PARAM_TEXT, 'field description'),
-                                                    'text' => new external_value(PARAM_CLEANHTML, 'field value'),
+                                                    'text' => new external_value(PARAM_RAW, 'field value'),
                                                     'format' => new external_format_value('text')
                                                 )
                                             )
@@ -2423,7 +2423,7 @@ class local_aspiredu_external extends external_api {
                             'overridden' => new external_value(
                                 PARAM_INT, '0 means not overridden, > 1 means overridden'),
                             'feedback' => new external_value(
-                                PARAM_CLEANHTML, 'Feedback from the grader'),
+                                PARAM_RAW, 'Feedback from the grader'),
                             'feedbackformat' => new external_value(
                                 PARAM_INT, 'The format of the feedback'),
                             'usermodified' => new external_value(
@@ -2437,7 +2437,7 @@ class local_aspiredu_external extends external_api {
                             'str_long_grade' => new external_value(
                                 PARAM_TEXT, 'A nicely formatted string representation of the grade'),
                             'str_feedback' => new external_value(
-                                PARAM_CLEANHTML, 'A formatted string representation of the feedback from the grader'),
+                                PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
                         )
                     ), 'user grades', VALUE_OPTIONAL
                 ),
