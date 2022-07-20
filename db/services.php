@@ -142,6 +142,13 @@ $functions = array(
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
     ],
+    'local_aspiredu_get_courses' => [
+            'classname' => 'local_aspiredu\external\get_courses',
+            'classpath' => '',
+            'description' => 'Return paginated courses details',
+            'type' => 'read',
+            'capabilities' => 'moodle/course:view, moodle/course:update, moodle/course:viewhiddencourses',
+    ],
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -179,7 +186,8 @@ $services = array(
             'local_aspiredu_core_course_get_course_module_from_instance',
             'local_aspiredu_core_grades_get_course_grades',
             'local_aspiredu_get_users_by_roles',
-            'local_aspiredu_get_users_by_capabilities'
+            'local_aspiredu_get_users_by_capabilities',
+            'local_aspiredu_get_courses',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,

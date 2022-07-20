@@ -103,4 +103,60 @@ class helper {
         $useridsset->close();
         return $users;
     }
+
+    /**
+     * Get list of courses paginated.
+     *
+     * @param array $options
+     * @param int $page
+     * @param int $perpage
+     * @return mixed
+     */
+    public static function get_courses(array $options = [], int $page = -1, int $perpage = 0): array {
+        global $DB;
+
+        $courseids = '';
+        if (!empty($options)) {
+            foreach ($options['ids'] as $courseid) {
+                $courseids .= $courseid . ',';
+            }
+
+            // Remove last comma.
+            if (strlen($courseids) > 1) {
+                $courseids = substr($courseids, 0, -1);
+            }
+        }
+        $filter = '';
+        if ($courseids !== '') {
+            $filter = " WHERE c.id IN ($courseids)";
+        }
+
+        $sql = "SELECT c.id
+                  FROM {course} c
+                 $filter";
+
+        $courses = $DB->get_records_sql($sql, [], $page * $perpage, $perpage);
+        return self::get_courses_external($courses);
+    }
+
+    /**
+     * Call get_courses external function.
+     *
+     * @param array $courses
+     * @return array
+     */
+    private static function get_courses_external(array $coursesset) {
+        $courseslist = [];
+
+        foreach ($coursesset as $courseindex => $course) {
+            $courseslist['ids'][] = $courseindex;
+        }
+
+        if (!empty($courseslist)) {
+            // Call external function.
+            return \core_course_external::get_courses($courseslist);
+        }
+
+        return [];
+    }
 }
