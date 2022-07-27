@@ -53,8 +53,9 @@ class get_courses extends external_api {
                                 except front page course.',
                         VALUE_OPTIONAL)
                     ], 'options - operator OR is used', VALUE_DEFAULT, []),
-                'page' => new external_value(PARAM_INT, 'current page', VALUE_DEFAULT, -1),
-                'perpage' => new external_value(PARAM_INT, 'items per page', VALUE_DEFAULT, 0),
+                'page' => new external_value(PARAM_INT, 'current page', VALUE_DEFAULT, 0),
+                'perpage' => new external_value(PARAM_INT, 'items per page', VALUE_DEFAULT, 100),
+                'sort' => new external_value(PARAM_TEXT, 'sort items by', VALUE_DEFAULT, 'id'),
             ]
         );
     }
@@ -67,15 +68,16 @@ class get_courses extends external_api {
      * @param int|null $perpage items per page
      * @return array of warnings and users
      */
-    public static function execute(array $options = [], ?int $page = -1, ?int $perpage = 0): array {
+    public static function execute(array $options = [], ?int $page = 0, ?int $perpage = 100, ?string $sort = 'id'): array {
 
         $params = external_api::validate_parameters(self::execute_parameters(), [
             'options' => $options,
             'page' => $page,
             'perpage' => $perpage,
+            'sort' => $sort,
         ]);
 
-        $coursesinfo = helper::get_courses($params['options'], $params['page'], $params['perpage']);
+        $coursesinfo = helper::get_courses($params['options'], $params['page'], $params['perpage'], $params['sort']);
 
         return $coursesinfo;
     }

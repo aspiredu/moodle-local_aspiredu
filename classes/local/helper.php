@@ -110,9 +110,10 @@ class helper {
      * @param array $options
      * @param int $page
      * @param int $perpage
+     * @param string $sort
      * @return mixed
      */
-    public static function get_courses(array $options = [], int $page = -1, int $perpage = 0): array {
+    public static function get_courses(array $options = [], int $page = 0, int $perpage = 100, string $sort = 'id'): array {
         global $DB;
 
         $courseids = '';
@@ -128,33 +129,33 @@ class helper {
         }
         $filter = '';
         if ($courseids !== '') {
-            $filter = " WHERE c.id IN ($courseids)";
+            $filter = "id IN ($courseids)";
         }
 
-        $sql = "SELECT c.id
-                  FROM {course} c
-                 $filter";
-
-        $courses = $DB->get_records_sql($sql, [], $page * $perpage, $perpage);
+        $courses = $DB->get_recordset_select('course', $filter, [], $sort, '*', $page * $perpage, $perpage);
         return self::get_courses_external($courses);
     }
 
     /**
      * Call get_courses external function.
      *
-     * @param array $courses
+     * @param \moodle_recordset $courses
      * @return array
      */
-    private static function get_courses_external(array $coursesset) {
+    private static function get_courses_external(\moodle_recordset $coursesset) {
         $courseslist = [];
 
         foreach ($coursesset as $courseindex => $course) {
-            $courseslist['ids'][] = $courseindex;
+            $coursesoption['ids'][] = $courseindex;
+            // Call external function.
+            $courseslist[$courseindex] = \core_course_external::get_courses($coursesoption)[0];
+            $coursesoption = [];
         }
 
+        $coursesset->close();
+
         if (!empty($courseslist)) {
-            // Call external function.
-            return \core_course_external::get_courses($courseslist);
+            return $courseslist;
         }
 
         return [];
