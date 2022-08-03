@@ -130,7 +130,7 @@ $functions = array(
     ),
     'local_aspiredu_get_users_by_roles' => [
         'classname'    => 'local_aspiredu\external\get_users_by_roles',
-        'methodname'  => '',
+        'methodname'  => 'execute',
         'classpath'    => '',
         'description'  => 'Return a list of users given a list of roles',
         'type'         => 'read',
@@ -138,7 +138,7 @@ $functions = array(
     ],
     'local_aspiredu_get_users_by_capabilities' => [
         'classname'    => 'local_aspiredu\external\get_users_by_capabilities',
-        'methodname'  => '',
+        'methodname'  => 'execute',
         'classpath'    => '',
         'description'  => 'Return a list of users given a list of capabilities',
         'type'         => 'read',
@@ -146,7 +146,7 @@ $functions = array(
     ],
     'local_aspiredu_get_courses' => [
             'classname' => 'local_aspiredu\external\get_courses',
-            'methodname'  => '',
+            'methodname'  => 'execute',
             'classpath' => '',
             'description' => 'Return paginated courses details',
             'type' => 'read',
