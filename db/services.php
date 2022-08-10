@@ -126,6 +126,14 @@ $functions = [
         'description' => 'Return the final course grade for the given users',
         'type' => 'read'
     ],
+    'local_aspiredu_get_plugin_info' => [
+        'classname' => 'local_aspiredu\external\get_plugin_info',
+        'methodname'  => 'execute',
+        'classpath' => '',
+        'description' => 'Fetch information regarding the AspirEDU plugin.',
+        'type' => 'read',
+        'capabilities' => '',
+    ],
 ];
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -163,6 +171,7 @@ $services = [
             'local_aspiredu_core_course_get_course_module',
             'local_aspiredu_core_course_get_course_module_from_instance',
             'local_aspiredu_core_grades_get_course_grades'
+            'local_aspiredu_get_plugin_info',
         ],
         'restrictedusers' => 1,
         'enabled' => 1,
