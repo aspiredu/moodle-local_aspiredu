@@ -145,12 +145,20 @@ $functions = array(
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
     ],
     'local_aspiredu_get_courses' => [
-            'classname' => 'local_aspiredu\external\get_courses',
-            'methodname'  => 'execute',
-            'classpath' => '',
-            'description' => 'Return paginated courses details',
-            'type' => 'read',
-            'capabilities' => 'moodle/course:view, moodle/course:update, moodle/course:viewhiddencourses',
+        'classname' => 'local_aspiredu\external\get_courses',
+        'methodname'  => 'execute',
+        'classpath' => '',
+        'description' => 'Return paginated courses details',
+        'type' => 'read',
+        'capabilities' => 'moodle/course:view, moodle/course:update, moodle/course:viewhiddencourses',
+    ],
+    'local_aspiredu_get_plugin_info' => [
+        'classname' => 'local_aspiredu\external\get_plugin_info',
+        'methodname'  => 'execute',
+        'classpath' => '',
+        'description' => 'Fetch information regarding the AspirEDU plugin.',
+        'type' => 'read',
+        'capabilities' => '',
     ],
 );
 
@@ -191,6 +199,7 @@ $services = array(
             'local_aspiredu_get_users_by_roles',
             'local_aspiredu_get_users_by_capabilities',
             'local_aspiredu_get_courses',
+            'local_aspiredu_get_plugin_info',
         ),
         'restrictedusers' => 1,
         'enabled' => 1,
