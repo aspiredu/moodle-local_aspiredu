@@ -59,8 +59,7 @@ class get_plugin_info extends external_api {
 
         return [
             'info' => array(
-                'release' => $plugin->release,
-                'version' => $plugin->version
+                'release' => $plugin->release
             ),
             'warnings' => $warnings
         ];
@@ -76,8 +75,7 @@ class get_plugin_info extends external_api {
             [
                 'info' => new external_single_structure(
                         array(
-                            'release' => new external_value(PARAM_TEXT, 'Plugin release'),
-                            'version' => new external_value(PARAM_INT, 'Plugin version'),
+                            'release' => new external_value(PARAM_TEXT, 'Plugin release')
                         )
                     ),
                 'warnings' => new external_warnings(),
