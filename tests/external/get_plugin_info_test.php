@@ -47,6 +47,6 @@ class get_plugin_info_test extends \externallib_advanced_testcase {
             get_plugin_info::execute()
         );
         $info = $response["info"];
-        $this->assertCount("4.0.0", $info["release"]);
+        $this->assertEquals("4.0.0", $info["release"]);
     }
 }
