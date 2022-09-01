@@ -58,9 +58,7 @@ class get_plugin_info extends external_api {
         $plugin = $pluginmanager->get_plugin_info('local_aspiredu');
 
         return [
-            'info' => array(
-                'release' => $plugin->release
-            ),
+            'release' => $plugin->release,
             'warnings' => $warnings
         ];
     }
@@ -73,11 +71,7 @@ class get_plugin_info extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'info' => new external_single_structure(
-                        array(
-                            'release' => new external_value(PARAM_TEXT, 'Plugin release')
-                        )
-                    ),
+                'release' => new external_value(PARAM_TEXT, 'Plugin release'),
                 'warnings' => new external_warnings(),
             ]
         );

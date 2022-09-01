@@ -46,7 +46,6 @@ class get_plugin_info_test extends \externallib_advanced_testcase {
             get_plugin_info::execute_returns(),
             get_plugin_info::execute()
         );
-        $info = $response["info"];
-        $this->assertEquals("4.0.0", $info["release"]);
+        $this->assertEquals("4.0.0", $response["release"]);
     }
 }
