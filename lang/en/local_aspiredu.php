@@ -56,3 +56,6 @@ $string['privacy:metadata:aspiredu_provider:fullname'] = 'The full name of the u
 $string['privacy:metadata:aspiredu_provider:lastname'] = 'The last name of the user.';
 $string['privacy:metadata:aspiredu_provider:userid'] = 'The ID of the user.';
 $string['privacy:metadata:aspiredu_provider:username'] = 'The username of the user.';
+// New for lti 1.3
+$string['instance'] = 'Tool instance id';
+$string['instancedesc'] = 'Must create one instance';

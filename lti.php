@@ -22,109 +22,54 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
-require_once($CFG->dirroot . '/mod/lti/OAuth.php');
+    require_once(dirname(__FILE__) . '/../../config.php');
 
-use moodle\mod\lti as lti;
+    global $CFG, $USER, $SITE, $PAGE, $OUTPUT;
 
-$id = required_param('id', PARAM_INT);
-$product = required_param('product', PARAM_ALPHA);
-
-if ($id == SITEID) {
-    $course = get_site();
-    $context = context_system::instance();
-    require_login();
-} else {
-    $course = get_course($id);
-    $context = context_course::instance($course->id);
-    require_login($course);
-}
+    require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
+    require_once($CFG->libdir.'/completionlib.php');
+    require_once($CFG->dirroot.'/mod/lti/lib.php');
+    require_once($CFG->dirroot.'/mod/lti/locallib.php');
 
 
-if ($product == 'dd') {
-    require_capability('local/aspiredu:viewdropoutdetective', $context);
-    $launchurl = get_config('local_aspiredu', 'dropoutdetectiveurl');
-} else {
-    require_capability('local/aspiredu:viewinstructorinsight', $context);
-    $launchurl = get_config('local_aspiredu', 'instructorinsighturl');
-}
+    $id = required_param('id', PARAM_INT);
+    $product = required_param('product', PARAM_ALPHA);
+    $instance = required_param('instance', PARAM_INT);
 
-$key = get_config('local_aspiredu', 'key');
-$secret = get_config('local_aspiredu', 'secret');
-
-// Ensure parameters set.
-if ($launchurl and $key and $secret) {
-
-    // Account level.
     if ($id == SITEID) {
-        $resourcelinkid = 0;
+        $course = get_site();
+        $context = context_system::instance();
+        require_login();
     } else {
-        // Course level.
-        $resourcelinkid = $course->id;
+        $course = get_course($id);
+        $context = context_course::instance($course->id);
+        require_login($course);
     }
 
-    $requestparams = array(
-        'resource_link_id' => $resourcelinkid,
-        'custom_moodle_course_id' => $resourcelinkid,
-        'resource_link_title' => $course->fullname,
-        'resource_link_description' => $course->summary,
-        'user_id' => $USER->id,
-        'custom_moodle_user_id' => $USER->id,
-        'roles' => 'urn:lti:instrole:ims/lis/Administrator',
-        'context_id' => 1,
-        'context_label' => $SITE->shortname,
-        'context_title' => $SITE->fullname,
-        'launch_presentation_locale' => current_language(),
-        'ext_lms' => 'moodle-2',
-        'tool_consumer_info_product_family_code' => 'moodle',
-        'tool_consumer_info_version' => get_config('local_aspiredu', 'version'),
-        'oauth_callback' => 'about:blank',
-        'lti_version' => 'LTI-1p0',
-        'lti_message_type' => 'basic-lti-launch-request',
-        'lis_person_name_given' => $USER->firstname,
-        'lis_person_name_family' => $USER->lastname,
-    );
+    if ($product == 'dd') {
+        require_capability('local/aspiredu:viewdropoutdetective', $context);
+        $launchurl = get_config('local_aspiredu', 'dropoutdetectiveurl');
+    } else {
+        require_capability('local/aspiredu:viewinstructorinsight', $context);
+        $launchurl = get_config('local_aspiredu', 'instructorinsighturl');
+    }
 
-    $hmacmethod = new lti\OAuthSignatureMethod_HMAC_SHA1();
-    $testconsumer = new lti\OAuthConsumer($key, $secret, null);
+    $lti = new stdClass();
+    $lti->instructorchoicesendname = 0;
+    $lti->instructorchoicesendemailaddr = 0;
+    $lti->instructorcustomparameters = 0;
+    $lti->instructorchoiceacceptgrades = 0;
+    $lti->instructorchoiceallowroster = 0;
 
-    // Sing request.
-    $accreq = lti\OAuthRequest::from_consumer_and_token($testconsumer, '', 'POST', $launchurl, $requestparams);
-    $accreq->sign_request($hmacmethod, $testconsumer, '');
-    $parms = $accreq->get_parameters();
-
-    $endpointurl = new moodle_url($launchurl);
-    $endpointparams = $endpointurl->params();
-    // Strip querystring params in endpoint url from $parms to avoid duplication.
-    if (!empty($endpointparams) && !empty($parms)) {
-        foreach (array_keys($endpointparams) as $paramname) {
-            if (isset($parms[$paramname])) {
-                unset($parms[$paramname]);
-            }
+    $config = lti_get_type_type_config($instance);
+    if ($config->lti_ltiversion === LTI_VERSION_1P3) {
+        if (!isset($SESSION->lti_initiatelogin_status)) {
+            echo lti_initiate_login($course->id, $id, $lti, $config);
+            exit;
+        } else {
+            unset($SESSION->lti_initiatelogin_status);
         }
     }
 
-    // Print form.
-    echo "<form action=\"".$launchurl."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" " .
-         "method=\"post\" encType=\"application/x-www-form-urlencoded\">\n";
-    // Contruct html for the launch parameters.
-    foreach ($parms as $key => $value) {
-        $key = htmlspecialchars($key);
-        $value = htmlspecialchars($value);
+    lti_launch_tool($lti);
 
-        echo "<input type=\"hidden\" name=\"";
-        echo $key;
-        echo "\" value=\"";
-        echo $value;
-        echo "\"/>\n";
-    }
-    echo "</form>\n";
-
-    echo " <script type=\"text/javascript\"> \n" .
-        "  //<![CDATA[ \n" .
-        "    document.ltiLaunchForm.submit(); \n" .
-        "  //]]> \n" .
-        " </script> \n";
-
-}

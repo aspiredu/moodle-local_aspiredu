@@ -68,4 +68,8 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configselect('local_aspiredu/showcoursesettings',
         new lang_string('showcoursesettings', 'local_aspiredu'), '', $default, $options));
 
+    $settings->add(new admin_setting_configtext('local_aspiredu/instance',
+        get_string('instance', 'local_aspiredu'),
+        get_string('instancedesc', 'local_aspiredu'), 0, PARAM_TEXT));
+
 }

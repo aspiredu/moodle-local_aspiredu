@@ -32,6 +32,11 @@ $product = required_param('product', PARAM_ALPHA);
 
 $course = get_course($id);
 $context = context_course::instance($course->id);
+$instance = get_config('local_aspiredu', 'instance');
+
+if(!(bool)$instance){
+    throw new coding_exception('Must create a instance');
+}
 
 require_login($course);
 
@@ -50,7 +55,8 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
-echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" src="lti.php?id='.$id.'&product='.$product.'">
+echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" 
+src="lti.php?id='.$id.'&product='.$product.'&instance='.$instance.'">
         </iframe>';
 
 echo $OUTPUT->footer();
