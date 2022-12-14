@@ -44,6 +44,10 @@ $string['instcourse'] = 'Only instructors with course';
 $string['showcoursesettings'] = 'Show AspirEDU specific course settings?';
 $string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
 $string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
+//
+$string['error:productparamunknown'] = 'The {$a} product param is unknown';
+$string['error:ltiversion1p3'] = 'The LTI version of the tool is not LTI 1.3';
+
 // Privacy.
 $string['privacy:metadata:aspiredu_provider'] = 'The AspirEDU plugin provides user information and context to the AspirEDU servers.';
 $string['privacy:metadata:aspiredu_provider:courseid'] = 'The ID of the course the user is enrolled.';
