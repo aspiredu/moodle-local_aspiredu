@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-    require_once(dirname(__DIR__) . '/../../config.php');
+    require_once(dirname(__DIR__) . '/../config.php');
 
     global $CFG, $USER, $SITE, $PAGE, $OUTPUT;
 
@@ -35,7 +35,7 @@
     $product = required_param('product', PARAM_ALPHA);
     $instance = required_param('instance', PARAM_INT);
     $launchurl = '';
-
+global $DB;
     if ($id == SITEID) {
         $course = get_site();
         $context = context_system::instance();
@@ -48,19 +48,19 @@
 
     //define launch url based on product
     if ($product === 'dd') {
-        require_capability('local/aspiredu:viewdropoutdetective', $context);
+//        require_capability('local/aspiredu:viewdropoutdetective', $context);
         $launchurl = get_config('local_aspiredu', 'dropoutdetectiveurl');
     } else if ($product === 'ii') {
-        require_capability('local/aspiredu:viewinstructorinsight', $context);
+//        require_capability('local/aspiredu:viewinstructorinsight', $context);
         $launchurl = get_config('local_aspiredu', 'instructorinsighturl');
     }else{
         //output with warning
         echo get_string('error:productparamunknown', 'local_aspiredu', $product);
         die();
     }
-
     if (!empty($launchurl)){
-        $lti = new stdClass();
+        $cm = get_coursemodule_from_id('lti', $id, 0, false, MUST_EXIST);
+        $lti = $DB->get_record('lti', array('id' => $cm->instance), '*', MUST_EXIST);
         $lti->instructorchoicesendname = 0;
         $lti->instructorchoicesendemailaddr = 0;
         $lti->instructorcustomparameters = 0;
@@ -85,7 +85,6 @@
         //set launch url based on product
         $lti->toolurl = $launchurl;
         $lti->securetoolurl = $launchurl;
-
         //launch tool
         lti_launch_tool($lti);
     }

@@ -25,8 +25,6 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
 
-use moodle\mod\lti as lti;
-
 $id = required_param('id', PARAM_INT);
 $product = required_param('product', PARAM_ALPHA);
 
@@ -45,17 +43,24 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 
 if ($product == 'dd') {
-    require_capability('local/aspiredu:viewdropoutdetective', $context);
+//    require_capability('local/aspiredu:viewdropoutdetective', $context);
+    $dropoutdetective = new moodle_url('/local/aspiredu/aspiredu.php',['id' => $id, 'product' => 'ii']);
+    $link = html_writer::link($dropoutdetective, 'Go to '.get_string('instructorinsight', 'local_aspiredu'));
     $pagetitle = get_string('dropoutdetective', 'local_aspiredu');
 } else {
-    require_capability('local/aspiredu:viewinstructorinsight', $context);
+//    require_capability('local/aspiredu:viewinstructorinsight', $context);
+    $instructorinsighturl = new moodle_url('/local/aspiredu/aspiredu.php',['id' => $id, 'product' => 'dd']);
+    $link = html_writer::link($instructorinsighturl, 'Go to '.get_string('dropoutdetective', 'local_aspiredu'));
+
     $pagetitle = get_string('instructorinsight', 'local_aspiredu');
 }
 $PAGE->set_title($pagetitle);
-$PAGE->set_heading($course->fullname);
+$PAGE->set_heading($pagetitle);
+
 echo $OUTPUT->header();
 
-echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" 
+echo $link.'
+<br><iframe id="contentframe" style="border: none" height="800px" width="100%" 
 src="lti.php?id='.$id.'&product='.$product.'&instance='.$instance.'">
         </iframe>';
 

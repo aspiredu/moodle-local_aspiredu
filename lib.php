@@ -162,3 +162,4 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
         }
     }
 }
+
