@@ -59,14 +59,40 @@ $functions = array(
         'type'          => 'read',
         'capabilities'  => 'mod/forum:viewdiscussion'
     ),
-    'local_aspiredu_mod_forum_get_forum_discussions_paginated' => array(
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_forum_get_forum_discussions_paginated',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of forum discussions contained within a given set of forums.',
+    'local_aspiredu_get_forums_by_courses_pag' => [
+        'classname'    => 'local_aspiredu\external\get_forums_by_courses_pag',
+        'methodname'  => 'execute',
+        'classpath'    => '',
+        'description'  => 'Returns a list of forum instances in a provided set of courses, if
+            no courses are provided then all the forum instances the user has access to will be
+            returned.',
+        'type'         => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion'
+    ],
+    'local_aspiredu_mod_forum_get_forum_discussion_posts_pag' => [
+        'classname'    => 'local_aspiredu\external\mod_forum_get_forum_discussion_posts_pag',
+        'methodname'  => 'execute',
+        'classpath'    => '',
+        'description'  => 'Returns a list of forum posts for a discussion.',
+        'type'         => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting'
+    ],
+    'local_aspiredu_course_get_contents_pag' => [
+        'classname'    => 'local_aspiredu\external\course_get_contents_pag',
+        'methodname'  => 'execute',
+        'classpath'    => '',
+        'description'  => 'Returns a list of forum posts for a discussion.',
+        'type'         => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting'
+    ],
+    'local_aspiredu_get_grades_pag' => [
+        'classname'    => 'local_aspiredu\external\get_grades_pag',
+        'methodname'  => 'execute',
+        'classpath'    => '',
+        'description'   => 'Returns grade item details and optionally student grades.',
         'type'          => 'read',
-        'capabilities'  => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
-    ),
+        'capabilities'  => 'moodle/grade:view, moodle/grade:viewall'
+    ],
     'local_aspiredu_mod_forum_get_forum_discussion_posts' => array(
         'classname'     => 'local_aspiredu_external',
         'methodname'    => 'mod_forum_get_forum_discussion_posts',
@@ -94,6 +120,12 @@ $functions = array(
         'classname'     => 'local_aspiredu_external',
         'methodname'    => 'mod_assign_get_submissions',
         'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns the submissions for assignments',
+        'type'          => 'read'
+    ),
+    'local_aspiredu_mod_assign_get_submissions_pag' => array(
+        'classname'     => 'local_aspiredu\external\mod_assign_get_submissions_pag',
+        'methodname'    => 'execute',
         'description'   => 'Returns the submissions for assignments',
         'type'          => 'read'
     ),
@@ -136,6 +168,13 @@ $functions = array(
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
     ],
+    'local_aspiredu_mod_assign_get_assignments_pag' => [
+        'classname'    => 'local_aspiredu\external\mod_assign_get_assignments_pag',
+        'methodname'  => 'execute',
+        'classpath'    => '',
+        'description'  => 'Returns the courses and assignments for the users capability',
+        'type'         => 'read'
+    ],
     'local_aspiredu_get_users_by_capabilities' => [
         'classname'    => 'local_aspiredu\external\get_users_by_capabilities',
         'methodname'  => 'execute',
@@ -175,8 +214,13 @@ $services = array(
             'gradereport_user_get_grade_items',
             'mod_forum_get_discussion_posts',
             'mod_forum_get_forum_discussions',
+            'mod_assign_get_assignments',
             'local_aspiredu_mod_forum_get_forums_by_courses',
-            'local_aspiredu_mod_forum_get_forum_discussions_paginated',
+            'local_aspiredu_get_forums_by_courses_pag',
+            'local_aspiredu_get_grades_pag',
+//            'local_aspiredu_mod_forum_get_forum_discussions_paginated',
+            'local_aspiredu_course_get_contents_pag',
+            'local_aspiredu_mod_forum_get_forum_discussion_posts_pag',
             'local_aspiredu_mod_forum_get_forum_discussion_posts',
             'local_aspiredu_gradereport_user_get_grades_table',
             'local_aspiredu_core_grades_get_grades',
@@ -184,6 +228,8 @@ $services = array(
             'local_aspiredu_report_log_get_log_records',
             'local_aspiredu_mod_assign_get_assignments',
             'local_aspiredu_mod_assign_get_submissions',
+            'local_aspiredu_mod_assign_get_submissions_pag',
+            'local_aspiredu_mod_assign_get_assignments_pag',
             'local_aspiredu_get_custom_course_settings',
             'local_aspiredu_core_course_get_course_module',
             'local_aspiredu_core_course_get_course_module_from_instance',

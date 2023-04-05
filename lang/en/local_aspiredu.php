@@ -44,6 +44,9 @@ $string['instcourse'] = 'Only instructors with course';
 $string['showcoursesettings'] = 'Show AspirEDU specific course settings?';
 $string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
 $string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
+$string['maxrecordsperpage'] = 'Maximum number of records per page';
+$string['maxrecordsperpagedesc'] = 'Maximum records that will be displayed in web service queries for each page.';
+
 //
 $string['error:productparamunknown'] = 'The {$a} product param is unknown';
 $string['error:ltiversion1p3'] = 'The LTI version of the tool is not LTI 1.3';

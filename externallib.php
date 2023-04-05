@@ -202,10 +202,11 @@ class local_aspiredu_external extends external_api {
                     $studentgrade->hidden = (!$studentgrade->hidden) ? 0 : $studentgrade->hidden;
                     $studentgrade->locked = (!$studentgrade->locked) ? 0 : $studentgrade->locked;
                     $studentgrade->overridden = (!$studentgrade->overridden) ? 0 : $studentgrade->overridden;
-
-                    $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
-                    // Add the student ID as some WS clients can't access the array key.
-                    $gradeitemarray['grades'][$studentid]['userid'] = $studentid;
+                    if($studentgrade->grade !== null){
+                        $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
+                        // Add the student ID as some WS clients can't access the array key.
+                        $gradeitemarray['grades'][$studentid]['userid'] = $studentid;
+                    }
                 }
             }
 
@@ -1794,7 +1795,8 @@ class local_aspiredu_external extends external_api {
                 $fs = get_file_storage();
                 foreach ($submissionrecords as $submissionrecord) {
                     $submission = array(
-                        'id' => $submissionrecord->id,
+                        'submissionid' => $submissionrecord->id,
+                        'assignmentid' => $assign->get_instance()->id,
                         'userid' => $submissionrecord->userid,
                         'timecreated' => $submissionrecord->timecreated,
                         'timemodified' => $submissionrecord->timemodified,
@@ -1878,7 +1880,8 @@ class local_aspiredu_external extends external_api {
                 'submissions' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id' => new external_value(PARAM_INT, 'submission id'),
+                            'submissionid' => new external_value(PARAM_INT, 'submission id'),
+                            'assignmentid' => new external_value(PARAM_INT, 'assignment id'),
                             'userid' => new external_value(PARAM_INT, 'student id'),
                             'timecreated' => new external_value(PARAM_INT, 'submission creation time'),
                             'timemodified' => new external_value(PARAM_INT, 'submission last modified time'),

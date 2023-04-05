@@ -72,4 +72,7 @@ if ($hassiteconfig) {
         get_string('instance', 'local_aspiredu'),
         get_string('instancedesc', 'local_aspiredu'), 0, PARAM_TEXT));
 
+    $settings->add(new admin_setting_configtext('local_aspiredu/maxrecordsperpage',
+        new lang_string('maxrecordsperpage','local_aspiredu'),
+        new lang_string('maxrecordsperpagedesc','local_aspiredu'), 100, PARAM_INT));
 }

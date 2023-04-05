@@ -43,12 +43,12 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 
 if ($product == 'dd') {
-//    require_capability('local/aspiredu:viewdropoutdetective', $context);
+    require_capability('local/aspiredu:viewdropoutdetective', $context);
     $dropoutdetective = new moodle_url('/local/aspiredu/aspiredu.php',['id' => $id, 'product' => 'ii']);
     $link = html_writer::link($dropoutdetective, 'Go to '.get_string('instructorinsight', 'local_aspiredu'));
     $pagetitle = get_string('dropoutdetective', 'local_aspiredu');
 } else {
-//    require_capability('local/aspiredu:viewinstructorinsight', $context);
+    require_capability('local/aspiredu:viewinstructorinsight', $context);
     $instructorinsighturl = new moodle_url('/local/aspiredu/aspiredu.php',['id' => $id, 'product' => 'dd']);
     $link = html_writer::link($instructorinsighturl, 'Go to '.get_string('dropoutdetective', 'local_aspiredu'));
 

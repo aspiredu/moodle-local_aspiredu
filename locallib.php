@@ -102,6 +102,7 @@ function local_aspiredu_grade_get_grades(
                 } else {
                     $userids = array($useridorids);
                 }
+
                 if ($userids) {
                     $gradegrades = grade_grade::fetch_users_grades($gradeitem, $userids, true);
                     foreach ($userids as $userid) {
