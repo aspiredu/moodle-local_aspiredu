@@ -93,7 +93,7 @@ class local_aspiredu_external extends external_api {
         } else if ($course->showgrades && count($params['userids']) == 1) {
             // Course showgrades == students/parents can access grades.
 
-            if ($params['userids'][0] == $USER->id and has_capability('moodle/grade:view', $coursecontext)) {
+            if ($params['userids'][0] == $USER->id && has_capability('moodle/grade:view', $coursecontext)) {
                 // Student can view their own grades in this course.
                 $access = true;
 
@@ -164,7 +164,7 @@ class local_aspiredu_external extends external_api {
 
         foreach ($grades->items as $gradeitem) {
             // Avoid to process manual or category items (they are going to fail).
-            if ($gradeitem->itemtype != 'course' and $gradeitem->itemtype != 'mod') {
+            if ($gradeitem->itemtype != 'course' && $gradeitem->itemtype != 'mod') {
                 continue;
             }
             // Switch the stdClass instance for a grade item instance so we can call is_hidden() and use the ID.
@@ -1136,10 +1136,10 @@ class local_aspiredu_external extends external_api {
         if (has_capability('moodle/grade:viewall', $context)) {
             // Can view all course grades.
             $access = true;
-        } else if ($userid == $USER->id and has_capability('moodle/grade:view', $context) and $course->showgrades) {
+        } else if ($userid == $USER->id && has_capability('moodle/grade:view', $context) && $course->showgrades) {
             // View own grades.
             $access = true;
-        } else if (has_capability('moodle/grade:viewall', context_user::instance($userid)) and $course->showgrades) {
+        } else if (has_capability('moodle/grade:viewall', context_user::instance($userid)) && $course->showgrades) {
             // Can view grades of this user, parent most probably.
             $access = true;
         }
@@ -1349,7 +1349,7 @@ class local_aspiredu_external extends external_api {
             $params['edulevel'] = -1;
         }
 
-        if ($params['order'] != 'ASC' and $params['order'] != 'DESC') {
+        if ($params['order'] != 'ASC' && $params['order'] != 'DESC') {
             throw new invalid_parameter_exception('Invalid order parameter');
         }
 
@@ -2165,22 +2165,19 @@ class local_aspiredu_external extends external_api {
         }
 
         if ($page != -1) {
-            $limitfrom = $page*$perpage;
+            $limitfrom = $page * $perpage;
             $limitnum  = $perpage;
         } else {
             $limitfrom = 0;
             $limitnum  = 0;
         }
-        
         $sort = $sortby . ' ' . $sortdirection;
+
         $courses = $DB->get_records('course', null, $sort, '*', $limitfrom, $limitnum);
 
-        //create return value
         $coursesinfo = array();
         foreach ($courses as $course) {
-
-        
-            // now security checks
+            // Now security checks.
             $context = context_course::instance($course->id, IGNORE_MISSING);
             $courseformatoptions = course_get_format($course)->get_format_options();
             try {
@@ -2209,7 +2206,7 @@ class local_aspiredu_external extends external_api {
             $courseinfo['showactivitydates'] = $course->showactivitydates;
             $courseinfo['showcompletionconditions'] = $course->showcompletionconditions;
             if (array_key_exists('numsections', $courseformatoptions)) {
-                // For backward-compartibility
+                // For backward-compatibility.
                 $courseinfo['numsections'] = $courseformatoptions['numsections'];
             }
 
@@ -2227,7 +2224,7 @@ class local_aspiredu_external extends external_api {
                 }
             }
 
-            //some field should be returned only if the user has update permission
+            // Some fields should be returned only if the user has update permission.
             $courseadmin = has_capability('moodle/course:update', $context);
             if ($courseadmin) {
                 $courseinfo['categorysortorder'] = $course->sortorder;
@@ -2238,7 +2235,7 @@ class local_aspiredu_external extends external_api {
                 $courseinfo['visible'] = $course->visible;
                 $courseinfo['maxbytes'] = $course->maxbytes;
                 if (array_key_exists('hiddensections', $courseformatoptions)) {
-                    // For backward-compartibility
+                    // For backward-compatibility.
                     $courseinfo['hiddensections'] = $courseformatoptions['hiddensections'];
                 }
                 // Return numsections for backward-compatibility with clients who expect it.
@@ -2261,8 +2258,8 @@ class local_aspiredu_external extends external_api {
                 }
             }
 
-            if ($courseadmin or $course->visible
-                    or has_capability('moodle/course:viewhiddencourses', $context)) {
+            if ($courseadmin || $course->visible
+                    || has_capability('moodle/course:viewhiddencourses', $context)) {
                 $coursesinfo[] = $courseinfo;
             }
         }
@@ -2317,7 +2314,8 @@ class local_aspiredu_external extends external_api {
                                 'visible' => new external_value(PARAM_INT,
                                         '1: available to student, 0:not available', VALUE_OPTIONAL),
                                 'hiddensections' => new external_value(PARAM_INT,
-                                        '(deprecated, use courseformatoptions) How the hidden sections in the course are displayed to students',
+                                        '(deprecated, use courseformatoptions) How the hidden
+                                        sections in the course are displayed to students',
                                         VALUE_OPTIONAL),
                                 'groupmode' => new external_value(PARAM_INT, 'no group, separate, visible',
                                         VALUE_OPTIONAL),
@@ -2345,7 +2343,8 @@ class local_aspiredu_external extends external_api {
                                             'value' => new external_value(PARAM_RAW, 'course format option value')
                                     )), 'additional options for particular course format', VALUE_OPTIONAL
                                  ),
-                                'showactivitydates' => new external_value(PARAM_BOOL, 'Whether the activity dates are shown or not'),
+                                'showactivitydates' => new external_value(
+                                    PARAM_BOOL, 'Whether the activity dates are shown or not'),
                                 'showcompletionconditions' => new external_value(PARAM_BOOL,
                                     'Whether the activity completion conditions are shown or not'),
                                 'customfields' => new external_multiple_structure(
@@ -2686,7 +2685,7 @@ class local_aspiredu_external extends external_api {
                     }
 
                     $grade->str_grade = grade_format_gradevalue($grade->grade, $gradeitem);
-                    if ($gradeitem->gradetype == GRADE_TYPE_SCALE or $gradeitem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
+                    if ($gradeitem->gradetype == GRADE_TYPE_SCALE || $gradeitem->get_displaytype() != GRADE_DISPLAY_TYPE_REAL) {
                         $grade->str_long_grade = $grade->str_grade;
                     } else {
                         $a = new stdClass();
