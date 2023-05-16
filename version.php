@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2022031800;
+$plugin->version  = 2023051700;
 // Version 3.8.
 $plugin->requires = 2019111809;
 $plugin->component = 'local_aspiredu';
-$plugin->release = '4.0.0';
+$plugin->release = '4.0.1';
 $plugin->maturity = MATURITY_STABLE;
