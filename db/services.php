@@ -118,7 +118,14 @@ $functions = array(
         'description'   => 'Get all custom course settings',
         'type'          => 'read'
     ),
-
+    'local_aspiredu_core_course_get_courses_paginated' => array(
+        'classname'     => 'local_aspiredu_external',
+        'methodname'    => 'core_course_get_courses_paginated',
+        'classpath'     => 'local/aspiredu/externallib.php',
+        'description'   => 'Returns a paginated list of courses.',
+        'type'          => 'read',
+        'capabilities'  => 'moodle/course:view, moodle/course:viewhiddencourses',
+    ),
     'local_aspiredu_core_course_get_course_module' => array(
         'classname'   => 'local_aspiredu_external',
         'methodname'  => 'core_course_get_course_module',
@@ -172,6 +179,7 @@ $services = array(
             'local_aspiredu_mod_assign_get_assignments',
             'local_aspiredu_mod_assign_get_submissions',
             'local_aspiredu_get_custom_course_settings',
+            'local_aspiredu_core_course_get_courses_paginated',
             'local_aspiredu_core_course_get_course_module',
             'local_aspiredu_core_course_get_course_module_from_instance',
             'local_aspiredu_core_grades_get_course_grades'
