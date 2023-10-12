@@ -23,7 +23,6 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
 
 use moodle\mod\lti as lti;
 
