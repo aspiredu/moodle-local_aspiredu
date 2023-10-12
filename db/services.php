@@ -105,9 +105,8 @@ $functions = [
         'type' => 'read'
     ],
     'local_aspiredu_core_course_get_courses_paginated' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_course_get_courses_paginated',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => '\local_aspiredu\external\core_course_get_courses_paginated',
+        'methodname' => 'execute',
         'description' => 'Returns a paginated list of courses.',
         'type' => 'read',
         'capabilities' => 'moodle/course:view, moodle/course:viewhiddencourses',
