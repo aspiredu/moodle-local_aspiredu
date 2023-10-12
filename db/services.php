@@ -113,9 +113,9 @@ $functions = [
         'capabilities' => 'moodle/course:view, moodle/course:viewhiddencourses',
     ],
     'local_aspiredu_core_course_get_course_module' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_course_get_course_module',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'core_course_external',
+        'methodname' => 'get_course_module',
+        'classpath' => 'course/externallib.php',
         'description' => 'Return information about a course module',
         'type' => 'read'
     ],
