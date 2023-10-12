@@ -100,17 +100,6 @@ class core_course_get_courses_paginated extends external_api {
             // Now security checks.
             $context = context_course::instance($course->id, IGNORE_MISSING);
             $courseformatoptions = course_get_format($course)->get_format_options();
-            try {
-                self::validate_context($context);
-            } catch (Exception $e) {
-                $exceptionparam = new stdClass();
-                $exceptionparam->message = $e->getMessage();
-                $exceptionparam->courseid = $course->id;
-                throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
-            }
-            if ($course->id != SITEID) {
-                require_capability('moodle/course:view', $context);
-            }
 
             $courseinfo = [];
             $courseinfo['id'] = $course->id;
@@ -145,8 +134,7 @@ class core_course_get_courses_paginated extends external_api {
             }
 
             // Some fields should be returned only if the user has update permission.
-            $courseadmin = has_capability('moodle/course:update', $context);
-            if ($courseadmin) {
+            if (has_capability('moodle/course:update', $context)) {
                 $courseinfo['categorysortorder'] = $course->sortorder;
                 $courseinfo['idnumber'] = $course->idnumber;
                 $courseinfo['showgrades'] = $course->showgrades;
@@ -178,10 +166,7 @@ class core_course_get_courses_paginated extends external_api {
                 }
             }
 
-            if ($courseadmin || $course->visible
-                || has_capability('moodle/course:viewhiddencourses', $context)) {
-                $coursesinfo[] = $courseinfo;
-            }
+            $coursesinfo[] = $courseinfo;
         }
 
         $result = [];
