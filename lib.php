@@ -36,8 +36,8 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
 
     $contextsystem = context_system::instance();
     $isadmin = has_capability('moodle/site:config', $contextsystem) ||
-                has_capability('local/aspiredu:viewdropoutdetective', $contextsystem) ||
-                has_capability('local/aspiredu:viewinstructorinsight', $contextsystem);
+        has_capability('local/aspiredu:viewdropoutdetective', $contextsystem) ||
+        has_capability('local/aspiredu:viewinstructorinsight', $contextsystem);
 
     if (!$settings) {
         return false;
@@ -70,8 +70,8 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
 /**
  * Display the AspirEdu settings in the course settings block
  *
- * @param  settings_navigation $nav     The settings navigatin object
- * @param  context            $context Course context
+ * @param settings_navigation $nav The settings navigatin object
+ * @param context $context Course context
  */
 function local_aspiredu_extend_settings_navigation(settings_navigation $nav, context $context) {
     global $COURSE;
@@ -79,11 +79,11 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
     $showcoursesettings = get_config('local_aspiredu', 'showcoursesettings');
 
     if ($showcoursesettings and $context->contextlevel >= CONTEXT_COURSE and
-            ($branch = $nav->get('courseadmin')) and has_capability('moodle/course:update', $context)) {
+        ($branch = $nav->get('courseadmin')) and has_capability('moodle/course:update', $context)) {
 
         $url = new moodle_url('/local/aspiredu/course.php', ['id' => $context->instanceid]);
         $branch->add(
-            get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
+            get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu' . $context->instanceid);
     }
 
     $dropoutdetectivelinks = get_config('local_aspiredu', 'dropoutdetectivelinks');
@@ -104,7 +104,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
                     $url,
                     $nav::TYPE_CONTAINER,
                     null,
-                    'aspiredudd'.$context->instanceid,
+                    'aspiredudd' . $context->instanceid,
                     new pix_icon('i/stats', '')
                 );
                 $displayed = true;
@@ -119,7 +119,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
                 $url,
                 $nav::TYPE_CONTAINER,
                 null,
-                'aspiredudd'.$context->instanceid,
+                'aspiredudd' . $context->instanceid,
                 new pix_icon('i/stats', '')
             );
         }
@@ -139,7 +139,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
                     $url,
                     $nav::TYPE_CONTAINER,
                     null,
-                    'aspireduii'.$context->instanceid,
+                    'aspireduii' . $context->instanceid,
                     new pix_icon('i/stats', '')
                 );
                 $displayed = true;
@@ -156,7 +156,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
                 $url,
                 $nav::TYPE_CONTAINER,
                 null,
-                'aspireduii'.$context->instanceid,
+                'aspireduii' . $context->instanceid,
                 new pix_icon('i/stats', '')
             );
         }

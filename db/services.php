@@ -26,114 +26,114 @@ defined('MOODLE_INTERNAL') || die;
 
 $functions = [
     'local_aspiredu_core_grades_get_grades' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'core_grades_get_grades',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns grade item details and optionally student grades.',
-        'type'          => 'read',
-        'capabilities'  => 'moodle/grade:view, moodle/grade:viewall',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_grades_get_grades',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns grade item details and optionally student grades.',
+        'type' => 'read',
+        'capabilities' => 'moodle/grade:view, moodle/grade:viewall',
     ],
     'local_aspiredu_core_group_get_course_user_groups' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'core_group_get_course_user_groups',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns all groups in specified course for the specified user.',
-        'type'          => 'read',
-        'capabilities'  => 'moodle/course:managegroups',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_group_get_course_user_groups',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns all groups in specified course for the specified user.',
+        'type' => 'read',
+        'capabilities' => 'moodle/course:managegroups',
     ],
     'local_aspiredu_gradereport_user_get_grades_table' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'gradereport_user_get_grades_table',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Get the user/s report grades table for a course',
-        'type'          => 'read',
-        'capabilities'  => '',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'gradereport_user_get_grades_table',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Get the user/s report grades table for a course',
+        'type' => 'read',
+        'capabilities' => '',
     ],
     'local_aspiredu_mod_forum_get_forums_by_courses' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_forum_get_forums_by_courses',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of forum instances in a provided set of courses, if
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'mod_forum_get_forums_by_courses',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns a list of forum instances in a provided set of courses, if
             no courses are provided then all the forum instances the user has access to will be
             returned.',
-        'type'          => 'read',
-        'capabilities'  => 'mod/forum:viewdiscussion'
+        'type' => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion'
     ],
     'local_aspiredu_mod_forum_get_forum_discussions_paginated' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_forum_get_forum_discussions_paginated',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of forum discussions contained within a given set of forums.',
-        'type'          => 'read',
-        'capabilities'  => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'mod_forum_get_forum_discussions_paginated',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns a list of forum discussions contained within a given set of forums.',
+        'type' => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ],
     'local_aspiredu_mod_forum_get_forum_discussion_posts' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_forum_get_forum_discussion_posts',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of forum posts for a discussion.',
-        'type'          => 'read',
-        'capabilities'  => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'mod_forum_get_forum_discussion_posts',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns a list of forum posts for a discussion.',
+        'type' => 'read',
+        'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ],
     'local_aspiredu_report_log_get_log_records' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'report_log_get_log_records',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a list of log entries for the course and parameters specified using the new log system.',
-        'type'          => 'read',
-        'capabilities'  => '',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'report_log_get_log_records',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns a list of log entries for the course and parameters specified using the new log system.',
+        'type' => 'read',
+        'capabilities' => '',
     ],
     'local_aspiredu_mod_assign_get_assignments' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_assign_get_assignments',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns the submissions for assignments',
-        'type'          => 'read'
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'mod_assign_get_assignments',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns the submissions for assignments',
+        'type' => 'read'
     ],
     'local_aspiredu_mod_assign_get_submissions' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'mod_assign_get_submissions',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns the submissions for assignments',
-        'type'          => 'read'
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'mod_assign_get_submissions',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns the submissions for assignments',
+        'type' => 'read'
     ],
     'local_aspiredu_get_custom_course_settings' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'get_custom_course_settings',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Get all custom course settings',
-        'type'          => 'read'
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'get_custom_course_settings',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Get all custom course settings',
+        'type' => 'read'
     ],
     'local_aspiredu_core_course_get_courses_paginated' => [
-        'classname'     => 'local_aspiredu_external',
-        'methodname'    => 'core_course_get_courses_paginated',
-        'classpath'     => 'local/aspiredu/externallib.php',
-        'description'   => 'Returns a paginated list of courses.',
-        'type'          => 'read',
-        'capabilities'  => 'moodle/course:view, moodle/course:viewhiddencourses',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_course_get_courses_paginated',
+        'classpath' => 'local/aspiredu/externallib.php',
+        'description' => 'Returns a paginated list of courses.',
+        'type' => 'read',
+        'capabilities' => 'moodle/course:view, moodle/course:viewhiddencourses',
     ],
     'local_aspiredu_core_course_get_course_module' => [
-        'classname'   => 'local_aspiredu_external',
-        'methodname'  => 'core_course_get_course_module',
-        'classpath'   => 'local/aspiredu/externallib.php',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_course_get_course_module',
+        'classpath' => 'local/aspiredu/externallib.php',
         'description' => 'Return information about a course module',
-        'type'        => 'read'
+        'type' => 'read'
     ],
 
     'local_aspiredu_core_course_get_course_module_from_instance' => [
-        'classname'   => 'local_aspiredu_external',
-        'methodname'  => 'core_course_get_course_module_from_instance',
-        'classpath'   => 'local/aspiredu/externallib.php',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_course_get_course_module_from_instance',
+        'classpath' => 'local/aspiredu/externallib.php',
         'description' => 'Return information about a course module',
-        'type'        => 'read'
+        'type' => 'read'
     ],
 
     'local_aspiredu_core_grades_get_course_grades' => [
-        'classname'   => 'local_aspiredu_external',
-        'methodname'  => 'core_grades_get_course_grades',
-        'classpath'   => 'local/aspiredu/externallib.php',
+        'classname' => 'local_aspiredu_external',
+        'methodname' => 'core_grades_get_course_grades',
+        'classpath' => 'local/aspiredu/externallib.php',
         'description' => 'Return the final course grade for the given users',
-        'type'        => 'read'
+        'type' => 'read'
     ],
 ];
 

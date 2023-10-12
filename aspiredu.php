@@ -47,7 +47,7 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
-echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" src="lti.php?id='.$id.'&product='.$product.'">
+echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" src="lti.php?id=' . $id . '&product=' . $product . '">
         </iframe>';
 
 echo $OUTPUT->footer();

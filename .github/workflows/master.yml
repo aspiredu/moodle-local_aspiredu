@@ -1,6 +1,6 @@
 name: master branch test
 
-on: 
+on:
   push
 
 jobs:

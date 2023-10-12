@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->dirroot.'/report/log/classes/renderable.php');
+require_once($CFG->dirroot . '/report/log/classes/renderable.php');
 
 class local_report_log_renderable extends report_log_renderable {
 

@@ -23,8 +23,8 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot.'/local/aspiredu/locallib.php');
-require_once($CFG->dirroot.'/local/aspiredu/course_form.php');
+require_once($CFG->dirroot . '/local/aspiredu/locallib.php');
+require_once($CFG->dirroot . '/local/aspiredu/course_form.php');
 
 $id = required_param('id', PARAM_INT);
 
@@ -41,7 +41,7 @@ $strheading = get_string('coursesettings', 'local_aspiredu');
 $PAGE->set_context($context);
 
 $PAGE->set_title($strheading);
-$PAGE->set_heading($course->fullname . ': '.$strheading);
+$PAGE->set_heading($course->fullname . ': ' . $strheading);
 
 $editform = new course_form(null);
 
