@@ -48,8 +48,7 @@ class core_course_get_courses_paginated extends external_api {
      * @throws moodle_exception
      * @since Moodle 3.0
      */
-    public static function execute($sortby = 'id',
-                                   $sortdirection = 'DESC', $page = -1, $perpage = 0) {
+    public static function execute($sortby = 'id', $sortdirection = 'DESC', $page = -1, $perpage = 0) {
 
         global $CFG, $DB;
 
