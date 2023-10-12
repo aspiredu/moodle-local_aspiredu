@@ -23,7 +23,6 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot . '/local/aspiredu/locallib.php');
 require_once($CFG->dirroot . '/local/aspiredu/course_form.php');
 
 $id = required_param('id', PARAM_INT);

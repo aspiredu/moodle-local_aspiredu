@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/externallib.php');
 require_once($CFG->dirroot . '/course/externallib.php');
-require_once("$CFG->dirroot/local/aspiredu/locallib.php");
 require_once("$CFG->dirroot/local/aspiredu/renderable.php");
 
 class local_aspiredu_external extends external_api {
@@ -66,7 +65,6 @@ class local_aspiredu_external extends external_api {
     public static function core_grades_get_grades($courseid, $component = null, $activityid = null, $userids = []) {
         global $CFG, $USER, $DB;
         require_once($CFG->libdir . '/gradelib.php');
-        require_once($CFG->dirroot . '/local/aspiredu/locallib.php');
 
         $params = self::validate_parameters(self::core_grades_get_grades_parameters(),
             ['courseid' => $courseid, 'component' => $component, 'activityid' => $activityid, 'userids' => $userids]);
@@ -2516,8 +2514,6 @@ class local_aspiredu_external extends external_api {
                 'instance' => $instance,
             ]);
 
-        $warnings = [];
-
         $cm = get_coursemodule_from_instance($params['module'], $params['instance'], 0, true, MUST_EXIST);
         $context = context_module::instance($cm->id);
         self::validate_context($context);
@@ -2544,7 +2540,7 @@ class local_aspiredu_external extends external_api {
 
         $result = [];
         $result['cm'] = $info;
-        $result['warnings'] = $warnings;
+        $result['warnings'] = [];
         return $result;
     }
 
