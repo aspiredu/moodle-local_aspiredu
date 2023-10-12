@@ -121,9 +121,8 @@ $functions = [
     ],
 
     'local_aspiredu_core_course_get_course_module_from_instance' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_course_get_course_module_from_instance',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => '\local_aspiredu\external\core_course_get_course_module_from_instance',
+        'methodname' => 'execute',
         'description' => 'Return information about a course module',
         'type' => 'read'
     ],
