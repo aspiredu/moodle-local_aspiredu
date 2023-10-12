@@ -50,9 +50,9 @@ $functions = [
         'capabilities' => '',
     ],
     'local_aspiredu_mod_forum_get_forums_by_courses' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'mod_forum_get_forums_by_courses',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'mod_forum_external',
+        'methodname' => 'get_forums_by_courses',
+        'classpath' => 'mod/forum/externallib.php',
         'description' => 'Returns a list of forum instances in a provided set of courses, if
             no courses are provided then all the forum instances the user has access to will be
             returned.',
