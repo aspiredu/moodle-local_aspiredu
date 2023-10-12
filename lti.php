@@ -63,7 +63,7 @@ if ($launchurl and $key and $secret) {
         $resourcelinkid = $course->id;
     }
 
-    $requestparams = array(
+    $requestparams = [
         'resource_link_id' => $resourcelinkid,
         'custom_moodle_course_id' => $resourcelinkid,
         'resource_link_title' => $course->fullname,
@@ -83,7 +83,7 @@ if ($launchurl and $key and $secret) {
         'lti_message_type' => 'basic-lti-launch-request',
         'lis_person_name_given' => $USER->firstname,
         'lis_person_name_family' => $USER->lastname,
-    );
+    ];
 
     $hmacmethod = new lti\OAuthSignatureMethod_HMAC_SHA1();
     $testconsumer = new lti\OAuthConsumer($key, $secret, null);

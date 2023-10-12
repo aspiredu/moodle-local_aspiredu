@@ -16,6 +16,10 @@
 
 namespace local_aspiredu\privacy;
 
+use core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\types\external_location;
+use core_privacy\tests\provider_testcase;
+
 /**
  * Privacy api tests.
  *
@@ -24,17 +28,17 @@ namespace local_aspiredu\privacy;
  * @author     Guillermo gomez Arias <3ipunt@tresipunt.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider_test extends \core_privacy\tests\provider_testcase {
+class provider_test extends provider_testcase {
 
     /**
      * Test for provider::get_metadata().
      */
     public function test_get_metadata() {
-        $collection = new \core_privacy\local\metadata\collection('local_aspiredu');
+        $collection = new collection('local_aspiredu');
         $collection = provider::get_metadata($collection);
         $this->assertNotEmpty($collection);
         $items = $collection->get_collection();
         $this->assertEquals(1, count($items));
-        $this->assertInstanceOf(\core_privacy\local\metadata\types\external_location::class, $items[0]);
+        $this->assertInstanceOf(external_location::class, $items[0]);
     }
 }

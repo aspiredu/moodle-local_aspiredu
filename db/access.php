@@ -24,23 +24,23 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$capabilities = array(
+$capabilities = [
 
-    'local/aspiredu:viewdropoutdetective' => array(
+    'local/aspiredu:viewdropoutdetective' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
-    'local/aspiredu:viewinstructorinsight' => array(
+    'local/aspiredu:viewinstructorinsight' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    )
-);
+        ]
+    ]
+];

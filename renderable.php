@@ -34,7 +34,7 @@ class local_report_log_renderable extends report_log_renderable {
     public function setup_table() {
         $readers = $this->get_readers();
 
-        $filter = new \stdClass();
+        $filter = new stdClass();
         if (!empty($this->course)) {
             $filter->courseid = $this->course->id;
         } else {
@@ -60,7 +60,7 @@ class local_report_log_renderable extends report_log_renderable {
         $this->tablelog = new report_log_table_log('report_log', $filter);
         $this->tablelog->define_baseurl($this->url);
         $this->tablelog->is_downloadable(true);
-        $this->tablelog->show_download_buttons_at(array(TABLE_P_BOTTOM));
+        $this->tablelog->show_download_buttons_at([TABLE_P_BOTTOM]);
     }
 
 }

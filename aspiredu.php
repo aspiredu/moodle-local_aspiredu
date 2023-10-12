@@ -24,8 +24,6 @@
 
 require_once(dirname(__FILE__) . '/../../config.php');
 
-use moodle\mod\lti as lti;
-
 $id = required_param('id', PARAM_INT);
 $product = required_param('product', PARAM_ALPHA);
 
@@ -34,7 +32,7 @@ $context = context_course::instance($course->id);
 
 require_login($course);
 
-$url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $id, 'product' => $product));
+$url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $id, 'product' => $product]);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 

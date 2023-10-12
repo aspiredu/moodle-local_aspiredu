@@ -23,21 +23,21 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-define('LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE', 1);
-define('LOCAL_ASPIREDU_ADMINACCCINSTCOURSE', 2);
-define('LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE', 3);
-define('LOCAL_ASPIREDU_ADMINACCCOURSE', 4);
-define('LOCAL_ASPIREDU_ADMINACC', 5);
-define('LOCAL_ASPIREDU_INSTCOURSE', 6);
+const LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE = 1;
+const LOCAL_ASPIREDU_ADMINACCCINSTCOURSE = 2;
+const LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE = 3;
+const LOCAL_ASPIREDU_ADMINACCCOURSE = 4;
+const LOCAL_ASPIREDU_ADMINACC = 5;
+const LOCAL_ASPIREDU_INSTCOURSE = 6;
 
 
 function local_aspiredu_check_links_visibility_permission($context, $settings) {
     global $COURSE;
 
     $contextsystem = context_system::instance();
-    $isadmin = (has_capability('moodle/site:config', $contextsystem) ||
+    $isadmin = has_capability('moodle/site:config', $contextsystem) ||
                 has_capability('local/aspiredu:viewdropoutdetective', $contextsystem) ||
-                has_capability('local/aspiredu:viewinstructorinsight', $contextsystem)) ? true : false;
+                has_capability('local/aspiredu:viewinstructorinsight', $contextsystem);
 
     if (!$settings) {
         return false;
@@ -71,9 +71,9 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
  * Display the AspirEdu settings in the course settings block
  *
  * @param  settings_navigation $nav     The settings navigatin object
- * @param  stdclass            $context Course context
+ * @param  context            $context Course context
  */
-function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $context) {
+function local_aspiredu_extend_settings_navigation(settings_navigation $nav, context $context) {
     global $COURSE;
 
     $showcoursesettings = get_config('local_aspiredu', 'showcoursesettings');
@@ -81,7 +81,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
     if ($showcoursesettings and $context->contextlevel >= CONTEXT_COURSE and
             ($branch = $nav->get('courseadmin')) and has_capability('moodle/course:update', $context)) {
 
-        $url = new moodle_url('/local/aspiredu/course.php', array('id' => $context->instanceid));
+        $url = new moodle_url('/local/aspiredu/course.php', ['id' => $context->instanceid]);
         $branch->add(
             get_string('coursesettings', 'local_aspiredu'), $url, $nav::TYPE_CONTAINER, null, 'aspiredu'.$context->instanceid);
     }
@@ -98,7 +98,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
         if ($branch and $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
-                $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
+                $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'dd']);
                 $subbranch->add(
                     get_string('dropoutdetective', 'local_aspiredu'),
                     $url,
@@ -113,7 +113,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
 
         if ($canview and !$displayed) {
             $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
-            $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'dd'));
+            $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'dd']);
             $reportsnode->add(
                 get_string('dropoutdetective', 'local_aspiredu'),
                 $url,
@@ -133,7 +133,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
         if ($branch and $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
-                $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'ii'));
+                $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'ii']);
                 $subbranch->add(
                     get_string('instructorinsight', 'local_aspiredu'),
                     $url,
@@ -150,7 +150,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, $co
             if (!$reportsnode) {
                 $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             }
-            $url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $COURSE->id, 'product' => 'ii'));
+            $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'ii']);
             $reportsnode->add(
                 get_string('instructorinsight', 'local_aspiredu'),
                 $url,

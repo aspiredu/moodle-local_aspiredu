@@ -29,17 +29,17 @@ require_once($CFG->dirroot.'/lib/formslib.php');
 class course_form extends moodleform {
 
     // Define the form.
-    public function definition () {
+    protected function definition () {
         $mform =& $this->_form;
 
         $mform->addElement('header', 'settingsheader', get_string('coursesettings', 'local_aspiredu'));
 
         $mform->addElement('date_selector', 'coursestartdate', get_string('coursestartdate', 'local_aspiredu'),
-                            array('optional' => true));
+                            ['optional' => true]);
         $mform->setDefault('coursestartdate', 0);
 
         $mform->addElement('date_selector', 'courseenddate', get_string('courseenddate', 'local_aspiredu'),
-                            array('optional' => true));
+                            ['optional' => true]);
         $mform->setDefault('courseenddate', 0);
 
         $mform->addElement('hidden', 'id');

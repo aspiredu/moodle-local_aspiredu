@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once($CFG->libdir . "/externallib.php");
-require_once($CFG->dirroot . "/course/externallib.php");
+require_once($CFG->libdir . '/externallib.php');
+require_once($CFG->dirroot . '/course/externallib.php');
 require_once("$CFG->dirroot/local/aspiredu/locallib.php");
 require_once("$CFG->dirroot/local/aspiredu/renderable.php");
 
@@ -40,16 +40,16 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_grades_get_grades_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'id of course'),
                 'component' => new external_value(
                     PARAM_COMPONENT, 'A component, for example mod_forum or mod_quiz', VALUE_DEFAULT, ''),
                 'activityid' => new external_value(PARAM_INT, 'The activity ID', VALUE_DEFAULT, null),
                 'userids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'user ID'),
-                    'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, array()
+                    'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, []
                 )
-            )
+            ]
         );
     }
 
@@ -63,13 +63,13 @@ class local_aspiredu_external extends external_api {
      * @return array                Array of grades
      * @since Moodle 2.7
      */
-    public static function core_grades_get_grades($courseid, $component = null, $activityid = null, $userids = array()) {
+    public static function core_grades_get_grades($courseid, $component = null, $activityid = null, $userids = []) {
         global $CFG, $USER, $DB;
-        require_once($CFG->libdir  . "/gradelib.php");
-        require_once($CFG->dirroot . "/local/aspiredu/locallib.php");
+        require_once($CFG->libdir  . '/gradelib.php');
+        require_once($CFG->dirroot . '/local/aspiredu/locallib.php');
 
         $params = self::validate_parameters(self::core_grades_get_grades_parameters(),
-            array('courseid' => $courseid, 'component' => $component, 'activityid' => $activityid, 'userids' => $userids));
+            ['courseid' => $courseid, 'component' => $component, 'activityid' => $activityid, 'userids' => $userids]);
 
         $coursecontext = context_course::instance($params['courseid']);
 
@@ -82,7 +82,7 @@ class local_aspiredu_external extends external_api {
             throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
         }
 
-        $course = $DB->get_record('course', array('id' => $params['courseid']), '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $params['courseid']], '*', MUST_EXIST);
 
         $access = false;
         if (has_capability('moodle/grade:viewall', $coursecontext)) {
@@ -109,7 +109,7 @@ class local_aspiredu_external extends external_api {
         $itemtype = null;
         $itemmodule = null;
         if (!empty($params['component'])) {
-            list($itemtype, $itemmodule) = \core_component::normalize_component($params['component']);
+            list($itemtype, $itemmodule) = core_component::normalize_component($params['component']);
         }
 
         $cm = null;
@@ -149,17 +149,17 @@ class local_aspiredu_external extends external_api {
                 if (!empty($studentgrade->feedback)) {
                     list($studentgrade->feedback, $studentgrade->feedbackformat) =
                         external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
-                        $modulecm->id, $params['component'], 'feedback', null);
+                        $modulecm->id, $params['component'], 'feedback');
                 }
             }
         }
 
         // Convert from objects to arrays so all web service clients are supported.
         // While we're doing that we also remove grades the current user can't see due to hiding.
-        $gradesarray = array();
+        $gradesarray = [];
         $canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($params['courseid']));
 
-        $gradesarray['items'] = array();
+        $gradesarray['items'] = [];
 
         foreach ($grades->items as $gradeitem) {
             // Avoid to process manual or category items (they are going to fail).
@@ -179,17 +179,17 @@ class local_aspiredu_external extends external_api {
             $gradeitem->locked = (!$gradeitem->locked) ? 0 : $gradeitem->locked;
 
             $gradeitemarray = (array)$gradeitem;
-            $gradeitemarray['grades'] = array();
+            $gradeitemarray['grades'] = [];
 
             if (!empty($gradeitem->grades)) {
                 foreach ($gradeitem->grades as $studentid => $studentgrade) {
                     if (!$canviewhidden) {
                         // Need to load the grade_grade object to check visibility.
                         $gradegradeinstance = grade_grade::fetch(
-                            array(
+                            [
                                 'userid' => $studentid,
                                 'itemid' => $gradeiteminstance->id
-                            )
+                            ]
                         );
                         // The grade grade may be legitimately missing if the student has no grade.
                         if (!empty($gradegradeinstance ) && $gradegradeinstance->is_hidden()) {
@@ -225,7 +225,7 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $gradesarray['outcomes'] = array();
+        $gradesarray['outcomes'] = [];
         foreach ($grades->outcomes as $outcome) {
             $modulecm = $cm;
             if (empty($modulecm)) {
@@ -239,7 +239,7 @@ class local_aspiredu_external extends external_api {
             $gradesarray['outcomes'][$modulecm->id] = (array)$outcome;
             $gradesarray['outcomes'][$modulecm->id]['activityid'] = $modulecm->id;
 
-            $gradesarray['outcomes'][$modulecm->id]['grades'] = array();
+            $gradesarray['outcomes'][$modulecm->id]['grades'] = [];
             if (!empty($outcome->grades)) {
                 foreach ($outcome->grades as $studentid => $studentgrade) {
                     if (!$canviewhidden) {
@@ -247,10 +247,10 @@ class local_aspiredu_external extends external_api {
                         $gradeiteminstance = self::core_grades_get_grade_item(
                             $course->id, $outcome->itemtype, $outcome->itemmodule, $outcome->iteminstance, $outcome->itemnumber);
                         $gradegradeinstance = grade_grade::fetch(
-                            array(
+                            [
                                 'userid' => $studentid,
                                 'itemid' => $gradeiteminstance->id
-                            )
+                            ]
                         );
                         // The grade grade may be legitimately missing if the student has no grade.
                         if (!empty($gradegradeinstance ) && $gradegradeinstance->is_hidden()) {
@@ -287,13 +287,12 @@ class local_aspiredu_external extends external_api {
         global $CFG;
         require_once($CFG->libdir . '/gradelib.php');
 
-        $gradeiteminstance = null;
         if ($itemtype == 'course') {
-            $gradeiteminstance = grade_item::fetch(array('courseid' => $courseid, 'itemtype' => $itemtype));
+            $gradeiteminstance = grade_item::fetch(['courseid' => $courseid, 'itemtype' => $itemtype]);
         } else {
             $gradeiteminstance = grade_item::fetch(
-                array('courseid' => $courseid, 'itemtype' => $itemtype,
-                    'itemmodule' => $itemmodule, 'iteminstance' => $iteminstance, 'itemnumber' => $itemnumber));
+                ['courseid' => $courseid, 'itemtype' => $itemtype,
+                    'itemmodule' => $itemmodule, 'iteminstance' => $iteminstance, 'itemnumber' => $itemnumber]);
         }
         return $gradeiteminstance;
     }
@@ -306,10 +305,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_grades_get_grades_returns() {
         return new external_single_structure(
-            array(
+            [
                 'items'  => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'activityid' => new external_value(
                                 PARAM_ALPHANUM, 'The ID of the activity or "course" for the course grade item'),
                             'itemnumber'  => new external_value(PARAM_INT, 'Will be 0 unless the module has multiple grades'),
@@ -324,7 +323,7 @@ class local_aspiredu_external extends external_api {
                             'hidden' => new external_value(PARAM_INT, '0 means not hidden, > 1 is a date to hide until'),
                             'grades' => new external_multiple_structure(
                                 new external_single_structure(
-                                    array(
+                                    [
                                         'userid' => new external_value(
                                             PARAM_INT, 'Student ID'),
                                         'grade' => new external_value(
@@ -351,15 +350,15 @@ class local_aspiredu_external extends external_api {
                                             PARAM_RAW, 'A nicely formatted string representation of the grade'),
                                         'str_feedback' => new external_value(
                                             PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
-                                    )
+                                    ]
                                 )
                             ),
-                        )
+                        ]
                     )
                 ),
                 'outcomes'  => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'activityid' => new external_value(
                                 PARAM_ALPHANUM, 'The ID of the activity or "course" for the course grade item'),
                             'itemnumber'  => new external_value(PARAM_INT, 'Will be 0 unless the module has multiple grades'),
@@ -369,7 +368,7 @@ class local_aspiredu_external extends external_api {
                             'hidden' => new external_value(PARAM_INT, '0 means not hidden, > 1 is a date to hide until'),
                             'grades' => new external_multiple_structure(
                                 new external_single_structure(
-                                    array(
+                                    [
                                         'userid' => new external_value(
                                             PARAM_INT, 'Student ID'),
                                         'grade' => new external_value(
@@ -388,13 +387,13 @@ class local_aspiredu_external extends external_api {
                                             PARAM_RAW, 'A string representation of the grade'),
                                         'str_feedback' => new external_value(
                                             PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
-                                    )
+                                    ]
                                 )
                             ),
-                        )
+                        ]
                     ), 'An array of outcomes associated with the grade items', VALUE_OPTIONAL
                 )
-            )
+            ]
         );
     }
 
@@ -407,14 +406,14 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_forum_get_forum_discussions_paginated_parameters() {
         return new external_function_parameters (
-            array(
+            [
                 'forumid' => new external_value(PARAM_INT, 'forum ID', VALUE_REQUIRED),
                 'sortby' => new external_value(PARAM_ALPHA,
                     'sort by this element: id, timemodified, timestart or timeend', VALUE_DEFAULT, 'timemodified'),
                 'sortdirection' => new external_value(PARAM_ALPHA, 'sort direction: ASC or DESC', VALUE_DEFAULT, 'DESC'),
                 'page' => new external_value(PARAM_INT, 'current page', VALUE_DEFAULT, -1),
                 'perpage' => new external_value(PARAM_INT, 'items per page', VALUE_DEFAULT, 0),
-            )
+            ]
         );
     }
 
@@ -422,29 +421,36 @@ class local_aspiredu_external extends external_api {
     /**
      * Returns a list of forum discussions as well as a summary of the discussion in a provided list of forums.
      *
-     * @param array $forumids the forum ids
-     * @param int $limitfrom limit from SQL data
-     * @param int $limitnum limit number SQL data
-     *
+     * @param $forumid
+     * @param string $sortby
+     * @param string $sortdirection
+     * @param int $page
+     * @param int $perpage
      * @return array the forum discussion details
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws invalid_parameter_exception
+     * @throws moodle_exception
+     * @throws required_capability_exception
+     * @throws restricted_context_exception
      * @since Moodle 2.8
      */
     public static function mod_forum_get_forum_discussions_paginated($forumid, $sortby = 'timemodified', $sortdirection = 'DESC',
                                                     $page = -1, $perpage = 0) {
-        global $CFG, $DB, $USER;
+        global $CFG, $DB;
 
-        require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-        $warnings = array();
+        $warnings = [];
 
         $params = self::validate_parameters(self::mod_forum_get_forum_discussions_paginated_parameters(),
-            array(
+            [
                 'forumid' => $forumid,
                 'sortby' => $sortby,
                 'sortdirection' => $sortdirection,
                 'page' => $page,
                 'perpage' => $perpage
-            )
+            ]
         );
 
         // Compact/extract functions are not recommended.
@@ -454,21 +460,21 @@ class local_aspiredu_external extends external_api {
         $page           = $params['page'];
         $perpage        = $params['perpage'];
 
-        $sortallowedvalues = array('id', 'timemodified', 'timestart', 'timeend');
+        $sortallowedvalues = ['id', 'timemodified', 'timestart', 'timeend'];
         if (!in_array($sortby, $sortallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortby parameter (value: ' . $sortby . '),' .
                 'allowed values are: ' . implode(',', $sortallowedvalues));
         }
 
         $sortdirection = strtoupper($sortdirection);
-        $directionallowedvalues = array('ASC', 'DESC');
+        $directionallowedvalues = ['ASC', 'DESC'];
         if (!in_array($sortdirection, $directionallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortdirection parameter (value: ' . $sortdirection . '),' .
                 'allowed values are: ' . implode(',', $directionallowedvalues));
         }
 
-        $forum = $DB->get_record('forum', array('id' => $forumid), '*', MUST_EXIST);
-        $course = $DB->get_record('course', array('id' => $forum->course), '*', MUST_EXIST);
+        $forum = $DB->get_record('forum', ['id' => $forumid], '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $forum->course], '*', MUST_EXIST);
         $cm = get_coursemodule_from_instance('forum', $forum->id, $course->id, false, MUST_EXIST);
 
         // Validate the module context. It checks everything that affects the module visibility (including groupings, etc..).
@@ -483,7 +489,7 @@ class local_aspiredu_external extends external_api {
 
         if ($discussions) {
             // Get the unreads array, this takes a forum id and returns data for all discussions.
-            $unreads = array();
+            $unreads = [];
             if ($cantrack = forum_tp_can_track_forums($forum)) {
                 if ($forumtracked = forum_tp_is_tracked($forum)) {
                     $unreads = forum_get_discussions_unread($cm);
@@ -495,7 +501,7 @@ class local_aspiredu_external extends external_api {
             foreach ($discussions as $did => $discussion) {
                 // This function checks for qanda forums.
                 if (!forum_user_can_see_discussion($forum, $discussion, $modcontext)) {
-                    $warning = array();
+                    $warning = [];
                     // Function forum_get_discussions returns forum_posts ids not forum_discussions ones.
                     $warning['item'] = 'post';
                     $warning['itemid'] = $discussion->id;
@@ -506,7 +512,7 @@ class local_aspiredu_external extends external_api {
                 }
 
                 $discussion->numunread = 0;
-                if ($cantrack && $forumtracked) {
+                if ($cantrack && !empty($forumtracked)) {
                     if (isset($unreads[$discussion->discussion])) {
                         $discussion->numunread = (int) $unreads[$discussion->discussion];
                     }
@@ -518,24 +524,24 @@ class local_aspiredu_external extends external_api {
                 }
 
                 // Load user objects from the results of the query.
-                $user = new stdclass();
+                $user = new stdClass();
                 $user->id = $discussion->userid;
                 $user = username_load_fields_from_object($user, $discussion);
                 $discussion->userfullname = fullname($user);
                 $discussion->userpictureurl = moodle_url::make_pluginfile_url(
                     context_user::instance($user->id)->id, 'user', 'icon', null, '/', 'f1');
                 // Fix the pluginfile.php link.
-                $discussion->userpictureurl = str_replace("pluginfile.php", "webservice/pluginfile.php",
+                $discussion->userpictureurl = str_replace('pluginfile.php', 'webservice/pluginfile.php',
                     $discussion->userpictureurl);
 
-                $usermodified = new stdclass();
+                $usermodified = new stdClass();
                 $usermodified->id = $discussion->usermodified;
                 $usermodified = username_load_fields_from_object($usermodified, $discussion, 'um');
                 $discussion->usermodifiedfullname = fullname($usermodified);
                 $discussion->usermodifiedpictureurl = moodle_url::make_pluginfile_url(
                     context_user::instance($usermodified->id)->id, 'user', 'icon', null, '/', 'f1');
                 // Fix the pluginfile.php link.
-                $discussion->usermodifiedpictureurl = str_replace("pluginfile.php", "webservice/pluginfile.php",
+                $discussion->usermodifiedpictureurl = str_replace('pluginfile.php', 'webservice/pluginfile.php',
                     $discussion->usermodifiedpictureurl);
 
                 // Rewrite embedded images URLs.
@@ -545,20 +551,20 @@ class local_aspiredu_external extends external_api {
 
                 // List attachments.
                 if (!empty($discussion->attachment)) {
-                    $discussion->attachments = array();
+                    $discussion->attachments = [];
 
                     $fs = get_file_storage();
                     if ($files = $fs->get_area_files($modcontext->id, 'mod_forum', 'attachment',
-                                                        $discussion->id, "filename", false)) {
+                                                        $discussion->id, 'filename', false)) {
                         foreach ($files as $file) {
                             $filename = $file->get_filename();
 
-                            $discussion->attachments[] = array(
+                            $discussion->attachments[] = [
                                 'filename' => $filename,
                                 'mimetype' => $file->get_mimetype(),
-                                'fileurl' => \moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
+                                'fileurl' => moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
                                     'attachment', $discussion->id, '/', $filename),
-                            );
+                            ];
                         }
                     }
                 }
@@ -567,7 +573,7 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $result = array();
+        $result = [];
         $result['discussions'] = $discussions;
         $result['warnings'] = $warnings;
         return $result;
@@ -582,10 +588,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_forum_get_forum_discussions_paginated_returns() {
         return new external_single_structure(
-            array(
+            [
                 'discussions' => new external_multiple_structure(
                         new external_single_structure(
-                            array(
+                            [
                                 'id' => new external_value(PARAM_INT, 'Post id'),
                                 'name' => new external_value(PARAM_RAW, 'Discussion name'),
                                 'groupid' => new external_value(PARAM_INT, 'Group id'),
@@ -606,11 +612,11 @@ class local_aspiredu_external extends external_api {
                                 'attachment' => new external_value(PARAM_RAW, 'Has attachments?'),
                                 'attachments' => new external_multiple_structure(
                                     new external_single_structure(
-                                        array (
+                                        [
                                             'filename' => new external_value(PARAM_FILE, 'file name'),
                                             'mimetype' => new external_value(PARAM_RAW, 'mime type'),
                                             'fileurl'  => new external_value(PARAM_URL, 'file download url')
-                                        )
+                                        ]
                                     ), 'attachments', VALUE_OPTIONAL
                                 ),
                                 'totalscore' => new external_value(PARAM_INT, 'The post message total score'),
@@ -622,11 +628,11 @@ class local_aspiredu_external extends external_api {
                                 'numreplies' => new external_value(PARAM_TEXT, 'The number of replies in the discussion'),
                                 'numunread' => new external_value(PARAM_TEXT, 'The number of unread posts, blank if this value is
                                     not available due to forum settings.')
-                            ), 'post'
+                            ], 'post'
                         )
                     ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -639,12 +645,12 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_forum_get_forum_discussion_posts_parameters() {
         return new external_function_parameters (
-            array(
+            [
                 'discussionid' => new external_value(PARAM_INT, 'discussion ID', VALUE_REQUIRED),
                 'sortby' => new external_value(PARAM_ALPHA,
                     'sort by this element: id, created or modified', VALUE_DEFAULT, 'created'),
                 'sortdirection' => new external_value(PARAM_ALPHA, 'sort direction: ASC or DESC', VALUE_DEFAULT, 'DESC')
-            )
+            ]
         );
     }
 
@@ -658,39 +664,39 @@ class local_aspiredu_external extends external_api {
      * @return array the forum post details
      * @since Moodle 2.7
      */
-    public static function mod_forum_get_forum_discussion_posts($discussionid, $sortby = "created", $sortdirection = "DESC") {
+    public static function mod_forum_get_forum_discussion_posts($discussionid, $sortby = 'created', $sortdirection = 'DESC') {
         global $CFG, $DB, $USER;
 
-        $warnings = array();
+        $warnings = [];
 
         // Validate the parameter.
         $params = self::validate_parameters(self::mod_forum_get_forum_discussion_posts_parameters(),
-            array(
+            [
                 'discussionid' => $discussionid,
                 'sortby' => $sortby,
-                'sortdirection' => $sortdirection));
+                'sortdirection' => $sortdirection]);
 
         // Compact/extract functions are not recommended.
         $discussionid   = $params['discussionid'];
         $sortby         = $params['sortby'];
         $sortdirection  = $params['sortdirection'];
 
-        $sortallowedvalues = array('id', 'created', 'modified');
+        $sortallowedvalues = ['id', 'created', 'modified'];
         if (!in_array($sortby, $sortallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortby parameter (value: ' . $sortby . '),' .
                 'allowed values are: ' . implode(',', $sortallowedvalues));
         }
 
         $sortdirection = strtoupper($sortdirection);
-        $directionallowedvalues = array('ASC', 'DESC');
+        $directionallowedvalues = ['ASC', 'DESC'];
         if (!in_array($sortdirection, $directionallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortdirection parameter (value: ' . $sortdirection . '),' .
                 'allowed values are: ' . implode(',', $directionallowedvalues));
         }
 
-        $discussion = $DB->get_record('forum_discussions', array('id' => $discussionid), '*', MUST_EXIST);
-        $forum = $DB->get_record('forum', array('id' => $discussion->forum), '*', MUST_EXIST);
-        $course = $DB->get_record('course', array('id' => $forum->course), '*', MUST_EXIST);
+        $discussion = $DB->get_record('forum_discussions', ['id' => $discussionid], '*', MUST_EXIST);
+        $forum = $DB->get_record('forum', ['id' => $discussion->forum], '*', MUST_EXIST);
+        $course = $DB->get_record('course', ['id' => $forum->course], '*', MUST_EXIST);
         $cm = get_coursemodule_from_instance('forum', $forum->id, $course->id, false, MUST_EXIST);
 
         // Validate the module context. It checks everything that affects the module visibility (including groupings, etc..).
@@ -698,7 +704,7 @@ class local_aspiredu_external extends external_api {
         self::validate_context($modcontext);
 
         // This require must be here, see mod/forum/discuss.php.
-        require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
         // Check they have the view forum capability.
         require_capability('mod/forum:viewdiscussion', $modcontext, null, true, 'noviewdiscussionspermission', 'forum');
@@ -725,7 +731,7 @@ class local_aspiredu_external extends external_api {
         foreach ($posts as $pid => $post) {
 
             if (!forum_user_can_see_post($forum, $discussion, $post, null, $cm)) {
-                $warning = array();
+                $warning = [];
                 $warning['item'] = 'post';
                 $warning['itemid'] = $post->id;
                 $warning['warningcode'] = '1';
@@ -737,26 +743,26 @@ class local_aspiredu_external extends external_api {
             // Function forum_get_all_discussion_posts adds postread field.
             // Note that the value returned can be a boolean or an integer. The WS expects a boolean.
             if (empty($post->postread)) {
-                $posts[$pid]->postread = false;
+                $post->postread = false;
             } else {
-                $posts[$pid]->postread = true;
+                $post->postread = true;
             }
 
-            $posts[$pid]->canreply = $canreply;
-            if (!empty($posts[$pid]->children)) {
-                $posts[$pid]->children = array_keys($posts[$pid]->children);
+            $post->canreply = $canreply;
+            if (!empty($post->children)) {
+                $post->children = array_keys($post->children);
             } else {
-                $posts[$pid]->children = array();
+                $post->children = [];
             }
 
-            $user = new stdclass();
+            $user = new stdClass();
             $user->id = $post->userid;
             $user = username_load_fields_from_object($user, $post);
             $post->userfullname = fullname($user, $canviewfullname);
             $post->userpictureurl = moodle_url::make_pluginfile_url(
                     context_user::instance($user->id)->id, 'user', 'icon', null, '/', 'f1');
             // Fix the pluginfile.php link.
-            $post->userpictureurl = str_replace("pluginfile.php", "webservice/pluginfile.php",
+            $post->userpictureurl = str_replace('pluginfile.php', 'webservice/pluginfile.php',
                 $post->userpictureurl);
 
             // Rewrite embedded images URLs.
@@ -765,19 +771,19 @@ class local_aspiredu_external extends external_api {
 
             // List attachments.
             if (!empty($post->attachment)) {
-                $post->attachments = array();
+                $post->attachments = [];
 
                 $fs = get_file_storage();
-                if ($files = $fs->get_area_files($modcontext->id, 'mod_forum', 'attachment', $post->id, "filename", false)) {
+                if ($files = $fs->get_area_files($modcontext->id, 'mod_forum', 'attachment', $post->id, 'filename', false)) {
                     foreach ($files as $file) {
                         $filename = $file->get_filename();
 
-                        $post->attachments[] = array(
+                        $post->attachments[] = [
                             'filename' => $filename,
                             'mimetype' => $file->get_mimetype(),
-                            'fileurl' => \moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
+                            'fileurl' => moodle_url::make_webservice_pluginfile_url($modcontext->id, 'mod_forum',
                                 'attachment', $post->id, '/', $filename),
-                        );
+                        ];
                     }
                 }
             }
@@ -785,7 +791,7 @@ class local_aspiredu_external extends external_api {
             $posts[$pid] = (array) $post;
         }
 
-        $result = array();
+        $result = [];
         $result['posts'] = $posts;
         $result['warnings'] = $warnings;
         return $result;
@@ -799,10 +805,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_forum_get_forum_discussion_posts_returns() {
         return new external_single_structure(
-            array(
+            [
                 'posts' => new external_multiple_structure(
                         new external_single_structure(
-                            array(
+                            [
                                 'id' => new external_value(PARAM_INT, 'Post id'),
                                 'discussion' => new external_value(PARAM_INT, 'Discussion id'),
                                 'parent' => new external_value(PARAM_INT, 'Parent id'),
@@ -817,11 +823,11 @@ class local_aspiredu_external extends external_api {
                                 'attachment' => new external_value(PARAM_RAW, 'Has attachments?'),
                                 'attachments' => new external_multiple_structure(
                                     new external_single_structure(
-                                        array (
+                                        [
                                             'filename' => new external_value(PARAM_FILE, 'file name'),
                                             'mimetype' => new external_value(PARAM_RAW, 'mime type'),
                                             'fileurl'  => new external_value(PARAM_URL, 'file download url')
-                                        )
+                                        ]
                                     ), 'attachments', VALUE_OPTIONAL
                                 ),
                                 'totalscore' => new external_value(PARAM_INT, 'The post message total score'),
@@ -831,11 +837,11 @@ class local_aspiredu_external extends external_api {
                                 'postread' => new external_value(PARAM_BOOL, 'The post was read'),
                                 'userfullname' => new external_value(PARAM_TEXT, 'Post author full name'),
                                 'userpictureurl' => new external_value(PARAM_URL, 'Post author picture.', VALUE_OPTIONAL),
-                            ), 'post'
+                            ], 'post'
                         )
                     ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -847,10 +853,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_forum_get_forums_by_courses_parameters() {
         return new external_function_parameters (
-            array(
+            [
                 'courseids' => new external_multiple_structure(new external_value(PARAM_INT, 'course ID',
-                    VALUE_REQUIRED, '', NULL_NOT_ALLOWED), 'Array of Course IDs', VALUE_DEFAULT, array()),
-            )
+                    VALUE_REQUIRED, '', NULL_NOT_ALLOWED), 'Array of Course IDs', VALUE_DEFAULT, []),
+            ]
         );
     }
 
@@ -863,12 +869,12 @@ class local_aspiredu_external extends external_api {
      * @return array the forum details
      * @since Moodle 2.5
      */
-    public static function mod_forum_get_forums_by_courses($courseids = array()) {
-        global $CFG, $DB, $USER;
+    public static function mod_forum_get_forums_by_courses($courseids = []) {
+        global $CFG, $DB;
 
-        require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-        $params = self::validate_parameters(self::mod_forum_get_forums_by_courses_parameters(), array('courseids' => $courseids));
+        $params = self::validate_parameters(self::mod_forum_get_forums_by_courses_parameters(), ['courseids' => $courseids]);
 
         if (empty($params['courseids'])) {
             // Get all the courses the user can view.
@@ -878,7 +884,7 @@ class local_aspiredu_external extends external_api {
         }
 
         // Array to store the forums to return.
-        $arrforums = array();
+        $arrforums = [];
 
         // Ensure there are courseids to loop through.
         if (!empty($courseids)) {
@@ -889,7 +895,7 @@ class local_aspiredu_external extends external_api {
                 // Check the user can function in this context.
                 self::validate_context($context);
                 // Get the forums in this course.
-                if ($forums = $DB->get_records('forum', array('course' => $cid))) {
+                if ($forums = $DB->get_records('forum', ['course' => $cid])) {
                     // Get the modinfo for the course.
                     $modinfo = get_fast_modinfo($cid);
                     // Get the forum instances.
@@ -934,7 +940,7 @@ class local_aspiredu_external extends external_api {
     public static function mod_forum_get_forums_by_courses_returns() {
         return new external_multiple_structure(
             new external_single_structure(
-                array(
+                [
                     'id' => new external_value(PARAM_INT, 'Forum id'),
                     'course' => new external_value(PARAM_TEXT, 'Course id'),
                     'type' => new external_value(PARAM_TEXT, 'The forum type'),
@@ -960,7 +966,7 @@ class local_aspiredu_external extends external_api {
                     'completionposts' => new external_value(PARAM_INT, 'Student must post discussions or replies'),
                     'cmid' => new external_value(PARAM_INT, 'Course module id'),
                     'numdiscussions' => new external_value(PARAM_INT, 'Number of discussions in the forum', VALUE_OPTIONAL)
-                ), 'forum'
+                ], 'forum'
             )
         );
     }
@@ -973,10 +979,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_group_get_course_user_groups_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'id of course'),
                 'userid' => new external_value(PARAM_INT, 'id of user')
-            )
+            ]
         );
     }
 
@@ -991,12 +997,12 @@ class local_aspiredu_external extends external_api {
         global $USER;
 
         // Warnings array, it can be empty at the end but is mandatory.
-        $warnings = array();
+        $warnings = [];
 
-        $params = array(
+        $params = [
             'courseid' => $courseid,
             'userid' => $userid
-        );
+        ];
         $params = self::validate_parameters(self::core_group_get_course_user_groups_parameters(), $params);
         $courseid = $params['courseid'];
         $userid = $params['userid'];
@@ -1025,7 +1031,7 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $usergroups = array();
+        $usergroups = [];
         if (empty($warnings)) {
             $groups = groups_get_all_groups($courseid, $userid, 0, 'g.id, g.name, g.description, g.descriptionformat');
 
@@ -1037,11 +1043,10 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $results = array(
+        return [
             'groups' => $usergroups,
             'warnings' => $warnings
-        );
-        return $results;
+        ];
     }
 
     /**
@@ -1051,19 +1056,19 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_group_get_course_user_groups_returns() {
         return new external_single_structure(
-            array(
+            [
                 'groups' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'id' => new external_value(PARAM_INT, 'group record id'),
                             'name' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
                             'description' => new external_value(PARAM_RAW, 'group description text'),
                             'descriptionformat' => new external_format_value('description')
-                        )
+                        ]
                     )
                 ),
                 'warnings' => new external_warnings(),
-            )
+            ]
         );
     }
 
@@ -1076,10 +1081,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function gradereport_user_get_grades_table_parameters() {
         return new external_function_parameters (
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'Course Id', VALUE_REQUIRED),
                 'userid'   => new external_value(PARAM_INT, 'Return grades only for this user (optional)', VALUE_DEFAULT, 0)
-            )
+            ]
         );
     }
 
@@ -1100,13 +1105,13 @@ class local_aspiredu_external extends external_api {
         require_once($CFG->dirroot . '/grade/lib.php');
         require_once($CFG->dirroot . '/grade/report/user/lib.php');
 
-        $warnings = array();
+        $warnings = [];
 
         // Validate the parameter.
         $params = self::validate_parameters(self::gradereport_user_get_grades_table_parameters(),
-            array(
+            [
                 'courseid' => $courseid,
-                'userid' => $userid)
+                'userid' => $userid]
             );
 
         // Compact/extract functions are not recommended.
@@ -1148,29 +1153,29 @@ class local_aspiredu_external extends external_api {
         }
 
         $gpr = new grade_plugin_return(
-            array(
+            [
                 'type' => 'report',
                 'plugin' => 'user',
                 'courseid' => $courseid,
-                'userid' => $userid)
+                'userid' => $userid]
             );
 
-        $tables = array();
+        $tables = [];
 
         // Just one user.
         if ($user) {
-            $report = new grade_report_user($courseid, $gpr, $context, $userid);
+            $report = new \gradereport_user\report\user($courseid, $gpr, $context, $userid);
             $report->fill_table();
 
             // Notice that we use array_filter for deleting empty elements in the array.
             // Those elements are items or category not visible by the user.
-            $tables[] = array(
+            $tables[] = [
                 'courseid'      => $courseid,
                 'userid'        => $user->id,
                 'userfullname'  => fullname($user),
                 'maxdepth'      => $report->maxdepth,
                 'tabledata'     => $report->tabledata
-            );
+            ];
 
         } else {
             $defaultgradeshowactiveenrol = !empty($CFG->grade_report_showonlyactiveenrol);
@@ -1183,23 +1188,23 @@ class local_aspiredu_external extends external_api {
 
             while ($userdata = $gui->next_user()) {
                 $currentuser = $userdata->user;
-                $report = new grade_report_user($courseid, $gpr, $context, $currentuser->id);
+                $report = new \gradereport_user\report\user($courseid, $gpr, $context, $currentuser->id);
                 $report->fill_table();
 
                 // Notice that we use array_filter for deleting empty elements in the array.
                 // Those elements are items or category not visible by the user.
-                $tables[] = array(
+                $tables[] = [
                     'courseid'      => $courseid,
                     'userid'        => $currentuser->id,
                     'userfullname'  => fullname($currentuser),
                     'maxdepth'      => $report->maxdepth,
                     'tabledata'     => $report->tabledata
-                );
+                ];
             }
             $gui->close();
         }
 
-        $result = array();
+        $result = [];
         $result['tables'] = $tables;
         $result['warnings'] = $warnings;
         return $result;
@@ -1212,11 +1217,11 @@ class local_aspiredu_external extends external_api {
      * @since  Moodle 2.8
      */
     private static function grades_table_column() {
-        return array (
+        return [
             'class'   => new external_value(PARAM_RAW, 'class'),
             'content' => new external_value(PARAM_RAW, 'cell content'),
             'headers' => new external_value(PARAM_RAW, 'headers')
-        );
+        ];
     }
 
     /**
@@ -1227,31 +1232,31 @@ class local_aspiredu_external extends external_api {
      */
     public static function gradereport_user_get_grades_table_returns() {
         return new external_single_structure(
-            array(
+            [
                 'tables' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'courseid' => new external_value(PARAM_INT, 'course id'),
                             'userid'   => new external_value(PARAM_INT, 'user id'),
                             'userfullname' => new external_value(PARAM_TEXT, 'user fullname'),
                             'maxdepth'   => new external_value(PARAM_INT, 'table max depth (needed for printing it)'),
                             'tabledata' => new external_multiple_structure(
                                 new external_single_structure(
-                                    array(
+                                    [
                                         'itemname' => new external_single_structure(
-                                            array (
+                                            [
                                                 'class' => new external_value(PARAM_RAW, 'file name'),
                                                 'colspan' => new external_value(PARAM_INT, 'mime type'),
                                                 'content'  => new external_value(PARAM_RAW, ''),
                                                 'celltype'  => new external_value(PARAM_RAW, ''),
                                                 'id'  => new external_value(PARAM_ALPHANUMEXT, '')
-                                            ), 'The item returned data', VALUE_OPTIONAL
+                                            ], 'The item returned data', VALUE_OPTIONAL
                                         ),
                                         'leader' => new external_single_structure(
-                                            array (
+                                            [
                                                 'class' => new external_value(PARAM_RAW, 'file name'),
                                                 'rowspan' => new external_value(PARAM_INT, 'mime type')
-                                            ), 'The item returned data', VALUE_OPTIONAL
+                                            ], 'The item returned data', VALUE_OPTIONAL
                                         ),
                                         'weight' => new external_single_structure(
                                             self::grades_table_column(), 'weight column', VALUE_OPTIONAL
@@ -1280,14 +1285,14 @@ class local_aspiredu_external extends external_api {
                                         'contributiontocoursetotal' => new external_single_structure(
                                             self::grades_table_column(), 'contributiontocoursetotal column', VALUE_OPTIONAL
                                         ),
-                                    ), 'table'
+                                    ], 'table'
                                 )
                             )
-                        )
+                        ]
                     )
                 ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -1298,7 +1303,7 @@ class local_aspiredu_external extends external_api {
      */
     public static function report_log_get_log_records_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'course id (0 for site logs)', VALUE_DEFAULT, 0),
                 'userid' => new external_value(PARAM_INT, 'user id, 0 for alls', VALUE_DEFAULT, 0),
                 'groupid' => new external_value(PARAM_INT, 'group id (for filtering by groups)', VALUE_DEFAULT, 0),
@@ -1310,15 +1315,30 @@ class local_aspiredu_external extends external_api {
                 'page' => new external_value(PARAM_INT, 'page to show', VALUE_DEFAULT, 0),
                 'perpage' => new external_value(PARAM_INT, 'entries per page', VALUE_DEFAULT, 100),
                 'order' => new external_value(PARAM_ALPHA, 'time order (ASC or DESC)', VALUE_DEFAULT, 'DESC'),
-            )
+            ]
         );
     }
 
     /**
      * Return log entries
      *
-     * @param int $categoryid id of the category
+     * @param int $courseid
+     * @param int $userid
+     * @param int $groupid
+     * @param int $date
+     * @param int $modid
+     * @param string $modaction
+     * @param string $logreader
+     * @param int $edulevel
+     * @param int $page
+     * @param int $perpage
+     * @param string $order
      * @return array of course objects (id, name ...) and warnings
+     * @throws dml_exception
+     * @throws invalid_parameter_exception
+     * @throws moodle_exception
+     * @throws required_capability_exception
+     * @throws restricted_context_exception
      */
     public static function report_log_get_log_records($courseid = 0, $userid = 0, $groupid = 0, $date = 0, $modid = 0,
                                                     $modaction = '', $logreader = '', $edulevel = -1, $page = 0,
@@ -1326,10 +1346,10 @@ class local_aspiredu_external extends external_api {
         global $CFG;
         require_once($CFG->dirroot.'/lib/tablelib.php');
 
-        $warnings = array();
-        $logsrecords = array();
+        $warnings = [];
+        $logsrecords = [];
 
-        $params = array(
+        $params = [
           'courseid' => $courseid,
           'userid' => $userid,
           'groupid' => $groupid,
@@ -1341,7 +1361,7 @@ class local_aspiredu_external extends external_api {
           'page' => $page,
           'perpage' => $perpage,
           'order' => $order,
-        );
+        ];
         $params = self::validate_parameters(self::report_log_get_log_records_parameters(), $params);
 
         if ($params['logreader'] == 'logstore_legacy') {
@@ -1382,7 +1402,7 @@ class local_aspiredu_external extends external_api {
             $reportlog->tablelog->query_db($params['perpage'], false);
 
             foreach ($reportlog->tablelog->rawdata as $row) {
-                $logsrecords[] = array(
+                $logsrecords[] = [
                     'eventname' => $row->eventname,
                     'name' => $row->get_name(),
                     'description' => $row->get_description(),
@@ -1402,15 +1422,14 @@ class local_aspiredu_external extends external_api {
                     'anonymous' => $row->anonymous,
                     'other' => json_encode($row->other),
                     'timecreated' => $row->timecreated,
-                );
+                ];
             }
         }
 
-        $results = array(
+        return [
             'logs' => $logsrecords,
             'warnings' => $warnings
-        );
-        return $results;
+        ];
     }
 
     /**
@@ -1420,10 +1439,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function report_log_get_log_records_returns() {
         return new external_single_structure(
-            array(
+            [
                 'logs' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'eventname' => new external_value(PARAM_RAW, 'eventname'),
                             'name' => new external_value(PARAM_RAW, 'get_name()'),
                             'description' => new external_value(PARAM_RAW, 'get_description()'),
@@ -1443,11 +1462,11 @@ class local_aspiredu_external extends external_api {
                             'anonymous' => new external_value(PARAM_INT, 'anonymous'),
                             'other' => new external_value(PARAM_RAW, 'other'),
                             'timecreated' => new external_value(PARAM_INT, 'timecreated'),
-                        )
+                        ]
                     )
                 ),
                 'warnings' => new external_warnings(),
-            )
+            ]
         );
     }
 
@@ -1459,18 +1478,18 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_assign_get_assignments_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'course id'),
                     '0 or more course ids',
-                    VALUE_DEFAULT, array()
+                    VALUE_DEFAULT, []
                 ),
                 'capabilities'  => new external_multiple_structure(
                     new external_value(PARAM_CAPABILITY, 'capability'),
                     'list of capabilities used to filter courses',
-                    VALUE_DEFAULT, array()
+                    VALUE_DEFAULT, []
                 )
-            )
+            ]
         );
     }
 
@@ -1484,19 +1503,19 @@ class local_aspiredu_external extends external_api {
      * @return array An array of courses and warnings.
      * @since  Moodle 2.4
      */
-    public static function mod_assign_get_assignments($courseids = array(), $capabilities = array()) {
+    public static function mod_assign_get_assignments($courseids = [], $capabilities = []) {
         global $USER, $DB, $CFG;
         require_once("$CFG->dirroot/mod/assign/locallib.php");
 
         $params = self::validate_parameters(
             self::mod_assign_get_assignments_parameters(),
-            array('courseids' => $courseids, 'capabilities' => $capabilities)
+            ['courseids' => $courseids, 'capabilities' => $capabilities]
         );
 
-        $warnings = array();
+        $warnings = [];
 
         if (!empty($params['courseids'])) {
-            $courses = array();
+            $courses = [];
             $courseids = $params['courseids'];
         } else {
             $fields = 'sortorder,shortname,fullname,timemodified';
@@ -1516,12 +1535,12 @@ class local_aspiredu_external extends external_api {
                 }
             } catch (Exception $e) {
                 unset($courses[$cid]);
-                $warnings[] = array(
+                $warnings[] = [
                     'item' => 'course',
                     'itemid' => $cid,
                     'warningcode' => '1',
                     'message' => 'No access rights in course context '.$e->getMessage()
-                );
+                ];
                 continue;
             }
             if (count($params['capabilities']) > 0 && !has_all_capabilities($params['capabilities'], $context)) {
@@ -1533,40 +1552,40 @@ class local_aspiredu_external extends external_api {
                      'm.sendlatenotifications, m.duedate, m.allowsubmissionsfromdate, m.grade, m.timemodified, '.
                      'm.completionsubmit, m.cutoffdate, m.teamsubmission, m.requireallteammemberssubmit, '.
                      'm.teamsubmissiongroupingid, m.blindmarking, m.revealidentities, m.requiresubmissionstatement';
-        $coursearray = array();
+        $coursearray = [];
         foreach ($courses as $id => $course) {
-            $assignmentarray = array();
+            $assignmentarray = [];
             // Get a list of assignments for the course.
-            if ($modules = get_coursemodules_in_course('assign', $courses[$id]->id, $extrafields)) {
+            if ($modules = get_coursemodules_in_course('assign', $course->id, $extrafields)) {
                 foreach ($modules as $module) {
                     $context = context_module::instance($module->id);
                     try {
                         self::validate_context($context);
                         require_capability('mod/assign:view', $context);
                     } catch (Exception $e) {
-                        $warnings[] = array(
+                        $warnings[] = [
                             'item' => 'module',
                             'itemid' => $module->id,
                             'warningcode' => '1',
                             'message' => 'No access rights in module context'
-                        );
+                        ];
                         continue;
                     }
-                    $configrecords = $DB->get_recordset('assign_plugin_config', array('assignment' => $module->assignmentid));
-                    $configarray = array();
+                    $configrecords = $DB->get_recordset('assign_plugin_config', ['assignment' => $module->assignmentid]);
+                    $configarray = [];
                     foreach ($configrecords as $configrecord) {
-                        $configarray[] = array(
+                        $configarray[] = [
                             'id' => $configrecord->id,
                             'assignment' => $configrecord->assignment,
                             'plugin' => $configrecord->plugin,
                             'subtype' => $configrecord->subtype,
                             'name' => $configrecord->name,
                             'value' => $configrecord->value
-                        );
+                        ];
                     }
                     $configrecords->close();
 
-                    $assignmentarray[] = array(
+                    $assignmentarray[] = [
                         'id' => $module->assignmentid,
                         'cmid' => $module->id,
                         'course' => $module->course,
@@ -1588,23 +1607,22 @@ class local_aspiredu_external extends external_api {
                         'revealidentities' => $module->revealidentities,
                         'requiresubmissionstatement' => $module->requiresubmissionstatement,
                         'configs' => $configarray
-                    );
+                    ];
                 }
             }
-            $coursearray[] = array(
-                'id' => $courses[$id]->id,
-                'fullname' => $courses[$id]->fullname,
-                'shortname' => $courses[$id]->shortname,
-                'timemodified' => $courses[$id]->timemodified,
+            $coursearray[] = [
+                'id' => $course->id,
+                'fullname' => $course->fullname,
+                'shortname' => $course->shortname,
+                'timemodified' => $course->timemodified,
                 'assignments' => $assignmentarray
-            );
+            ];
         }
 
-        $result = array(
+        return [
             'courses' => $coursearray,
             'warnings' => $warnings
-        );
-        return $result;
+        ];
     }
 
     /**
@@ -1615,7 +1633,7 @@ class local_aspiredu_external extends external_api {
      */
     private static function mod_assign_get_assignments_assignment_structure() {
         return new external_single_structure(
-            array(
+            [
                 'id' => new external_value(PARAM_INT, 'assignment id'),
                 'course' => new external_value(PARAM_INT, 'course id'),
                 'name' => new external_value(PARAM_RAW, 'assignment name'),
@@ -1637,7 +1655,7 @@ class local_aspiredu_external extends external_api {
                 'requiresubmissionstatement' => new external_value(PARAM_INT, 'student must accept submission statement'),
                 'configs' => new external_multiple_structure(
                     self::mod_assign_get_assignments_config_structure(), 'configuration settings')
-            ), 'assignment information object');
+            ], 'assignment information object');
     }
 
     /**
@@ -1648,14 +1666,14 @@ class local_aspiredu_external extends external_api {
      */
     private static function mod_assign_get_assignments_config_structure() {
         return new external_single_structure(
-            array(
+            [
                 'id' => new external_value(PARAM_INT, 'assign_plugin_config id'),
                 'assignment' => new external_value(PARAM_INT, 'assignment id'),
                 'plugin' => new external_value(PARAM_TEXT, 'plugin'),
                 'subtype' => new external_value(PARAM_TEXT, 'subtype'),
                 'name' => new external_value(PARAM_TEXT, 'name'),
                 'value' => new external_value(PARAM_TEXT, 'value')
-            ), 'assignment configuration object'
+            ], 'assignment configuration object'
         );
     }
 
@@ -1667,14 +1685,14 @@ class local_aspiredu_external extends external_api {
      */
     private static function mod_assign_get_assignments_course_structure() {
         return new external_single_structure(
-            array(
+            [
                 'id' => new external_value(PARAM_INT, 'course id'),
                 'fullname' => new external_value(PARAM_TEXT, 'course full name'),
                 'shortname' => new external_value(PARAM_TEXT, 'course short name'),
                 'timemodified' => new external_value(PARAM_INT, 'last time modified'),
                 'assignments' => new external_multiple_structure(
                     self::mod_assign_get_assignments_assignment_structure(), 'assignment info')
-              ), 'course information object'
+            ], 'course information object'
         );
     }
 
@@ -1686,13 +1704,13 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_assign_get_assignments_returns() {
         return new external_single_structure(
-            array(
+            [
                 'courses' => new external_multiple_structure(
                     self::mod_assign_get_assignments_course_structure(), 'list of courses'),
                 'warnings'  => new external_warnings('item can be \'course\' (errorcode 1 or 2) or \'module\' (errorcode 1)',
                     'When item is a course then itemid is a course id. When the item is a module then itemid is a module id',
                     'errorcode can be 1 (no access rights) or 2 (not enrolled or no permissions)')
-            )
+            ]
         );
     }
 
@@ -1704,7 +1722,7 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_assign_get_submissions_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'assignmentids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'assignment id'),
                     '1 or more assignment ids',
@@ -1712,14 +1730,14 @@ class local_aspiredu_external extends external_api {
                 'status' => new external_value(PARAM_ALPHA, 'status', VALUE_DEFAULT, ''),
                 'since' => new external_value(PARAM_INT, 'submitted since', VALUE_DEFAULT, 0),
                 'before' => new external_value(PARAM_INT, 'submitted before', VALUE_DEFAULT, 0)
-            )
+            ]
         );
     }
 
     /**
      * Returns submissions for the requested assignment ids
      *
-     * @param array of ints $assignmentids
+     * @param int[] $assignmentids
      * @param string $status only return submissions with this status
      * @param int $since only return submissions with timemodified >= since
      * @param int $before only return submissions with timemodified <= before
@@ -1730,22 +1748,21 @@ class local_aspiredu_external extends external_api {
         global $DB, $CFG;
         require_once("$CFG->dirroot/mod/assign/locallib.php");
         $params = self::validate_parameters(self::mod_assign_get_submissions_parameters(),
-                        array('assignmentids' => $assignmentids,
+                        ['assignmentids' => $assignmentids,
                               'status' => $status,
                               'since' => $since,
-                              'before' => $before));
+                              'before' => $before]);
 
-        $warnings = array();
-        $assignments = array();
+        $warnings = [];
+        $assignments = [];
 
         // Check the user is allowed to get the submissions for the assignments requested.
-        $placeholders = array();
         list($inorequalsql, $placeholders) = $DB->get_in_or_equal($params['assignmentids'], SQL_PARAMS_NAMED);
-        $sql = "SELECT cm.id, cm.instance FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module ".
-               "WHERE md.name = :modname AND cm.instance ".$inorequalsql;
+        $sql = 'SELECT cm.id, cm.instance FROM {course_modules} cm JOIN {modules} md ON md.id = cm.module ' .
+            'WHERE md.name = :modname AND cm.instance ' .$inorequalsql;
         $placeholders['modname'] = 'assign';
         $cms = $DB->get_records_sql($sql, $placeholders);
-        $assigns = array();
+        $assigns = [];
         foreach ($cms as $cm) {
             try {
                 $context = context_module::instance($cm->id);
@@ -1754,37 +1771,36 @@ class local_aspiredu_external extends external_api {
                 $assign = new assign($context, null, null);
                 $assigns[] = $assign;
             } catch (Exception $e) {
-                $warnings[] = array(
+                $warnings[] = [
                     'item' => 'assignment',
                     'itemid' => $cm->instance,
                     'warningcode' => '1',
                     'message' => 'No access rights in module context'
-                );
+                ];
             }
         }
 
         foreach ($assigns as $assign) {
-            $submissions = array();
+            $submissions = [];
             $submissionplugins = $assign->get_submission_plugins();
-            $placeholders = array('assignid1' => $assign->get_instance()->id,
-                                  'assignid2' => $assign->get_instance()->id);
+            $placeholders = ['assignid1' => $assign->get_instance()->id,
+                                  'assignid2' => $assign->get_instance()->id];
 
-            $sql = "SELECT mas.id, mas.assignment,mas.userid,".
-                   "mas.timecreated,mas.timemodified,mas.status,mas.groupid ".
-                   "FROM {assign_submission} mas ".
-                   "WHERE mas.assignment = :assignid2";
+            $sql = 'SELECT mas.id, mas.assignment,mas.userid,' .
+                'mas.timecreated,mas.timemodified,mas.status,mas.groupid ' .
+                'FROM {assign_submission} mas ' .
+                'WHERE mas.assignment = :assignid2';
 
             if (!empty($params['status'])) {
                 $placeholders['status'] = $params['status'];
-                $sql = $sql." AND mas.status = :status";
+                $sql = $sql. ' AND mas.status = :status';
             }
+            $placeholders['since'] = $params['since'];
             if (!empty($params['before'])) {
-                $placeholders['since'] = $params['since'];
                 $placeholders['before'] = $params['before'];
-                $sql = $sql." AND mas.timemodified BETWEEN :since AND :before";
+                $sql = $sql. ' AND mas.timemodified BETWEEN :since AND :before';
             } else {
-                $placeholders['since'] = $params['since'];
-                $sql = $sql." AND mas.timemodified >= :since";
+                $sql = $sql. ' AND mas.timemodified >= :since';
             }
 
             $submissionrecords = $DB->get_records_sql($sql, $placeholders);
@@ -1792,35 +1808,35 @@ class local_aspiredu_external extends external_api {
             if (!empty($submissionrecords)) {
                 $fs = get_file_storage();
                 foreach ($submissionrecords as $submissionrecord) {
-                    $submission = array(
+                    $submission = [
                         'id' => $submissionrecord->id,
                         'userid' => $submissionrecord->userid,
                         'timecreated' => $submissionrecord->timecreated,
                         'timemodified' => $submissionrecord->timemodified,
                         'status' => $submissionrecord->status,
                         'groupid' => $submissionrecord->groupid
-                    );
+                    ];
                     foreach ($submissionplugins as $submissionplugin) {
-                        $plugin = array(
+                        $plugin = [
                             'name' => $submissionplugin->get_name(),
                             'type' => $submissionplugin->get_type()
-                        );
+                        ];
                         // Subtype is 'assignsubmission', type is currently 'file' or 'onlinetext'.
                         $component = $submissionplugin->get_subtype().'_'.$submissionplugin->get_type();
 
                         $fileareas = $submissionplugin->get_file_areas();
                         foreach ($fileareas as $filearea => $name) {
-                            $fileareainfo = array('area' => $filearea);
+                            $fileareainfo = ['area' => $filearea];
                             $files = $fs->get_area_files(
                                 $assign->get_context()->id,
                                 $component,
                                 $filearea,
                                 $submissionrecord->id,
-                                "timemodified",
+                                'timemodified',
                                 false
                             );
                             foreach ($files as $file) {
-                                $filepath = array('filepath' => $file->get_filepath().$file->get_filename());
+                                $filepath = ['filepath' => $file->get_filepath().$file->get_filename()];
                                 $fileareainfo['files'][] = $filepath;
                             }
                             $plugin['fileareas'][] = $fileareainfo;
@@ -1828,12 +1844,12 @@ class local_aspiredu_external extends external_api {
 
                         $editorfields = $submissionplugin->get_editor_fields();
                         foreach ($editorfields as $name => $description) {
-                            $editorfieldinfo = array(
+                            $editorfieldinfo = [
                                 'name' => $name,
                                 'description' => $description,
                                 'text' => $submissionplugin->get_editor_text($name, $submissionrecord->id),
                                 'format' => $submissionplugin->get_editor_format($name, $submissionrecord->id)
-                            );
+                            ];
                             $plugin['editorfields'][] = $editorfieldinfo;
                         }
 
@@ -1842,26 +1858,25 @@ class local_aspiredu_external extends external_api {
                     $submissions[] = $submission;
                 }
             } else {
-                $warnings[] = array(
+                $warnings[] = [
                     'item' => 'module',
                     'itemid' => $assign->get_instance()->id,
                     'warningcode' => '3',
                     'message' => 'No submissions found'
-                );
+                ];
             }
 
-            $assignments[] = array(
+            $assignments[] = [
                 'assignmentid' => $assign->get_instance()->id,
                 'submissions' => $submissions
-            );
+            ];
 
         }
 
-        $result = array(
+        return [
             'assignments' => $assignments,
             'warnings' => $warnings
-        );
-        return $result;
+        ];
     }
 
     /**
@@ -1872,11 +1887,11 @@ class local_aspiredu_external extends external_api {
      */
     private static function mod_assign_get_submissions_structure() {
         return new external_single_structure(
-            array (
+            [
                 'assignmentid' => new external_value(PARAM_INT, 'assignment id'),
                 'submissions' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'id' => new external_value(PARAM_INT, 'submission id'),
                             'userid' => new external_value(PARAM_INT, 'student id'),
                             'timecreated' => new external_value(PARAM_INT, 'submission creation time'),
@@ -1885,42 +1900,42 @@ class local_aspiredu_external extends external_api {
                             'groupid' => new external_value(PARAM_INT, 'group id'),
                             'plugins' => new external_multiple_structure(
                                 new external_single_structure(
-                                    array(
+                                    [
                                         'type' => new external_value(PARAM_TEXT, 'submission plugin type'),
                                         'name' => new external_value(PARAM_TEXT, 'submission plugin name'),
                                         'fileareas' => new external_multiple_structure(
                                             new external_single_structure(
-                                                array (
+                                                [
                                                     'area' => new external_value (PARAM_TEXT, 'file area'),
                                                     'files' => new external_multiple_structure(
                                                         new external_single_structure(
-                                                            array (
+                                                            [
                                                                 'filepath' => new external_value (PARAM_TEXT, 'file path')
-                                                            )
+                                                            ]
                                                         ), 'files', VALUE_OPTIONAL
                                                     )
-                                                )
+                                                ]
                                             ), 'fileareas', VALUE_OPTIONAL
                                         ),
                                         'editorfields' => new external_multiple_structure(
                                             new external_single_structure(
-                                                array(
+                                                [
                                                     'name' => new external_value(PARAM_TEXT, 'field name'),
                                                     'description' => new external_value(PARAM_TEXT, 'field description'),
                                                     'text' => new external_value (PARAM_RAW, 'field value'),
                                                     'format' => new external_format_value ('text')
-                                                )
+                                                ]
                                             )
                                             , 'editorfields', VALUE_OPTIONAL
                                         )
-                                    )
+                                    ]
                                 )
                                 , 'plugins', VALUE_OPTIONAL
                             )
-                        )
+                        ]
                     )
                 )
-            )
+            ]
         );
     }
 
@@ -1932,11 +1947,11 @@ class local_aspiredu_external extends external_api {
      */
     public static function mod_assign_get_submissions_returns() {
         return new external_single_structure(
-            array(
+            [
                 'assignments' => new external_multiple_structure(
                     self::mod_assign_get_submissions_structure(), 'assignment submissions'),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -1947,9 +1962,9 @@ class local_aspiredu_external extends external_api {
      */
     public static function get_custom_course_settings_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'id of course, 0 for all', VALUE_DEFAULT, 0),
-            )
+            ]
         );
     }
 
@@ -1962,15 +1977,16 @@ class local_aspiredu_external extends external_api {
     public static function get_custom_course_settings($courseid = 0) {
 
         // Warnings array, it can be empty at the end but is mandatory.
-        $warnings = array();
-        $settings = array();
+        $warnings = [];
+        $settings = [];
 
-        $params = array(
+        $params = [
             'courseid' => $courseid
-        );
+        ];
         $params = self::validate_parameters(self::get_custom_course_settings_parameters(), $params);
         $courseid = $params['courseid'];
 
+        $courses = [];
         if ($courseid) {
             $courses[] = $courseid;
             $settings[$courseid] = get_config('local_aspiredu', 'course' . $courseid);
@@ -1992,33 +2008,32 @@ class local_aspiredu_external extends external_api {
                 require_capability('moodle/course:update', $context);
 
             } catch (Exception $e) {
-                $warnings[] = array(
+                $warnings[] = [
                     'item' => 'course',
                     'itemid' => $id,
                     'warningcode' => '1',
                     'message' => 'No access rights in course context'
-                );
+                ];
                 unset($settings[$id]);
             }
         }
 
-        $finalsettings = array();
+        $finalsettings = [];
         foreach ($settings as $courseid => $settingjson) {
             $settingjson = json_decode($settingjson);
             foreach ($settingjson as $name => $value) {
-                $finalsettings[] = array(
+                $finalsettings[] = [
                     'courseid' => $courseid,
                     'name' => $name,
                     'value' => $value,
-                );
+                ];
             }
         }
 
-        $results = array(
+        return [
             'settings' => $finalsettings,
             'warnings' => $warnings
-        );
-        return $results;
+        ];
     }
 
     /**
@@ -2028,18 +2043,18 @@ class local_aspiredu_external extends external_api {
      */
     public static function get_custom_course_settings_returns() {
         return new external_single_structure(
-            array(
+            [
                 'settings' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'courseid' => new external_value(PARAM_INT, 'course id'),
                             'name' => new external_value(PARAM_NOTAGS, 'setting name'),
                             'value' => new external_value(PARAM_NOTAGS, 'setting value'),
-                        )
+                        ]
                     )
                 ),
                 'warnings' => new external_warnings(),
-            )
+            ]
         );
     }
 
@@ -2051,7 +2066,7 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_grades_get_course_grades_returns() {
         return new external_single_structure(
-            array(
+            [
                 'scaleid' => new external_value(PARAM_INT, 'The ID of the custom scale or 0'),
                 'name' => new external_value(PARAM_RAW, 'The module name'),
                 'grademin' => new external_value(PARAM_FLOAT, 'Minimum grade'),
@@ -2061,7 +2076,7 @@ class local_aspiredu_external extends external_api {
                 'hidden' => new external_value(PARAM_INT, '0 means not hidden, > 1 is a date to hide until'),
                 'grades' => new external_multiple_structure(
                     new external_single_structure(
-                        array(
+                        [
                             'userid' => new external_value(
                                 PARAM_INT, 'Student ID'),
                             'grade' => new external_value(
@@ -2090,10 +2105,10 @@ class local_aspiredu_external extends external_api {
                                 PARAM_RAW, 'A nicely formatted string representation of the grade'),
                             'str_feedback' => new external_value(
                                 PARAM_RAW, 'A formatted string representation of the feedback from the grader'),
-                        )
+                        ]
                     ), 'user grades', VALUE_OPTIONAL
                 ),
-            )
+            ]
         );
     }
 
@@ -2106,13 +2121,13 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_courses_paginated_parameters() {
         return new external_function_parameters (
-            array(
+            [
                 'sortby' => new external_value(PARAM_ALPHA,
                     'sort by this element: id, timemodified, timestart or timeend', VALUE_DEFAULT, 'timemodified'),
                 'sortdirection' => new external_value(PARAM_ALPHA, 'sort direction: ASC or DESC', VALUE_DEFAULT, 'DESC'),
                 'page' => new external_value(PARAM_INT, 'current page', VALUE_DEFAULT, -1),
                 'perpage' => new external_value(PARAM_INT, 'items per page', VALUE_DEFAULT, 0),
-            )
+            ]
         );
     }
 
@@ -2120,29 +2135,34 @@ class local_aspiredu_external extends external_api {
     /**
      * Returns a list of courses in a paginated response.
      *
-     * @param array $forumids the forum ids
-     * @param int $limitfrom limit from SQL data
-     * @param int $limitnum limit number SQL data
-     *
+     * @param string $sortby
+     * @param string $sortdirection
+     * @param int $page
+     * @param int $perpage
      * @return array the paginated colleciton of courses
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws invalid_parameter_exception
+     * @throws moodle_exception
+     * @throws required_capability_exception
      * @since Moodle 3.11
      */
     public static function core_course_get_courses_paginated($sortby = 'id',
                                                     $sortdirection = 'DESC', $page = -1, $perpage = 0) {
 
-        global $CFG, $DB, $USER;
+        global $CFG, $DB;
 
-        require_once($CFG->dirroot . "/mod/forum/lib.php");
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
 
-        $warnings = array();
+        $warnings = [];
 
         $params = self::validate_parameters(self::core_course_get_courses_paginated_parameters(),
-            array(
+            [
                 'sortby' => $sortby,
                 'sortdirection' => $sortdirection,
                 'page' => $page,
                 'perpage' => $perpage
-            )
+            ]
         );
 
         $sortby         = $params['sortby'];
@@ -2150,14 +2170,14 @@ class local_aspiredu_external extends external_api {
         $page           = $params['page'];
         $perpage        = $params['perpage'];
 
-        $sortallowedvalues = array('id', 'startdate', 'enddate', 'timemodified');
+        $sortallowedvalues = ['id', 'startdate', 'enddate', 'timemodified'];
         if (!in_array($sortby, $sortallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortby parameter (value: ' . $sortby . '),' .
                 'allowed values are: ' . implode(',', $sortallowedvalues));
         }
 
         $sortdirection = strtoupper($sortdirection);
-        $directionallowedvalues = array('ASC', 'DESC');
+        $directionallowedvalues = ['ASC', 'DESC'];
         if (!in_array($sortdirection, $directionallowedvalues)) {
             throw new invalid_parameter_exception('Invalid value for sortdirection parameter (value: ' . $sortdirection . '),' .
                 'allowed values are: ' . implode(',', $directionallowedvalues));
@@ -2174,7 +2194,7 @@ class local_aspiredu_external extends external_api {
 
         $courses = $DB->get_records('course', null, $sort, '*', $limitfrom, $limitnum);
 
-        $coursesinfo = array();
+        $coursesinfo = [];
         foreach ($courses as $course) {
             // Now security checks.
             $context = context_course::instance($course->id, IGNORE_MISSING);
@@ -2191,7 +2211,7 @@ class local_aspiredu_external extends external_api {
                 require_capability('moodle/course:view', $context);
             }
 
-            $courseinfo = array();
+            $courseinfo = [];
             $courseinfo['id'] = $course->id;
             $courseinfo['fullname'] = external_format_string($course->fullname, $context->id);
             $courseinfo['shortname'] = external_format_string($course->shortname, $context->id);
@@ -2248,12 +2268,12 @@ class local_aspiredu_external extends external_api {
                 $courseinfo['forcetheme'] = clean_param($course->theme, PARAM_THEME);
                 $courseinfo['enablecompletion'] = $course->enablecompletion;
                 $courseinfo['completionnotify'] = $course->completionnotify;
-                $courseinfo['courseformatoptions'] = array();
+                $courseinfo['courseformatoptions'] = [];
                 foreach ($courseformatoptions as $key => $value) {
-                    $courseinfo['courseformatoptions'][] = array(
+                    $courseinfo['courseformatoptions'][] = [
                         'name' => $key,
                         'value' => $value
-                    );
+                    ];
                 }
             }
 
@@ -2263,7 +2283,7 @@ class local_aspiredu_external extends external_api {
             }
         }
 
-        $result = array();
+        $result = [];
         $result['courses'] = $coursesinfo;
         $result['warnings'] = $warnings;
         return $result;
@@ -2278,10 +2298,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_courses_paginated_returns() {
         return new external_single_structure(
-            array(
+            [
                 'courses' => new external_multiple_structure(
                         new external_single_structure(
-                            array(
+                            [
                                 'id' => new external_value(PARAM_INT, 'course id'),
                                 'shortname' => new external_value(PARAM_RAW, 'course short name'),
                                 'categoryid' => new external_value(PARAM_INT, 'category id'),
@@ -2338,9 +2358,9 @@ class local_aspiredu_external extends external_api {
                                         'name of the force theme', VALUE_OPTIONAL),
                                 'courseformatoptions' => new external_multiple_structure(
                                     new external_single_structure(
-                                        array('name' => new external_value(PARAM_ALPHANUMEXT, 'course format option name'),
+                                        ['name' => new external_value(PARAM_ALPHANUMEXT, 'course format option name'),
                                             'value' => new external_value(PARAM_RAW, 'course format option value')
-                                    )), 'additional options for particular course format', VALUE_OPTIONAL
+                                        ]), 'additional options for particular course format', VALUE_OPTIONAL
                                  ),
                                 'showactivitydates' => new external_value(
                                     PARAM_BOOL, 'Whether the activity dates are shown or not'),
@@ -2355,11 +2375,11 @@ class local_aspiredu_external extends external_api {
                                          'valueraw' => new external_value(PARAM_RAW, 'The raw value of the custom field'),
                                          'value' => new external_value(PARAM_RAW, 'The value of the custom field')]
                                     ), 'Custom fields and associated values', VALUE_OPTIONAL),
-                            ), 'course'
+                            ], 'course'
                         )
                     ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -2371,9 +2391,9 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_course_module_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'cmid' => new external_value(PARAM_INT, 'The course module id')
-            )
+            ]
         );
     }
 
@@ -2388,11 +2408,11 @@ class local_aspiredu_external extends external_api {
     public static function core_course_get_course_module($cmid) {
 
         $params = self::validate_parameters(self::core_course_get_course_module_parameters(),
-                                            array(
+                                            [
                                                 'cmid' => $cmid,
-                                            ));
+                                            ]);
 
-        $warnings = array();
+        $warnings = [];
 
         $cm = get_coursemodule_from_id(null, $params['cmid'], 0, true, MUST_EXIST);
         $context = context_module::instance($cm->id);
@@ -2416,9 +2436,9 @@ class local_aspiredu_external extends external_api {
             $info->completion = $cm->completion;
         }
         // Format name.
-        $info->name = format_string($cm->name, true, array('context' => $context));
+        $info->name = format_string($cm->name, true, ['context' => $context]);
 
-        $result = array();
+        $result = [];
         $result['cm'] = $info;
         $result['warnings'] = $warnings;
         return $result;
@@ -2432,9 +2452,9 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_course_module_returns() {
         return new external_single_structure(
-            array(
+            [
                 'cm' => new external_single_structure(
-                    array(
+                    [
                         'id' => new external_value(PARAM_INT, 'The course module id'),
                         'course' => new external_value(PARAM_INT, 'The course id'),
                         'module' => new external_value(PARAM_INT, 'The module type id'),
@@ -2457,10 +2477,10 @@ class local_aspiredu_external extends external_api {
                         'completionexpected' => new external_value(PARAM_INT, 'Completion time expected', VALUE_OPTIONAL),
                         'showdescription' => new external_value(PARAM_INT, 'If the description is showed', VALUE_OPTIONAL),
                         'availability' => new external_value(PARAM_RAW, 'Availability settings', VALUE_OPTIONAL),
-                    )
+                    ]
                 ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -2472,10 +2492,10 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_course_module_from_instance_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'module' => new external_value(PARAM_COMPONENT, 'The module name'),
                 'instance' => new external_value(PARAM_INT, 'The module instance id')
-            )
+            ]
         );
     }
 
@@ -2491,12 +2511,12 @@ class local_aspiredu_external extends external_api {
     public static function core_course_get_course_module_from_instance($module, $instance) {
 
         $params = self::validate_parameters(self::core_course_get_course_module_from_instance_parameters(),
-                                            array(
+                                            [
                                                 'module' => $module,
                                                 'instance' => $instance,
-                                            ));
+                                            ]);
 
-        $warnings = array();
+        $warnings = [];
 
         $cm = get_coursemodule_from_instance($params['module'], $params['instance'], 0, true, MUST_EXIST);
         $context = context_module::instance($cm->id);
@@ -2520,9 +2540,9 @@ class local_aspiredu_external extends external_api {
             $info->completion = $cm->completion;
         }
         // Format name.
-        $info->name = format_string($cm->name, true, array('context' => $context));
+        $info->name = format_string($cm->name, true, ['context' => $context]);
 
-        $result = array();
+        $result = [];
         $result['cm'] = $info;
         $result['warnings'] = $warnings;
         return $result;
@@ -2536,9 +2556,9 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_course_get_course_module_from_instance_returns() {
         return new external_single_structure(
-            array(
+            [
                 'cm' => new external_single_structure(
-                    array(
+                    [
                         'id' => new external_value(PARAM_INT, 'The course module id'),
                         'course' => new external_value(PARAM_INT, 'The course id'),
                         'module' => new external_value(PARAM_INT, 'The module type id'),
@@ -2561,10 +2581,10 @@ class local_aspiredu_external extends external_api {
                         'completionexpected' => new external_value(PARAM_INT, 'Completion time expected', VALUE_OPTIONAL),
                         'showdescription' => new external_value(PARAM_INT, 'If the description is showed', VALUE_OPTIONAL),
                         'availability' => new external_value(PARAM_RAW, 'Availability settings', VALUE_OPTIONAL),
-                    )
+                    ]
                 ),
                 'warnings' => new external_warnings()
-            )
+            ]
         );
     }
 
@@ -2575,13 +2595,13 @@ class local_aspiredu_external extends external_api {
      */
     public static function core_grades_get_course_grades_parameters() {
         return new external_function_parameters(
-            array(
+            [
                 'courseid' => new external_value(PARAM_INT, 'id of course'),
                 'userids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'user ID'),
-                    'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, array()
+                    'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, []
                 )
-            )
+            ]
         );
     }
 
@@ -2592,12 +2612,12 @@ class local_aspiredu_external extends external_api {
      * @param  array  $userids      Array of user ids
      * @return stdClass             Array of grades
      */
-    public static function core_grades_get_course_grades($courseid, $userids = array()) {
-        global $CFG, $USER, $DB;
-        require_once($CFG->libdir  . "/gradelib.php");
+    public static function core_grades_get_course_grades($courseid, $userids = []) {
+        global $CFG;
+        require_once($CFG->libdir  . '/gradelib.php');
 
         $params = self::validate_parameters(self::core_grades_get_grades_parameters(),
-            array('courseid' => $courseid, 'userids' => $userids));
+            ['courseid' => $courseid, 'userids' => $userids]);
 
         $courseid = $params['courseid'];
         $userids = $params['userids'];
@@ -2605,7 +2625,6 @@ class local_aspiredu_external extends external_api {
         $coursecontext = context_course::instance($courseid);
         self::validate_context($coursecontext);
 
-        $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
         require_capability('moodle/grade:viewall', $coursecontext);
 
         $gradeitem = grade_item::fetch_course_item($courseid);
@@ -2624,7 +2643,7 @@ class local_aspiredu_external extends external_api {
         $item->locked     = (empty($item->locked)) ? 0 : 1;
         $item->hidden     = $gradeitem->is_hidden();
         $item->hidden     = (empty($item->hidden)) ? 0 : 1;
-        $item->grades     = array();
+        $item->grades     = [];
 
         switch ($gradeitem->gradetype) {
             case GRADE_TYPE_NONE:
@@ -2643,7 +2662,7 @@ class local_aspiredu_external extends external_api {
         }
 
         if ($userids) {
-            $gradegrades = grade_grade::fetch_users_grades($gradeitem, $userids, true);
+            $gradegrades = grade_grade::fetch_users_grades($gradeitem, $userids);
             foreach ($userids as $userid) {
                 $gradegrades[$userid]->gradeItem =& $gradeitem;
 

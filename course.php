@@ -31,8 +31,8 @@ $id = required_param('id', PARAM_INT);
 $course = get_course($id);
 $context = context_course::instance($course->id);
 
-$PAGE->set_url('/local/aspiredu/course.php', array('id' => $id));
-$returnurl = new moodle_url('/course/view.php', array('id' => $id));
+$PAGE->set_url('/local/aspiredu/course.php', ['id' => $id]);
+$returnurl = new moodle_url('/course/view.php', ['id' => $id]);
 
 require_login($course);
 require_capability('moodle/course:update', $context);
@@ -47,12 +47,11 @@ $editform = new course_form(null);
 
 if ($coursesettings = get_config('local_aspiredu', 'course' . $course->id)) {
     $coursesettings = json_decode($coursesettings);
-    $editform->set_data($coursesettings);
 } else {
     $coursesettings = new stdClass();
     $coursesettings->id = $course->id;
-    $editform->set_data($coursesettings);
 }
+$editform->set_data($coursesettings);
 
 if ($editform->is_cancelled()) {
     redirect($returnurl);
