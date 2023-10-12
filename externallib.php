@@ -124,7 +124,7 @@ class local_aspiredu_external extends external_api {
             $cminstanceid = $cm->instance;
         }
 
-        $grades = local_aspiredu_grade_get_grades($params['courseid'], $itemtype, $itemmodule, $cminstanceid, $params['userids']);
+        $grades = grade_get_grades($params['courseid'], $itemtype, $itemmodule, $cminstanceid, $params['userids']);
 
         $acitivityinstances = null;
         if (empty($cm)) {
