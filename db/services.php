@@ -127,9 +127,8 @@ $functions = [
     ],
 
     'local_aspiredu_core_grades_get_course_grades' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_grades_get_course_grades',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => '\local_aspiredu\external\core_grades_get_course_grades',
+        'methodname' => 'execute',
         'description' => 'Return the final course grade for the given users',
         'type' => 'read'
     ],
