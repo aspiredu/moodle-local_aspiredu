@@ -91,11 +91,11 @@ $functions = [
         'type' => 'read'
     ],
     'local_aspiredu_mod_assign_get_submissions' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'mod_assign_get_submissions',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'mod_assign_external',
+        'methodname' => 'get_submissions',
+        'classpath' => 'mod/assign/externallib.php',
         'description' => 'Returns the submissions for assignments',
-        'type' => 'read'
+        'type' => 'read',
     ],
     'local_aspiredu_get_custom_course_settings' => [
         'classname' => 'local_aspiredu_external',
