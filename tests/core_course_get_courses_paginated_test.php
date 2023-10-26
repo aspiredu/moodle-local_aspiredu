@@ -138,7 +138,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
         // We need to execute the return values cleaning process to simulate the web service server.
         $courses = external_api::clean_returnvalue(core_course_get_courses_paginated::execute_returns(), $courses)['courses'];
 
-        $this->assertEquals($DB->count_records('course'), count($courses));
+        $this->assertEquals($DB->count_records('course') - 1, count($courses)); // Subtract one for the site home course.
     }
 
     /**
@@ -165,7 +165,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
 
         $courses = external_api::clean_returnvalue(
             core_course_get_courses_paginated::execute_returns(),
-            core_course_get_courses_paginated::execute('id', 'ASC', 1,1)
+            core_course_get_courses_paginated::execute('id', 'ASC', 0,1)
         )['courses'];
 
         $this->assertCount(1, $courses);
@@ -194,11 +194,9 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
         $this->setUser($this->getDataGenerator()->create_user());
 
         // No permissions are required to get the site course.
-        $courses = core_course_get_courses_paginated::execute('id', 'DESC', 1, 1);
+        $courses = core_course_get_courses_paginated::execute('id', 'DESC', 0, 1);
         $courses = external_api::clean_returnvalue(core_course_get_courses_paginated::execute_returns(), $courses)['courses'];
 
-        $this->assertEquals(1, count($courses));
-        $this->assertEquals('PHPUnit test site', $courses[0]['fullname']);
-        $this->assertEquals('site', $courses[0]['format']);
+        $this->assertEquals(0, count($courses));
     }
 }

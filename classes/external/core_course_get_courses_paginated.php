@@ -4,7 +4,6 @@ namespace local_aspiredu\external;
 
 use context_course;
 use core_course\customfield\course_handler;
-use Exception;
 use external_api;
 use external_description;
 use external_format_value;
@@ -15,7 +14,6 @@ use external_value;
 use external_warnings;
 use invalid_parameter_exception;
 use moodle_exception;
-use stdClass;
 
 global $CFG;
 require_once("$CFG->dirroot/course/externallib.php");
@@ -50,7 +48,7 @@ class core_course_get_courses_paginated extends external_api {
      */
     public static function execute($sortby = 'id', $sortdirection = 'DESC', $page = -1, $perpage = 0) {
 
-        global $CFG, $DB;
+        global $CFG;
 
         require_once($CFG->dirroot . '/mod/forum/lib.php');
 
@@ -92,31 +90,28 @@ class core_course_get_courses_paginated extends external_api {
         }
         $sort = $sortby . ' ' . $sortdirection;
 
-        $courses = $DB->get_records('course', null, $sort, '*', $limitfrom, $limitnum);
+        $courses = enrol_get_my_courses(['format', 'summary', 'summaryformat', 'enddate', 'showgrades', 'showreports', 'newsitems', 'maxbytes', 'defaultgroupingid', 'lang', 'timecreated', 'timemodified', 'theme', 'enablecompletion', 'completionnotify'], $sort, $limitnum, [], true, $limitfrom);
 
         $coursesinfo = [];
         foreach ($courses as $course) {
-            // Now security checks.
-            $context = context_course::instance($course->id, IGNORE_MISSING);
+            $context = context_course::instance($course->id);
+
             $courseformatoptions = course_get_format($course)->get_format_options();
 
             $courseinfo = [];
             $courseinfo['id'] = $course->id;
-            $courseinfo['fullname'] = external_format_string($course->fullname, $context->id);
-            $courseinfo['shortname'] = external_format_string($course->shortname, $context->id);
-            $courseinfo['displayname'] = external_format_string(get_course_display_name_for_list($course), $context->id);
-            $courseinfo['categoryid'] = $course->category;
-            list($courseinfo['summary'], $courseinfo['summaryformat']) =
-                external_format_text($course->summary, $course->summaryformat, $context->id, 'course', 'summary', 0);
             $courseinfo['format'] = $course->format;
             $courseinfo['startdate'] = $course->startdate;
             $courseinfo['enddate'] = $course->enddate;
             $courseinfo['showactivitydates'] = $course->showactivitydates;
             $courseinfo['showcompletionconditions'] = $course->showcompletionconditions;
-            if (array_key_exists('numsections', $courseformatoptions)) {
-                // For backward-compatibility.
-                $courseinfo['numsections'] = $courseformatoptions['numsections'];
-            }
+            $courseinfo['categoryid'] = $course->category;
+            $courseinfo['fullname'] = external_format_string($course->fullname, $context->id);
+            $courseinfo['shortname'] = external_format_string($course->shortname, $context->id);
+            $courseinfo['displayname'] = external_format_string(get_course_display_name_for_list($course), $context->id);
+            list($courseinfo['summary'], $courseinfo['summaryformat']) =
+                external_format_text($course->summary, $course->summaryformat, $context->id, 'course', 'summary', 0);
+            $courseinfo['numsections'] = course_get_format($course)->get_last_section_number();
 
             $handler = course_handler::create();
             if ($customfields = $handler->export_instance_data($course->id)) {
@@ -141,21 +136,19 @@ class core_course_get_courses_paginated extends external_api {
                 $courseinfo['newsitems'] = $course->newsitems;
                 $courseinfo['visible'] = $course->visible;
                 $courseinfo['maxbytes'] = $course->maxbytes;
+                $courseinfo['enablecompletion'] = $course->enablecompletion;
+                $courseinfo['completionnotify'] = $course->completionnotify;
+                $courseinfo['timecreated'] = $course->timecreated;
+                $courseinfo['timemodified'] = $course->timemodified;
+                $courseinfo['groupmode'] = $course->groupmode;
+                $courseinfo['groupmodeforce'] = $course->groupmodeforce;
+                $courseinfo['defaultgroupingid'] = $course->defaultgroupingid;
                 if (array_key_exists('hiddensections', $courseformatoptions)) {
                     // For backward-compatibility.
                     $courseinfo['hiddensections'] = $courseformatoptions['hiddensections'];
                 }
-                // Return numsections for backward-compatibility with clients who expect it.
-                $courseinfo['numsections'] = course_get_format($course)->get_last_section_number();
-                $courseinfo['groupmode'] = $course->groupmode;
-                $courseinfo['groupmodeforce'] = $course->groupmodeforce;
-                $courseinfo['defaultgroupingid'] = $course->defaultgroupingid;
                 $courseinfo['lang'] = clean_param($course->lang, PARAM_LANG);
-                $courseinfo['timecreated'] = $course->timecreated;
-                $courseinfo['timemodified'] = $course->timemodified;
                 $courseinfo['forcetheme'] = clean_param($course->theme, PARAM_THEME);
-                $courseinfo['enablecompletion'] = $course->enablecompletion;
-                $courseinfo['completionnotify'] = $course->completionnotify;
                 $courseinfo['courseformatoptions'] = [];
                 foreach ($courseformatoptions as $key => $value) {
                     $courseinfo['courseformatoptions'][] = [
@@ -172,7 +165,6 @@ class core_course_get_courses_paginated extends external_api {
         $result['courses'] = $coursesinfo;
         $result['warnings'] = $warnings;
         return $result;
-
     }
 
     /**
