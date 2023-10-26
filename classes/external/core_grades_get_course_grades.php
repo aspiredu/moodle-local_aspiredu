@@ -29,8 +29,8 @@ class core_grades_get_course_grades extends external_api {
                 'grademin' => new external_value(PARAM_FLOAT, 'Minimum grade'),
                 'grademax' => new external_value(PARAM_FLOAT, 'Maximum grade'),
                 'gradepass' => new external_value(PARAM_FLOAT, 'The passing grade threshold'),
-                'locked' => new external_value(PARAM_INT, '0 means not locked, > 1 is a date to lock until'),
-                'hidden' => new external_value(PARAM_INT, '0 means not hidden, > 1 is a date to hide until'),
+                'locked' => new external_value(PARAM_BOOL, '0 means not locked, > 1 is a date to lock until'),
+                'hidden' => new external_value(PARAM_BOOL, '0 means not hidden, > 1 is a date to hide until'),
                 'grades' => new external_multiple_structure(
                     new external_single_structure(
                         [
@@ -41,11 +41,11 @@ class core_grades_get_course_grades extends external_api {
                             'grademax' => new external_value(
                                 PARAM_FLOAT, 'Max student grade'),
                             'locked' => new external_value(
-                                PARAM_INT, '0 means not locked, > 1 is a date to lock until'),
+                                PARAM_BOOL, '0 means not locked, > 1 is a date to lock until'),
                             'hidden' => new external_value(
-                                PARAM_INT, '0 means not hidden, 1 hidden, > 1 is a date to hide until'),
+                                PARAM_BOOL, '0 means not hidden, 1 hidden, > 1 is a date to hide until'),
                             'overridden' => new external_value(
-                                PARAM_INT, '0 means not overridden, > 1 means overridden'),
+                                PARAM_BOOL, '0 means not overridden, > 1 means overridden'),
                             'feedback' => new external_value(
                                 PARAM_RAW, 'Feedback from the grader'),
                             'feedbackformat' => new external_value(
@@ -108,6 +108,11 @@ class core_grades_get_course_grades extends external_api {
 
         require_capability('moodle/grade:viewall', $coursecontext);
 
-        return grade_get_course_grades($courseid, $userids);
+        $retval = grade_get_course_grades($courseid, $userids);
+        foreach ($retval->grades as $userid => $grade) {
+            $grade->userid = $userid;
+            $grade->grademax = $retval->grademax;
+        }
+        return $retval;
     }
 }
