@@ -84,10 +84,10 @@ $functions = [
         'capabilities' => '',
     ],
     'local_aspiredu_mod_assign_get_assignments' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'mod_assign_get_assignments',
-        'classpath' => 'local/aspiredu/externallib.php',
-        'description' => 'Returns the submissions for assignments',
+        'classname'   => 'mod_assign_external',
+        'methodname'  => 'get_assignments',
+        'classpath'   => 'mod/assign/externallib.php',
+        'description' => 'Returns the courses and assignments for the users capability',
         'type' => 'read'
     ],
     'local_aspiredu_mod_assign_get_submissions' => [
