@@ -149,8 +149,8 @@ class report_log_get_log_records extends external_api {
 
         $reportlog = new report_log_renderable($params['logreader'], $course, $params['userid'], $params['modid'],
             $params['modaction'],
-            $params['group'], $params['edulevel'], true, true,
-            false, true, '', $params['date'], '',
+            $params['groupid'], $params['edulevel'], true, true,
+            false, true, new \moodle_url(''), $params['date'], '',
             $params['page'], $params['perpage'], 'timecreated ' . $params['order']);
         $readers = $reportlog->get_readers();
 

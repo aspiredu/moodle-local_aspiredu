@@ -17,38 +17,44 @@
 
 global $CFG;
 
-use local_aspiredu\external\core_grades_get_course_grades;
+use local_aspiredu\external\report_log_get_log_records;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
-class grade_get_course_grades extends externallib_advanced_testcase {
+class report_log_get_log_records_test extends externallib_advanced_testcase {
 
     /**
      * Basic setup for these tests.
      */
     public function setUp(): void {
         $this->resetAfterTest();
+
+        set_config('enabled_stores', 'logstore_standard', 'tool_log');
+        set_config('buffersize', 0, 'logstore_standard');
     }
 
     /**
      * Test get_courses
      */
     public function test_get_courses() {
+        global $DB;
+
         $this->resetAfterTest(true);
 
+        $this->setAdminUser();
+
         $course = self::getDataGenerator()->create_course();
-        $student1 = $this->getDataGenerator()->create_and_enrol($course);
-        $student2 = $this->getDataGenerator()->create_and_enrol($course);
-        $teacher = $this->getDataGenerator()->create_and_enrol($course, 'teacher');
+        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
+        $user = $this->getDataGenerator()->create_user();
+        $coursecontext = \context_course::instance($course->id);
+        role_assign($studentrole->id, $user->id, $coursecontext->id);
 
-        $this->setUser($teacher);
+        $response = report_log_get_log_records::execute($course->id);
 
-        grade_regrade_final_grades($course->id);
+        external_api::clean_returnvalue(report_log_get_log_records::execute_returns(), $response);
 
-        $response = core_grades_get_course_grades::execute($course->id, [$student1->id, $student2->id]);
-
-        external_api::clean_returnvalue(core_grades_get_course_grades::execute_returns(), $response);
-
-        $this->assertCount(2, $response->grades);
+        $lastlog = array_shift($response['logs']);
+        $this->assertEquals('\core\event\role_assigned', $lastlog['eventname']);
+        $this->assertEquals($user->id, $lastlog['relateduserid']);
     }
 }
