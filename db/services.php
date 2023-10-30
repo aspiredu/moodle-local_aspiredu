@@ -26,9 +26,8 @@ defined('MOODLE_INTERNAL') || die;
 
 $functions = [
     'local_aspiredu_core_grades_get_grades' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_grades_get_grades',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => '\local_aspiredu\external\core_grades_get_grades',
+        'methodname' => 'execute',
         'description' => 'Returns grade item details and optionally student grades.',
         'type' => 'read',
         'capabilities' => 'moodle/grade:view, moodle/grade:viewall',
