@@ -33,9 +33,9 @@ $functions = [
         'capabilities' => 'moodle/grade:view, moodle/grade:viewall',
     ],
     'local_aspiredu_core_group_get_course_user_groups' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'core_group_get_course_user_groups',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'core_group_external',
+        'methodname' => 'get_course_user_groups',
+        'classpath' => 'group/externallib.php',
         'description' => 'Returns all groups in specified course for the specified user.',
         'type' => 'read',
         'capabilities' => 'moodle/course:managegroups',
