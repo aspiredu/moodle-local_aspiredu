@@ -41,9 +41,8 @@ $functions = [
         'capabilities' => 'moodle/course:managegroups',
     ],
     'local_aspiredu_gradereport_user_get_grades_table' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'gradereport_user_get_grades_table',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'gradereport_user\\external\\user',
+        'methodname' => 'get_grades_table',
         'description' => 'Get the user/s report grades table for a course',
         'type' => 'read',
         'capabilities' => '',
