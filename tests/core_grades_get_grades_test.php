@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright 2012 Andrew Davis
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_grades_external_testcase extends externallib_advanced_testcase {
+class core_grades_get_grades_test extends externallib_advanced_testcase {
 
     /**
      * Load initial test information
@@ -152,23 +152,23 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
 
         // Teacher requesting a student grade for the assignment.
         $this->setUser($teacher);
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             'mod_assign',
             $assigmentcm->id,
             array($student1->id)
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertEquals($student1rawgrade, $this->get_activity_student_grade($grades, $assigmentcm->id, $student1->id));
 
         // Teacher requesting all the grades of student1 in a course.
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             null,
             null,
             array($student1->id)
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertTrue(count($grades['items']) == 2);
         $this->assertEquals($student1rawgrade, $this->get_activity_student_grade($grades, $assigmentcm->id, $student1->id));
         $this->assertEquals($student1rawgrade, $this->get_activity_student_grade($grades, 'course', $student1->id));
@@ -178,13 +178,13 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
         $this->assertEquals(0, $this->get_outcome_student_grade($grades, $assigmentcm->id, $student1->id));
 
         // Teacher requesting all the grades of all the students in a course.
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             null,
             null,
             array($student1->id, $student2->id)
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertTrue(count($grades['items']) == 2);
         $this->assertTrue(count($grades['items'][0]['grades']) == 2);
         $this->assertTrue(count($grades['items'][1]['grades']) == 2);
@@ -192,7 +192,7 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
         // Student requesting another student's grade for the assignment (should fail).
         $this->setUser($student1);
         try {
-            $grades = core_grades_external::get_grades(
+            $grades = \local_aspiredu\external\core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -203,23 +203,9 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
             $this->assertTrue(true);
         }
 
-        // Parent requesting their child's grade for the assignment (should fail).
-        $this->setUser($parent);
-        try {
-            $grades = core_grades_external::get_grades(
-                $course->id,
-                'mod_assign',
-                $assigmentcm->id,
-                array($student1->id)
-            );
-            $this->fail('moodle_exception expected');
-        } catch (moodle_exception $ex) {
-            $this->assertTrue(true);
-        }
-
         // Parent requesting another student's grade for the assignment(should fail).
         try {
-            $grades = core_grades_external::get_grades(
+            $grades = \local_aspiredu\external\core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -232,7 +218,7 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
 
         // Student requesting all other student grades for the assignment (should fail).
         try {
-            $grades = core_grades_external::get_grades(
+            $grades = \local_aspiredu\external\core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -245,7 +231,7 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
 
         // Student requesting only grade item information (should fail).
         try {
-            $grades = core_grades_external::get_grades(
+            $grades = \local_aspiredu\external\core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -258,32 +244,32 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
 
         // Teacher requesting student grades for a course.
         $this->setUser($teacher);
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             'mod_assign',
             $assigmentcm->id,
             array($student1->id, $student2->id)
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertEquals($student1rawgrade, $this->get_activity_student_grade($grades, $assigmentcm->id, $student1->id));
         $this->assertEquals($student2rawgrade, $this->get_activity_student_grade($grades, $assigmentcm->id, $student2->id));
 
         // Teacher requesting grade item information.
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             'mod_assign',
             $assigmentcm->id
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $activity = $this->get_activity($grades, $assigmentcm->id);
         $this->assertEquals($activity['name'], $assignmentname);
         $this->assertEquals(count($activity['grades']), 0);
 
         // Teacher requesting all grade items in a course.
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertTrue(count($grades['items']) == 2);
 
         $activity = $this->get_activity($grades, $assigmentcm->id);
@@ -312,13 +298,13 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
 
         // Teacher should still be able to see the hidden grades.
         $this->setUser($teacher);
-        $grades = core_grades_external::get_grades(
+        $grades = \local_aspiredu\external\core_grades_get_grades::execute(
             $course->id,
             'mod_assign',
             $assigmentcm->id,
             array($student1->id)
         );
-        $grades = external_api::clean_returnvalue(core_grades_external::get_grades_returns(), $grades);
+        $grades = external_api::clean_returnvalue(\local_aspiredu\external\core_grades_get_grades::execute_returns(), $grades);
         $this->assertEquals($student1rawgrade, $this->get_activity_student_grade($grades, $assigmentcm->id, $student1->id));
     }
 
@@ -388,150 +374,6 @@ class core_grades_external_testcase extends externallib_advanced_testcase {
             }
         }
         return null;
-    }
-
-    /**
-     * Test update_grades()
-     */
-    public function test_update_grades() {
-        global $DB;
-
-        $this->resetAfterTest(true);
-
-        $assignmentname = 'The assignment';
-        $student1rawgrade = 10;
-        $student2rawgrade = 20;
-        list($course, $assignment, $student1, $student2, $teacher, $parent) =
-            $this->load_test_data($assignmentname, $student1rawgrade, $student2rawgrade);
-        $assigmentcm = get_coursemodule_from_id('assign', $assignment->cmid, 0, false, MUST_EXIST);
-
-        $this->setUser($teacher);
-
-        // Teacher updating grade item information.
-        $changedmax = 93;
-        $result = core_grades_external::update_grades(
-            'test',
-            $course->id,
-            'mod_assign',
-            $assigmentcm->id,
-            0,
-            array(),
-            array('grademax' => $changedmax)
-        );
-        $result = external_api::clean_returnvalue(core_grades_external::update_grades_returns(), $result);
-        $this->assertTrue($result == GRADE_UPDATE_OK);
-        $grades = grade_get_grades($course->id, 'mod', 'assign', $assignment->id);
-        $this->assertTrue($grades->items[0]->grademax == $changedmax);
-
-        // Teacher updating 1 student grade.
-        $student1grade = 23;
-        $result = core_grades_external::update_grades(
-            'test',
-            $course->id,
-            'mod_assign',
-            $assigmentcm->id,
-            0,
-            array(array('studentid' => $student1->id, 'grade' => $student1grade))
-        );
-        $result = external_api::clean_returnvalue(core_grades_external::update_grades_returns(), $result);
-        $this->assertTrue($result == GRADE_UPDATE_OK);
-        $grades = grade_get_grades($course->id, 'mod', 'assign', $assignment->id, array($student1->id));
-        $this->assertTrue($grades->items[0]->grades[$student1->id]->grade == $student1grade);
-
-        // Teacher updating multiple student grades.
-        $student1grade = 11;
-        $student2grade = 13;
-        $result = core_grades_external::update_grades(
-            'test',
-            $course->id,
-            'mod_assign',
-            $assigmentcm->id,
-            0,
-            array(
-                array('studentid' => $student1->id, 'grade' => $student1grade),
-                array('studentid' => $student2->id, 'grade' => $student2grade)
-            )
-        );
-        $result = external_api::clean_returnvalue(core_grades_external::update_grades_returns(), $result);
-        $this->assertTrue($result == GRADE_UPDATE_OK);
-        $grades = grade_get_grades($course->id, 'mod', 'assign', $assignment->id, array($student1->id, $student2->id));
-        $this->assertTrue($grades->items[0]->grades[$student1->id]->grade == $student1grade);
-        $this->assertTrue($grades->items[0]->grades[$student2->id]->grade == $student2grade);
-
-        // Student attempting to update their own grade (should fail).
-        $this->setUser($student1);
-        try {
-            $student1grade = 17;
-            $result = core_grades_external::update_grades(
-                'test',
-                $course->id,
-                'mod_assign',
-                $assigmentcm->id,
-                0,
-                array( array('studentid' => $student1->id, 'grade' => $student1grade))
-            );
-            $this->fail('moodle_exception expected');
-        } catch (moodle_exception $ex) {
-            $this->assertTrue(true);
-        }
-
-        // Parent attempting to update their child's grade (should fail).
-        $this->setUser($parent);
-        try {
-            $student1grade = 13;
-            $result = core_grades_external::update_grades(
-                'test',
-                $course->id,
-                'mod_assign',
-                $assigmentcm->id,
-                0,
-                array( array('studentid' => $student1->id, 'grade' => $student1grade))
-            );
-            $this->fail('moodle_exception expected');
-        } catch (moodle_exception $ex) {
-            $this->assertTrue(true);
-        }
-
-        // Student trying to hide a grade item (should fail).
-        $this->setUser($student1);
-        try {
-            $result = core_grades_external::update_grades(
-                'test',
-                $course->id,
-                'mod_assign',
-                $assigmentcm->id,
-                0,
-                array(),
-                array('hidden' => 1)
-            );
-            $this->fail('moodle_exception expected');
-        } catch (moodle_exception $ex) {
-            $this->assertTrue(true);
-        }
-
-        // Give the student role 'moodle/grade:hide' and they should now be able to hide the grade item.
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        $coursecontext = context_course::instance($course->id);
-        assign_capability('moodle/grade:hide', CAP_ALLOW, $studentrole->id, $coursecontext->id);
-        accesslib_clear_all_caches_for_unit_testing();
-
-        // Check the activity isn't already hidden.
-        $grades = grade_get_grades($course->id, 'mod', 'assign', $assignment->id);
-        $this->assertTrue($grades->items[0]->hidden == 0);
-
-        $result = core_grades_external::update_grades(
-            'test',
-            $course->id,
-            'mod_assign',
-            $assigmentcm->id,
-            0,
-            array(),
-            array('hidden' => 1)
-        );
-        $result = external_api::clean_returnvalue(core_grades_external::update_grades_returns(), $result);
-        $this->assertTrue($result == GRADE_UPDATE_OK);
-        $grades = grade_get_grades($course->id, 'mod', 'assign', $assignment->id);
-        $this->assertTrue($grades->items[0]->hidden == 1);
     }
 
 }

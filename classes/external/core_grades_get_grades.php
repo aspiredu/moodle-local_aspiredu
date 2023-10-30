@@ -3,6 +3,7 @@
 namespace local_aspiredu\external;
 
 use context_course;
+use context_module;
 use context_user;
 use core_component;
 use Exception;
@@ -19,6 +20,9 @@ use stdClass;
 
 global $CFG;
 require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->dirroot/grade/querylib.php");
+
+// NOTE - this function is based on a forward-port of a deprecated function - see MDL-51373
 
 class core_grades_get_grades extends external_api {
 
@@ -200,159 +204,166 @@ class core_grades_get_grades extends external_api {
         }
 
         $cm = null;
-        if (!empty($itemmodule) && !empty($activityid)) {
-            if (!$cm = get_coursemodule_from_id($itemmodule, $activityid)) {
+        if (!empty($itemmodule) && !empty($params['activityid'])) {
+            if (!$cm = get_coursemodule_from_id($itemmodule, $params['activityid'])) {
                 throw new moodle_exception('invalidcoursemodule');
             }
+            $iteminstance = $cm->instance;
         }
 
-        $cminstanceid = null;
-        if (!empty($cm)) {
-            $cminstanceid = $cm->instance;
+        // Load all the module info.
+        $modinfo = get_fast_modinfo($params['courseid']);
+        $activityinstances = $modinfo->get_instances();
+
+        $gradeparams = array('courseid' => $params['courseid']);
+        if (!empty($itemtype)) {
+            $gradeparams['itemtype'] = $itemtype;
+        }
+        if (!empty($itemmodule)) {
+            $gradeparams['itemmodule'] = $itemmodule;
+        }
+        if (!empty($iteminstance)) {
+            $gradeparams['iteminstance'] = $iteminstance;
         }
 
-        $grades = grade_get_grades($params['courseid'], $itemtype, $itemmodule, $cminstanceid, $params['userids']);
+        if ($activitygrades = grade_item::fetch_all($gradeparams)) {
+            $canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($params['courseid']));
 
-        $acitivityinstances = null;
-        if (empty($cm)) {
-            // If we're dealing with multiple activites load all the module info.
-            $modinfo = get_fast_modinfo($params['courseid']);
-            $acitivityinstances = $modinfo->get_instances();
-        }
+            foreach ($activitygrades as $activitygrade) {
 
-        foreach ($grades->items as $gradeitem) {
-            if (!empty($cm)) {
-                // If they only requested one activity we will already have the cm.
-                $modulecm = $cm;
-            } else if (!empty($gradeitem->itemmodule)) {
-                $modulecm = $acitivityinstances[$gradeitem->itemmodule][$gradeitem->iteminstance];
-            } else {
-                // Course grade item.
-                continue;
-            }
-
-            // Make student feedback ready for output.
-            foreach ($gradeitem->grades as $studentgrade) {
-                if (!empty($studentgrade->feedback)) {
-                    list($studentgrade->feedback, $studentgrade->feedbackformat) =
-                        external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
-                            $modulecm->id, $params['component'], 'feedback');
+                if ($activitygrade->itemtype != 'course' and $activitygrade->itemtype != 'mod') {
+                    // This function currently only supports course and mod grade items. Manual and category not supported.
+                    continue;
                 }
-            }
-        }
 
-        // Convert from objects to arrays so all web service clients are supported.
-        // While we're doing that we also remove grades the current user can't see due to hiding.
-        $gradesarray = [];
-        $canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($params['courseid']));
+                $context = $coursecontext;
 
-        $gradesarray['items'] = [];
+                if ($activitygrade->itemtype == 'course') {
+                    $item = grade_get_course_grades($course->id, $params['userids']);
+                    $item->itemnumber = 0;
 
-        foreach ($grades->items as $gradeitem) {
-            // Avoid to process manual or category items (they are going to fail).
-            if ($gradeitem->itemtype != 'course' && $gradeitem->itemtype != 'mod') {
-                continue;
-            }
-            // Switch the stdClass instance for a grade item instance so we can call is_hidden() and use the ID.
-            $gradeiteminstance = self::core_grades_get_grade_item(
-                $course->id, $gradeitem->itemtype, $gradeitem->itemmodule, $gradeitem->iteminstance, $gradeitem->itemnumber);
+                    $grades = new stdClass;
+                    $grades->items = array($item);
+                    $grades->outcomes = array();
 
-            if (!$canviewhidden && $gradeiteminstance->is_hidden()) {
-                continue;
-            }
+                } else {
+                    $cm = $activityinstances[$activitygrade->itemmodule][$activitygrade->iteminstance];
+                    $instance = $cm->instance;
+                    $context = context_module::instance($cm->id, IGNORE_MISSING);
 
-            // Format mixed bool/integer parameters.
-            $gradeitem->hidden = (!$gradeitem->hidden) ? 0 : $gradeitem->hidden;
-            $gradeitem->locked = (!$gradeitem->locked) ? 0 : $gradeitem->locked;
+                    $grades = grade_get_grades($params['courseid'], $activitygrade->itemtype,
+                        $activitygrade->itemmodule, $instance, $params['userids']);
+                }
 
-            $gradeitemarray = (array)$gradeitem;
-            $gradeitemarray['grades'] = [];
-
-            if (!empty($gradeitem->grades)) {
-                foreach ($gradeitem->grades as $studentid => $studentgrade) {
-                    if (!$canviewhidden) {
-                        // Need to load the grade_grade object to check visibility.
-                        $gradegradeinstance = grade_grade::fetch(
-                            [
-                                'userid' => $studentid,
-                                'itemid' => $gradeiteminstance->id
-                            ]
-                        );
-                        // The grade grade may be legitimately missing if the student has no grade.
-                        if (!empty($gradegradeinstance) && $gradegradeinstance->is_hidden()) {
-                            continue;
-                        }
+                // Convert from objects to arrays so all web service clients are supported.
+                // While we're doing that we also remove grades the current user can't see due to hiding.
+                foreach ($grades->items as $gradeitem) {
+                    // Switch the stdClass instance for a grade item instance so we can call is_hidden() and use the ID.
+                    $gradeiteminstance = self::get_grade_item(
+                        $course->id, $activitygrade->itemtype, $activitygrade->itemmodule, $activitygrade->iteminstance, 0);
+                    if (!$canviewhidden && $gradeiteminstance->is_hidden()) {
+                        continue;
                     }
 
                     // Format mixed bool/integer parameters.
-                    $studentgrade->hidden = (!$studentgrade->hidden) ? 0 : $studentgrade->hidden;
-                    $studentgrade->locked = (!$studentgrade->locked) ? 0 : $studentgrade->locked;
-                    $studentgrade->overridden = (!$studentgrade->overridden) ? 0 : $studentgrade->overridden;
+                    $gradeitem->hidden = (empty($gradeitem->hidden)) ? 0 : $gradeitem->hidden;
+                    $gradeitem->locked = (empty($gradeitem->locked)) ? 0 : $gradeitem->locked;
 
-                    $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
-                    // Add the student ID as some WS clients can't access the array key.
-                    $gradeitemarray['grades'][$studentid]['userid'] = $studentid;
-                }
-            }
+                    $gradeitemarray = (array)$gradeitem;
+                    $gradeitemarray['grades'] = array();
 
-            // If they requested grades for multiple activities load the cm object now.
-            $modulecm = $cm;
-            if (empty($modulecm) && !empty($gradeiteminstance->itemmodule)) {
-                $modulecm = $acitivityinstances[$gradeiteminstance->itemmodule][$gradeiteminstance->iteminstance];
-            }
-            if ($gradeiteminstance->itemtype == 'course') {
-                $gradesarray['items']['course'] = $gradeitemarray;
-                $gradesarray['items']['course']['activityid'] = 'course';
-            } else {
-                $gradesarray['items'][$modulecm->id] = $gradeitemarray;
-                // Add the activity ID as some WS clients can't access the array key.
-                $gradesarray['items'][$modulecm->id]['activityid'] = $modulecm->id;
-                $gradesarray['items'][$modulecm->id]['instance'] = $modulecm->instance;
-                $gradesarray['items'][$modulecm->id]['modname'] = $modulecm->modname;
-            }
-        }
+                    if (!empty($gradeitem->grades)) {
+                        foreach ($gradeitem->grades as $studentid => $studentgrade) {
+                            if (!$canviewhidden) {
+                                // Need to load the grade_grade object to check visibility.
+                                $gradegradeinstance = grade_grade::fetch(
+                                    array(
+                                        'userid' => $studentid,
+                                        'itemid' => $gradeiteminstance->id
+                                    )
+                                );
+                                // The grade grade may be legitimately missing if the student has no grade.
+                                if (!empty($gradegradeinstance) && $gradegradeinstance->is_hidden()) {
+                                    continue;
+                                }
+                            }
 
-        $gradesarray['outcomes'] = [];
-        foreach ($grades->outcomes as $outcome) {
-            $modulecm = $cm;
-            if (empty($modulecm)) {
-                $modulecm = $acitivityinstances[$outcome->itemmodule][$outcome->iteminstance];
-            }
+                            // Format mixed bool/integer parameters.
+                            $studentgrade->hidden = (empty($studentgrade->hidden)) ? 0 : $studentgrade->hidden;
+                            $studentgrade->locked = (empty($studentgrade->locked)) ? 0 : $studentgrade->locked;
+                            $studentgrade->overridden = (empty($studentgrade->overridden)) ? 0 : $studentgrade->overridden;
 
-            // Format mixed bool/integer parameters.
-            $outcome->hidden = (!$outcome->hidden) ? 0 : $outcome->hidden;
-            $outcome->locked = (!$outcome->locked) ? 0 : $outcome->locked;
+                            if ($gradeiteminstance->itemtype != 'course' and !empty($studentgrade->feedback)) {
+                                list($studentgrade->feedback, $studentgrade->feedbackformat) =
+                                    external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
+                                        $context->id, $params['component'], 'feedback', null);
+                            }
 
-            $gradesarray['outcomes'][$modulecm->id] = (array)$outcome;
-            $gradesarray['outcomes'][$modulecm->id]['activityid'] = $modulecm->id;
-
-            $gradesarray['outcomes'][$modulecm->id]['grades'] = [];
-            if (!empty($outcome->grades)) {
-                foreach ($outcome->grades as $studentid => $studentgrade) {
-                    if (!$canviewhidden) {
-                        // Need to load the grade_grade object to check visibility.
-                        $gradeiteminstance = self::core_grades_get_grade_item(
-                            $course->id, $outcome->itemtype, $outcome->itemmodule, $outcome->iteminstance, $outcome->itemnumber);
-                        $gradegradeinstance = grade_grade::fetch(
-                            [
-                                'userid' => $studentid,
-                                'itemid' => $gradeiteminstance->id
-                            ]
-                        );
-                        // The grade grade may be legitimately missing if the student has no grade.
-                        if (!empty($gradegradeinstance) && $gradegradeinstance->is_hidden()) {
-                            continue;
+                            $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
+                            // Add the student ID as some WS clients can't access the array key.
+                            $gradeitemarray['grades'][$studentid]['userid'] = $studentid;
                         }
                     }
 
+                    if ($gradeiteminstance->itemtype == 'course') {
+                        $gradesarray['items']['course'] = $gradeitemarray;
+                        $gradesarray['items']['course']['activityid'] = 'course';
+                    } else {
+                        $gradesarray['items'][$cm->id] = $gradeitemarray;
+                        // Add the activity ID as some WS clients can't access the array key.
+                        $gradesarray['items'][$cm->id]['activityid'] = $cm->id;
+
+                        // Additional data added by local_aspiredu.
+                        $gradesarray['items'][$cm->id]['instance'] = $cm->instance;
+                        $gradesarray['items'][$cm->id]['modname'] = $cm->modname;
+                        // END
+                    }
+                }
+
+                foreach ($grades->outcomes as $outcome) {
                     // Format mixed bool/integer parameters.
-                    $studentgrade->hidden = (!$studentgrade->hidden) ? 0 : $studentgrade->hidden;
-                    $studentgrade->locked = (!$studentgrade->locked) ? 0 : $studentgrade->locked;
+                    $outcome->hidden = (empty($outcome->hidden)) ? 0 : $outcome->hidden;
+                    $outcome->locked = (empty($outcome->locked)) ? 0 : $outcome->locked;
 
-                    $gradesarray['outcomes'][$modulecm->id]['grades'][$studentid] = (array)$studentgrade;
+                    $gradesarray['outcomes'][$cm->id] = (array)$outcome;
+                    $gradesarray['outcomes'][$cm->id]['activityid'] = $cm->id;
 
-                    // Add the student ID into the grade structure as some WS clients can't access the key.
-                    $gradesarray['outcomes'][$modulecm->id]['grades'][$studentid]['userid'] = $studentid;
+                    $gradesarray['outcomes'][$cm->id]['grades'] = array();
+                    if (!empty($outcome->grades)) {
+                        foreach ($outcome->grades as $studentid => $studentgrade) {
+                            if (!$canviewhidden) {
+                                // Need to load the grade_grade object to check visibility.
+                                $gradeiteminstance = self::get_grade_item($course->id, $activitygrade->itemtype,
+                                    $activitygrade->itemmodule, $activitygrade->iteminstance,
+                                    $activitygrade->itemnumber);
+                                $gradegradeinstance = grade_grade::fetch(
+                                    array(
+                                        'userid' => $studentid,
+                                        'itemid' => $gradeiteminstance->id
+                                    )
+                                );
+                                // The grade grade may be legitimately missing if the student has no grade.
+                                if (!empty($gradegradeinstance ) && $gradegradeinstance->is_hidden()) {
+                                    continue;
+                                }
+                            }
+
+                            // Format mixed bool/integer parameters.
+                            $studentgrade->hidden = (empty($studentgrade->hidden)) ? 0 : $studentgrade->hidden;
+                            $studentgrade->locked = (empty($studentgrade->locked)) ? 0 : $studentgrade->locked;
+
+                            if (!empty($studentgrade->feedback)) {
+                                list($studentgrade->feedback, $studentgrade->feedbackformat) =
+                                    external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
+                                        $context->id, $params['component'], 'feedback', null);
+                            }
+
+                            $gradesarray['outcomes'][$cm->id]['grades'][$studentid] = (array)$studentgrade;
+
+                            // Add the student ID into the grade structure as some WS clients can't access the key.
+                            $gradesarray['outcomes'][$cm->id]['grades'][$studentid]['userid'] = $studentid;
+                        }
+                    }
                 }
             }
         }
@@ -370,7 +381,7 @@ class core_grades_get_grades extends external_api {
      * @param int $itemnumber Item number
      * @return grade_item           A gradeItem instance
      */
-    private static function core_grades_get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
+    private static function get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
                                                        $itemnumber = null) {
         global $CFG;
         require_once($CFG->libdir . '/gradelib.php');
