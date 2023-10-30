@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_aspiredu\local;
+
+use report_log_table_log;
+use stdClass;
+
 /**
  * AspirEDU Integration
  *
@@ -26,7 +31,7 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/report/log/classes/renderable.php');
 
-class local_report_log_renderable extends report_log_renderable {
+class report_log_renderable extends \report_log_renderable {
 
     /**
      * Setup table log.
@@ -50,12 +55,13 @@ class local_report_log_renderable extends report_log_renderable {
         $filter->date = $this->date;
         $filter->orderby = $this->order;
         $filter->origin = $this->origin;
-        $filter->anonymous = 0;
         // If showing site_errors.
         if ('site_errors' === $this->modid) {
             $filter->siteerrors = true;
             $filter->modid = 0;
         }
+
+        $filter->anonymous = 0; // Only difference to base implementation...
 
         $this->tablelog = new report_log_table_log('report_log', $filter);
         $this->tablelog->define_baseurl($this->url);

@@ -74,9 +74,8 @@ $functions = [
         'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ],
     'local_aspiredu_report_log_get_log_records' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'report_log_get_log_records',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'gradereport_user\\external\\report_log_get_log_records',
+        'methodname' => 'get_grades_table',
         'description' => 'Returns a list of log entries for the course and parameters specified using the new log system.',
         'type' => 'read',
         'capabilities' => '',
