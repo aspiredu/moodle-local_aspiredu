@@ -33,6 +33,8 @@ use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_grades_get_course_grades;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 class grade_get_course_grades_test extends externallib_advanced_testcase {

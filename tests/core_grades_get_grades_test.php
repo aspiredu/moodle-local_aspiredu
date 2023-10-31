@@ -27,6 +27,8 @@
 
 namespace local_aspiredu;
 
+defined('MOODLE_INTERNAL') || die();
+
 use context_course;
 use context_user;
 use core_grades_external;
@@ -38,8 +40,6 @@ use grade_scale;
 use local_aspiredu\external\core_grades_get_grades;
 use moodle_exception;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 

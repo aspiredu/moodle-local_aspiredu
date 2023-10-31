@@ -34,6 +34,8 @@ use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\report_log_get_log_records;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 class report_log_get_log_records_test extends externallib_advanced_testcase {

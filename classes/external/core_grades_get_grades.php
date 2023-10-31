@@ -44,6 +44,9 @@ use moodle_exception;
 use stdClass;
 
 global $CFG;
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->dirroot/course/externallib.php");
 require_once("$CFG->dirroot/grade/querylib.php");
 
@@ -252,7 +255,7 @@ class core_grades_get_grades extends external_api {
 
             foreach ($activitygrades as $activitygrade) {
 
-                if ($activitygrade->itemtype != 'course' and $activitygrade->itemtype != 'mod') {
+                if ($activitygrade->itemtype != 'course' && $activitygrade->itemtype != 'mod') {
                     // This function currently only supports course and mod grade items. Manual and category not supported.
                     continue;
                 }
@@ -314,7 +317,7 @@ class core_grades_get_grades extends external_api {
                             $studentgrade->locked = (empty($studentgrade->locked)) ? 0 : $studentgrade->locked;
                             $studentgrade->overridden = (empty($studentgrade->overridden)) ? 0 : $studentgrade->overridden;
 
-                            if ($gradeiteminstance->itemtype != 'course' and !empty($studentgrade->feedback)) {
+                            if ($gradeiteminstance->itemtype != 'course' && !empty($studentgrade->feedback)) {
                                 list($studentgrade->feedback, $studentgrade->feedbackformat) =
                                     external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
                                         $context->id, $params['component'], 'feedback');

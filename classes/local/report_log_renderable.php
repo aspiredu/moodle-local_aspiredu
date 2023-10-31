@@ -30,6 +30,8 @@ namespace local_aspiredu\local;
 use report_log_table_log;
 use stdClass;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/report/log/classes/renderable.php');
 
 class report_log_renderable extends \report_log_renderable {

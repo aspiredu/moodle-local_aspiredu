@@ -36,6 +36,9 @@ use external_value;
 use stdClass;
 
 global $CFG;
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->dirroot/course/externallib.php");
 
 class core_grades_get_course_grades extends external_api {

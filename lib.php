@@ -24,8 +24,6 @@
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
 const LOCAL_ASPIREDU_DISABLED = 0;
 const LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE = 1;
 const LOCAL_ASPIREDU_ADMINACCCINSTCOURSE = 2;
@@ -63,7 +61,7 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
     }
 
     // Site permissions.
-    if ($context->contextlevel == CONTEXT_SYSTEM or $COURSE->id == SITEID) {
+    if ($context->contextlevel == CONTEXT_SYSTEM || $COURSE->id == SITEID) {
         if ($isadmin && $settings != LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE) {
             return true;
         }

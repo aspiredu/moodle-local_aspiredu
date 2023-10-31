@@ -39,6 +39,9 @@ use external_warnings;
 use invalid_parameter_exception;
 
 global $CFG;
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->dirroot/course/externallib.php");
 
 class core_course_get_courses_paginated extends external_api {
@@ -106,7 +109,9 @@ class core_course_get_courses_paginated extends external_api {
         }
         $sort = $sortby . ' ' . $sortdirection;
 
-        $courses = enrol_get_my_courses(['format', 'summary', 'summaryformat', 'enddate', 'showgrades', 'showreports', 'newsitems', 'maxbytes', 'defaultgroupingid', 'lang', 'timecreated', 'timemodified', 'theme', 'enablecompletion', 'completionnotify'], $sort, $limitnum, [], true, $limitfrom);
+        $courses = enrol_get_my_courses(
+            ['format', 'summary', 'summaryformat', 'enddate', 'showgrades', 'showreports', 'newsitems', 'maxbytes', 'defaultgroupingid', 'lang', 'timecreated', 'timemodified', 'theme', 'enablecompletion', 'completionnotify'],
+            $sort, $limitnum, [], true, $limitfrom);
 
         $coursesinfo = [];
         foreach ($courses as $course) {

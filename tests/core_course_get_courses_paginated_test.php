@@ -35,6 +35,8 @@ use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_course_get_courses_paginated;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
