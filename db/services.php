@@ -57,10 +57,11 @@ $functions = [
         'type' => 'read',
         'capabilities' => 'mod/forum:viewdiscussion'
     ],
+    // Will need to be replaced or cloned when https://tracker.moodle.org/browse/MDL-70483 is done and final deprecation happens.
     'local_aspiredu_mod_forum_get_forum_discussions_paginated' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'mod_forum_get_forum_discussions_paginated',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'mod_forum_external',
+        'methodname' => 'get_forum_discussions_paginated',
+        'classpath' => 'mod/forum/externallib.php',
         'description' => 'Returns a list of forum discussions contained within a given set of forums.',
         'type' => 'read',
         'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
