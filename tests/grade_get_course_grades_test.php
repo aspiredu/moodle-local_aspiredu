@@ -21,7 +21,7 @@ use local_aspiredu\external\core_grades_get_course_grades;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
-class grade_get_course_grades extends externallib_advanced_testcase {
+class grade_get_course_grades_test extends externallib_advanced_testcase {
 
     /**
      * Basic setup for these tests.

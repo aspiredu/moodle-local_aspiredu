@@ -41,7 +41,7 @@ $functions = [
         'capabilities' => 'moodle/course:managegroups',
     ],
     'local_aspiredu_gradereport_user_get_grades_table' => [
-        'classname' => 'gradereport_user\\external\\user',
+        'classname' => 'gradereport_user\external\user',
         'methodname' => 'get_grades_table',
         'description' => 'Get the user/s report grades table for a course',
         'type' => 'read',
@@ -74,8 +74,8 @@ $functions = [
         'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ],
     'local_aspiredu_report_log_get_log_records' => [
-        'classname' => 'gradereport_user\\external\\report_log_get_log_records',
-        'methodname' => 'get_grades_table',
+        'classname' => 'local_aspiredu\external\report_log_get_log_records',
+        'methodname' => 'execute',
         'description' => 'Returns a list of log entries for the course and parameters specified using the new log system.',
         'type' => 'read',
         'capabilities' => '',

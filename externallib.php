@@ -26,7 +26,6 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir . '/externallib.php');
 require_once($CFG->dirroot . '/course/externallib.php');
-require_once("$CFG->dirroot/local/aspiredu/renderable.php");
 
 class local_aspiredu_external extends external_api {
     /**
