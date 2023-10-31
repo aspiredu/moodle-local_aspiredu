@@ -66,9 +66,8 @@ $functions = [
         'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
     ],
     'local_aspiredu_mod_forum_get_forum_discussion_posts' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'mod_forum_get_forum_discussion_posts',
-        'classpath' => 'local/aspiredu/externallib.php',
+        'classname' => 'local_aspiredu\external\mod_forum_get_forum_discussion_posts',
+        'methodname' => 'execute',
         'description' => 'Returns a list of forum posts for a discussion.',
         'type' => 'read',
         'capabilities' => 'mod/forum:viewdiscussion, mod/forum:viewqandawithoutposting',
