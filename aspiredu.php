@@ -33,6 +33,7 @@ $context = context_course::instance($course->id);
 require_login($course);
 
 $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $id, 'product' => $product]);
+
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 
@@ -43,12 +44,17 @@ if ($product == 'dd') {
     require_capability('local/aspiredu:viewinstructorinsight', $context);
     $pagetitle = get_string('instructorinsight', 'local_aspiredu');
 }
+
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
+
 echo $OUTPUT->header();
 
-echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" src="lti.php?id=' . $id . '&product=' . $product . '">
-        </iframe>';
+echo html_writer::tag('iframe', '', [
+    'src' => new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]),
+    'id' => 'contentframe',
+    'class' => 'local_aspiredu_lti_wrapper'
+]);
 
 echo $OUTPUT->footer();
 

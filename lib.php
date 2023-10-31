@@ -23,6 +23,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+const LOCAL_ASPIREDU_DISABLED = 0;
 const LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE = 1;
 const LOCAL_ASPIREDU_ADMINACCCINSTCOURSE = 2;
 const LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE = 3;
@@ -43,24 +44,24 @@ function local_aspiredu_check_links_visibility_permission($context, $settings) {
         return false;
     }
 
-    if ($isadmin and $settings == LOCAL_ASPIREDU_INSTCOURSE) {
+    if ($isadmin && $settings == LOCAL_ASPIREDU_INSTCOURSE) {
         // Admins links disabled.
         return false;
     }
 
     // Course permissions.
-    if ($context->contextlevel >= CONTEXT_COURSE and $COURSE->id != SITEID) {
-        if ($isadmin and $settings != LOCAL_ASPIREDU_ADMINACC and $settings != LOCAL_ASPIREDU_ADMINACCCINSTCOURSE) {
+    if ($context->contextlevel >= CONTEXT_COURSE && $COURSE->id != SITEID) {
+        if ($isadmin && $settings != LOCAL_ASPIREDU_ADMINACC && $settings != LOCAL_ASPIREDU_ADMINACCCINSTCOURSE) {
             return true;
         }
-        if (!$isadmin and $settings != LOCAL_ASPIREDU_ADMINACCCOURSE and $settings != LOCAL_ASPIREDU_ADMINACC) {
+        if (!$isadmin && $settings != LOCAL_ASPIREDU_ADMINACCCOURSE && $settings != LOCAL_ASPIREDU_ADMINACC) {
             return true;
         }
     }
 
     // Site permissions.
     if ($context->contextlevel == CONTEXT_SYSTEM or $COURSE->id == SITEID) {
-        if ($isadmin and $settings != LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE) {
+        if ($isadmin && $settings != LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE) {
             return true;
         }
     }
@@ -85,7 +86,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
         $canview = has_capability('local/aspiredu:viewdropoutdetective', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
 
-        if ($branch and $canview) {
+        if ($branch && $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'dd']);
@@ -101,7 +102,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
             }
         }
 
-        if ($canview and !$displayed) {
+        if ($canview && !$displayed) {
             $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'dd']);
             $reportsnode->add(
@@ -120,7 +121,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
         $canview = has_capability('local/aspiredu:viewinstructorinsight', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
 
-        if ($branch and $canview) {
+        if ($branch && $canview) {
             $subbranch = ($branch->get('coursereports')) ? $branch->get('coursereports') : $branch->get('frontpagereports');
             if ($subbranch) {
                 $url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $COURSE->id, 'product' => 'ii']);
@@ -136,7 +137,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
             }
         }
 
-        if ($canview and !$displayed) {
+        if ($canview && !$displayed) {
             if (!$reportsnode) {
                 $reportsnode = $nav->add(get_string('reports'), null, $nav::NODETYPE_BRANCH, null, 'aspiredureports');
             }

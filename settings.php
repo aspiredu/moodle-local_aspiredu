@@ -43,13 +43,13 @@ if ($hassiteconfig) {
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $options = [
-        0 => new lang_string('disabled', 'local_aspiredu'),
-        1 => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
-        2 => new lang_string('adminacccinstcourse', 'local_aspiredu'),
-        3 => new lang_string('admincourseinstcourse', 'local_aspiredu'),
-        4 => new lang_string('adminacccourse', 'local_aspiredu'),
-        5 => new lang_string('adminacc', 'local_aspiredu'),
-        6 => new lang_string('instcourse', 'local_aspiredu'),
+        LOCAL_ASPIREDU_DISABLED => new lang_string('disabled', 'local_aspiredu'),
+        LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
+        LOCAL_ASPIREDU_ADMINACCCINSTCOURSE => new lang_string('adminacccinstcourse', 'local_aspiredu'),
+        LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE => new lang_string('admincourseinstcourse', 'local_aspiredu'),
+        LOCAL_ASPIREDU_ADMINACCCOURSE => new lang_string('adminacccourse', 'local_aspiredu'),
+        LOCAL_ASPIREDU_ADMINACC => new lang_string('adminacc', 'local_aspiredu'),
+        LOCAL_ASPIREDU_INSTCOURSE => new lang_string('instcourse', 'local_aspiredu'),
     ];
     $default = 1;
 

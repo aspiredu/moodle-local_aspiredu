@@ -33,6 +33,7 @@ $product = required_param('product', PARAM_ALPHA);
 if ($id == SITEID) {
     $course = get_site();
     $context = context_system::instance();
+    $PAGE->set_context($context);
     require_login();
 } else {
     $course = get_course($id);
@@ -40,6 +41,7 @@ if ($id == SITEID) {
     require_login($course);
 }
 
+$PAGE->set_url( new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]));
 
 if ($product == 'dd') {
     require_capability('local/aspiredu:viewdropoutdetective', $context);
@@ -53,7 +55,7 @@ $key = get_config('local_aspiredu', 'key');
 $secret = get_config('local_aspiredu', 'secret');
 
 // Ensure parameters set.
-if ($launchurl and $key and $secret) {
+if ($launchurl && $key && $secret) {
 
     // Account level.
     if ($id == SITEID) {
