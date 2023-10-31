@@ -59,13 +59,4 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
         new lang_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
 
-
-    $default = 1;
-    $options = [
-        0 => new lang_string('no'),
-        1 => new lang_string('yes')
-    ];
-    $settings->add(new admin_setting_configselect('local_aspiredu/showcoursesettings',
-        new lang_string('showcoursesettings', 'local_aspiredu'), '', $default, $options));
-
 }

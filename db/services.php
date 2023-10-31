@@ -94,13 +94,6 @@ $functions = [
         'description' => 'Returns the submissions for assignments',
         'type' => 'read',
     ],
-    'local_aspiredu_get_custom_course_settings' => [
-        'classname' => 'local_aspiredu_external',
-        'methodname' => 'get_custom_course_settings',
-        'classpath' => 'local/aspiredu/externallib.php',
-        'description' => 'Get all custom course settings',
-        'type' => 'read'
-    ],
     'local_aspiredu_core_course_get_courses_paginated' => [
         'classname' => '\local_aspiredu\external\core_course_get_courses_paginated',
         'methodname' => 'execute',
