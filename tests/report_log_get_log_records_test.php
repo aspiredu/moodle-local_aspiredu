@@ -14,19 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace local_aspiredu;
 
 global $CFG;
 
+use context_course;
+use external_api;
+use externallib_advanced_testcase;
 use local_aspiredu\external\report_log_get_log_records;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 class report_log_get_log_records_test extends externallib_advanced_testcase {
-
     /**
      * Basic setup for these tests.
      */
-    public function setUp(): void {
+    protected function setUp(): void {
         $this->resetAfterTest();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
@@ -39,14 +53,14 @@ class report_log_get_log_records_test extends externallib_advanced_testcase {
     public function test_get_courses() {
         global $DB;
 
-        $this->resetAfterTest(true);
+        $this->resetAfterTest();
 
-        $this->setAdminUser();
+        static::setAdminUser();
 
         $course = self::getDataGenerator()->create_course();
-        $studentrole = $DB->get_record('role', array('shortname' => 'student'));
-        $user = $this->getDataGenerator()->create_user();
-        $coursecontext = \context_course::instance($course->id);
+        $studentrole = $DB->get_record('role', ['shortname' => 'student']);
+        $user = static::getDataGenerator()->create_user();
+        $coursecontext = context_course::instance($course->id);
         role_assign($studentrole->id, $user->id, $coursecontext->id);
 
         $response = report_log_get_log_records::execute($course->id);
@@ -54,7 +68,7 @@ class report_log_get_log_records_test extends externallib_advanced_testcase {
         external_api::clean_returnvalue(report_log_get_log_records::execute_returns(), $response);
 
         $lastlog = array_shift($response['logs']);
-        $this->assertEquals('\core\event\role_assigned', $lastlog['eventname']);
-        $this->assertEquals($user->id, $lastlog['relateduserid']);
+        static::assertEquals('\core\event\role_assigned', $lastlog['eventname']);
+        static::assertEquals($user->id, $lastlog['relateduserid']);
     }
 }

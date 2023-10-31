@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace local_aspiredu\external;
 
@@ -125,11 +150,6 @@ class core_grades_get_grades extends external_api {
         );
     }
 
-    /**
-     * Returns description of method parameters
-     *
-     * @return external_function_parameters
-     */
     public static function execute_parameters() {
         return new external_function_parameters(
             [
@@ -153,7 +173,6 @@ class core_grades_get_grades extends external_api {
      * @param int $activityid Activity id
      * @param array $userids Array of user ids
      * @return array                Array of grades
-     * @since Moodle 2.7
      */
     public static function execute($courseid, $component = null, $activityid = null, $userids = []) {
         global $CFG, $USER, $DB;
@@ -215,7 +234,7 @@ class core_grades_get_grades extends external_api {
         $modinfo = get_fast_modinfo($params['courseid']);
         $activityinstances = $modinfo->get_instances();
 
-        $gradeparams = array('courseid' => $params['courseid']);
+        $gradeparams = ['courseid' => $params['courseid']];
         if (!empty($itemtype)) {
             $gradeparams['itemtype'] = $itemtype;
         }
@@ -225,6 +244,8 @@ class core_grades_get_grades extends external_api {
         if (!empty($iteminstance)) {
             $gradeparams['iteminstance'] = $iteminstance;
         }
+
+        $gradesarray = [];
 
         if ($activitygrades = grade_item::fetch_all($gradeparams)) {
             $canviewhidden = has_capability('moodle/grade:viewhidden', context_course::instance($params['courseid']));
@@ -243,8 +264,8 @@ class core_grades_get_grades extends external_api {
                     $item->itemnumber = 0;
 
                     $grades = new stdClass;
-                    $grades->items = array($item);
-                    $grades->outcomes = array();
+                    $grades->items = [$item];
+                    $grades->outcomes = [];
 
                 } else {
                     $cm = $activityinstances[$activitygrade->itemmodule][$activitygrade->iteminstance];
@@ -270,17 +291,17 @@ class core_grades_get_grades extends external_api {
                     $gradeitem->locked = (empty($gradeitem->locked)) ? 0 : $gradeitem->locked;
 
                     $gradeitemarray = (array)$gradeitem;
-                    $gradeitemarray['grades'] = array();
+                    $gradeitemarray['grades'] = [];
 
                     if (!empty($gradeitem->grades)) {
                         foreach ($gradeitem->grades as $studentid => $studentgrade) {
                             if (!$canviewhidden) {
                                 // Need to load the grade_grade object to check visibility.
                                 $gradegradeinstance = grade_grade::fetch(
-                                    array(
+                                    [
                                         'userid' => $studentid,
                                         'itemid' => $gradeiteminstance->id
-                                    )
+                                    ]
                                 );
                                 // The grade grade may be legitimately missing if the student has no grade.
                                 if (!empty($gradegradeinstance) && $gradegradeinstance->is_hidden()) {
@@ -296,7 +317,7 @@ class core_grades_get_grades extends external_api {
                             if ($gradeiteminstance->itemtype != 'course' and !empty($studentgrade->feedback)) {
                                 list($studentgrade->feedback, $studentgrade->feedbackformat) =
                                     external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
-                                        $context->id, $params['component'], 'feedback', null);
+                                        $context->id, $params['component'], 'feedback');
                             }
 
                             $gradeitemarray['grades'][$studentid] = (array)$studentgrade;
@@ -328,7 +349,7 @@ class core_grades_get_grades extends external_api {
                     $gradesarray['outcomes'][$cm->id] = (array)$outcome;
                     $gradesarray['outcomes'][$cm->id]['activityid'] = $cm->id;
 
-                    $gradesarray['outcomes'][$cm->id]['grades'] = array();
+                    $gradesarray['outcomes'][$cm->id]['grades'] = [];
                     if (!empty($outcome->grades)) {
                         foreach ($outcome->grades as $studentid => $studentgrade) {
                             if (!$canviewhidden) {
@@ -337,13 +358,13 @@ class core_grades_get_grades extends external_api {
                                     $activitygrade->itemmodule, $activitygrade->iteminstance,
                                     $activitygrade->itemnumber);
                                 $gradegradeinstance = grade_grade::fetch(
-                                    array(
+                                    [
                                         'userid' => $studentid,
                                         'itemid' => $gradeiteminstance->id
-                                    )
+                                    ]
                                 );
                                 // The grade grade may be legitimately missing if the student has no grade.
-                                if (!empty($gradegradeinstance ) && $gradegradeinstance->is_hidden()) {
+                                if (!empty($gradegradeinstance) && $gradegradeinstance->is_hidden()) {
                                     continue;
                                 }
                             }
@@ -355,7 +376,7 @@ class core_grades_get_grades extends external_api {
                             if (!empty($studentgrade->feedback)) {
                                 list($studentgrade->feedback, $studentgrade->feedbackformat) =
                                     external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
-                                        $context->id, $params['component'], 'feedback', null);
+                                        $context->id, $params['component'], 'feedback');
                             }
 
                             $gradesarray['outcomes'][$cm->id]['grades'][$studentid] = (array)$studentgrade;
@@ -382,7 +403,7 @@ class core_grades_get_grades extends external_api {
      * @return grade_item           A gradeItem instance
      */
     private static function get_grade_item($courseid, $itemtype, $itemmodule = null, $iteminstance = null,
-                                                       $itemnumber = null) {
+                                           $itemnumber = null) {
         global $CFG;
         require_once($CFG->libdir . '/gradelib.php');
 

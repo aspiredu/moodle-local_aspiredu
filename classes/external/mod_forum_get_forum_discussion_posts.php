@@ -1,9 +1,34 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace local_aspiredu\external;
 
 use context_module;
-use context_user;
+use core_user\fields;
 use external_api;
 use external_description;
 use external_format_value;
@@ -15,7 +40,6 @@ use external_value;
 use external_warnings;
 use invalid_parameter_exception;
 use moodle_exception;
-use moodle_url;
 use stdClass;
 use user_picture;
 
@@ -26,12 +50,6 @@ require_once("$CFG->dirroot/report/log/classes/renderable.php");
 // NOTE - this function is based on a forward-port of a deprecated function - see MDL-65252
 
 class mod_forum_get_forum_discussion_posts extends external_api {
-
-    /**
-     * Returns description of method result value
-     *
-     * @return external_description
-     */
     public static function execute_returns() {
         return new external_single_structure(
             [
@@ -84,7 +102,6 @@ class mod_forum_get_forum_discussion_posts extends external_api {
             ]
         );
     }
-
 
     /**
      * Returns a list of forum posts for a discussion
@@ -158,6 +175,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
 
         $sort = 'p.' . $sortby . ' ' . $sortdirection;
 
+        $posts = [];
         foreach (forum_get_all_discussion_posts($discussion->id, $sort, $forumtracked) as $pid => $post) {
             if (!forum_user_can_see_post($forum, $discussion, $post, null, $cm)) {
                 $warning = [];
@@ -186,7 +204,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
 
             $user = new stdClass();
             $user->id = $post->userid;
-            $additionalfields = explode(',', implode(',', \core_user\fields::get_picture_fields()));
+            $additionalfields = explode(',', implode(',', fields::get_picture_fields()));
             $user = username_load_fields_from_object($user, $post, null, $additionalfields);
             $post->userfullname = fullname($user, $canviewfullname);
 

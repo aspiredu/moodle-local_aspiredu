@@ -15,10 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Service definitions WebServices.
+ * AspirEDU Integration
  *
  * @package    local_aspiredu
- * @copyright  AspirEDU
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -81,9 +84,9 @@ $functions = [
         'capabilities' => '',
     ],
     'local_aspiredu_mod_assign_get_assignments' => [
-        'classname'   => 'mod_assign_external',
-        'methodname'  => 'get_assignments',
-        'classpath'   => 'mod/assign/externallib.php',
+        'classname' => 'mod_assign_external',
+        'methodname' => 'get_assignments',
+        'classpath' => 'mod/assign/externallib.php',
         'description' => 'Returns the courses and assignments for the users capability',
         'type' => 'read'
     ],

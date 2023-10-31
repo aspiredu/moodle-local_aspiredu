@@ -19,6 +19,9 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -57,5 +60,3 @@ echo html_writer::tag('iframe', '', [
 ]);
 
 echo $OUTPUT->footer();
-
-

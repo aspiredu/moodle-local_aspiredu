@@ -19,6 +19,9 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -41,7 +44,7 @@ if ($id == SITEID) {
     require_login($course);
 }
 
-$PAGE->set_url( new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]));
+$PAGE->set_url(new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]));
 
 if ($product == 'dd') {
     require_capability('local/aspiredu:viewdropoutdetective', $context);

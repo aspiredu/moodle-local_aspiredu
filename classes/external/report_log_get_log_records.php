@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 namespace local_aspiredu\external;
 
@@ -15,6 +40,7 @@ use external_warnings;
 use invalid_parameter_exception;
 use local_aspiredu\local\report_log_renderable;
 use moodle_exception;
+use moodle_url;
 use required_capability_exception;
 use restricted_context_exception;
 
@@ -23,12 +49,6 @@ require_once("$CFG->dirroot/course/externallib.php");
 require_once("$CFG->dirroot/report/log/classes/renderable.php");
 
 class report_log_get_log_records extends external_api {
-
-    /**
-     * Returns description of method result value
-     *
-     * @return external_description
-     */
     public static function execute_returns() {
         return new external_single_structure(
             [
@@ -150,7 +170,7 @@ class report_log_get_log_records extends external_api {
         $reportlog = new report_log_renderable($params['logreader'], $course, $params['userid'], $params['modid'],
             $params['modaction'],
             $params['groupid'], $params['edulevel'], true, true,
-            false, true, new \moodle_url(''), $params['date'], '',
+            false, true, new moodle_url(''), $params['date'], '',
             $params['page'], $params['perpage'], 'timecreated ' . $params['order']);
         $readers = $reportlog->get_readers();
 
