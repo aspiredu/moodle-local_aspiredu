@@ -46,13 +46,13 @@ if ($hassiteconfig) {
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $options = [
-        LOCAL_ASPIREDU_DISABLED => new lang_string('disabled', 'local_aspiredu'),
-        LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
-        LOCAL_ASPIREDU_ADMINACCCINSTCOURSE => new lang_string('adminacccinstcourse', 'local_aspiredu'),
-        LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE => new lang_string('admincourseinstcourse', 'local_aspiredu'),
-        LOCAL_ASPIREDU_ADMINACCCOURSE => new lang_string('adminacccourse', 'local_aspiredu'),
-        LOCAL_ASPIREDU_ADMINACC => new lang_string('adminacc', 'local_aspiredu'),
-        LOCAL_ASPIREDU_INSTCOURSE => new lang_string('instcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_DISABLED => new lang_string('disabled', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCINSTCOURSE => new lang_string('adminacccinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINCOURSEINSTCOURSE => new lang_string('admincourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSE => new lang_string('adminacccourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACC => new lang_string('adminacc', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_INSTCOURSE => new lang_string('instcourse', 'local_aspiredu'),
     ];
     $default = 1;
 

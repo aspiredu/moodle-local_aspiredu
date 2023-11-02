@@ -24,50 +24,10 @@
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-const LOCAL_ASPIREDU_DISABLED = 0;
-const LOCAL_ASPIREDU_ADMINACCCOURSEINSTCOURSE = 1;
-const LOCAL_ASPIREDU_ADMINACCCINSTCOURSE = 2;
-const LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE = 3;
-const LOCAL_ASPIREDU_ADMINACCCOURSE = 4;
-const LOCAL_ASPIREDU_ADMINACC = 5;
-const LOCAL_ASPIREDU_INSTCOURSE = 6;
 
+use local_aspiredu\local\lib;
 
-function local_aspiredu_check_links_visibility_permission($context, $settings) {
-    global $COURSE;
-
-    $contextsystem = context_system::instance();
-    $isadmin = has_capability('moodle/site:config', $contextsystem) ||
-        has_capability('local/aspiredu:viewdropoutdetective', $contextsystem) ||
-        has_capability('local/aspiredu:viewinstructorinsight', $contextsystem);
-
-    if (!$settings) {
-        return false;
-    }
-
-    if ($isadmin && $settings == LOCAL_ASPIREDU_INSTCOURSE) {
-        // Admins links disabled.
-        return false;
-    }
-
-    // Course permissions.
-    if ($context->contextlevel >= CONTEXT_COURSE && $COURSE->id != SITEID) {
-        if ($isadmin && $settings != LOCAL_ASPIREDU_ADMINACC && $settings != LOCAL_ASPIREDU_ADMINACCCINSTCOURSE) {
-            return true;
-        }
-        if (!$isadmin && $settings != LOCAL_ASPIREDU_ADMINACCCOURSE && $settings != LOCAL_ASPIREDU_ADMINACC) {
-            return true;
-        }
-    }
-
-    // Site permissions.
-    if ($context->contextlevel == CONTEXT_SYSTEM || $COURSE->id == SITEID) {
-        if ($isadmin && $settings != LOCAL_ASPIREDU_ADMINCOURSEINSTCOURSE) {
-            return true;
-        }
-    }
-    return false;
-}
+defined('MOODLE_INTERNAL') || die;
 
 /**
  * Display the AspirEdu settings in the course settings block
@@ -82,7 +42,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
     $instructorinsightlinks = get_config('local_aspiredu', 'instructorinsightlinks');
     $reportsnode = null;
 
-    if (local_aspiredu_check_links_visibility_permission($context, $dropoutdetectivelinks)) {
+    if (lib::links_visibility_permission($context, $dropoutdetectivelinks)) {
         $displayed = false;
         $canview = has_capability('local/aspiredu:viewdropoutdetective', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
@@ -117,7 +77,7 @@ function local_aspiredu_extend_settings_navigation(settings_navigation $nav, con
         }
     }
 
-    if (local_aspiredu_check_links_visibility_permission($context, $instructorinsightlinks)) {
+    if (lib::links_visibility_permission($context, $instructorinsightlinks)) {
         $displayed = false;
         $canview = has_capability('local/aspiredu:viewinstructorinsight', $context);
         $branch = ($nav->get('courseadmin')) ? $nav->get('courseadmin') : $nav->get('frontpage');
