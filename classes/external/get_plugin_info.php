@@ -21,11 +21,10 @@ use external_function_parameters;
 use external_single_structure;
 use external_value;
 use external_warnings;
-use local_aspiredu\local\helper;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/user/externallib.php');
+require_once($CFG->dirroot . '/user/externallib.php');
 
 /**
  * Get users by role external function.
