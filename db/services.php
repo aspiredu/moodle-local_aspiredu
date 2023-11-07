@@ -129,21 +129,20 @@ $functions = [
     'local_aspiredu_get_plugin_info' => [
         'classname' => 'local_aspiredu\external\get_plugin_info',
         'methodname'  => 'execute',
-        'classpath' => '',
         'description' => 'Fetch information regarding the AspirEDU plugin.',
         'type' => 'read',
         'capabilities' => '',
     ],
     'local_aspiredu_get_users_by_roles' => [
         'classname'    => 'local_aspiredu\external\get_users_by_roles',
-        'classpath'    => '',
+        'methodname'  => 'execute',
         'description'  => 'Return a list of users given a list of roles',
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
     ],
     'local_aspiredu_get_users_by_capabilities' => [
         'classname'    => 'local_aspiredu\external\get_users_by_capabilities',
-        'classpath'    => '',
+        'methodname'  => 'execute',
         'description'  => 'Return a list of users given a list of capabilities',
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'

@@ -22,7 +22,7 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use external_warnings;
-use local_aspiredu\local\helper;
+use local_aspiredu\local\lib;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -72,7 +72,7 @@ class get_users_by_roles extends external_api {
             'perpage' => $perpage,
         ]);
 
-        $users = helper::get_users_by_roles($params['roleids'], $params['page'], $params['perpage']);
+        $users = lib::get_users_by_roles($params['roleids'], $params['page'], $params['perpage']);
 
         return [
                 'users' => $users,

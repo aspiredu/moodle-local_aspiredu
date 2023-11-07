@@ -73,6 +73,84 @@ class lib {
         }
         return false;
     }
+
+    /**
+     * Get users by capabilities paginated.
+     *
+     * @param array $capabilities
+     * @param int $page
+     * @param int $perpage
+     * @return array
+     */
+    public static function get_users_by_capabilities(array $capabilities, int $page = -1, int $perpage = 0): array {
+        global $DB;
+
+        $capabilitiesids = '';
+        foreach ($capabilities as $capability) {
+            $capabilitycheck = $DB->get_record('capabilities', ['name' => $capability], 'id');
+            if ($capabilitycheck) {
+                $capabilitiesids .= $capabilitycheck->id . ',';
+            }
+        }
+
+        // Remove last comma.
+        if (strlen($capabilitiesids) > 1) {
+            $capabilitiesids = substr($capabilitiesids, 0, -1);
+
+            $sql = 'SELECT distinct ra.userid
+                      FROM {role_assignments} ra
+                      JOIN {role_capabilities} rc ON rc.roleid = ra.roleid
+                      JOIN {capabilities} c ON c.name = rc.capability
+                     WHERE c.id IN (' . $capabilitiesids . ')';
+
+            $usersbycapabilities = $DB->get_recordset_sql($sql, [], $page * $perpage, $perpage);
+            return self::get_users_external($usersbycapabilities);
+        }
+
+        return [];
+    }
+
+    /**
+     * Get users by role paginated.
+     *
+     * @param array $roleids
+     * @param int $page
+     * @param int $perpage
+     * @return array
+     */
+    public static function get_users_by_roles(array $roleids, int $page = -1, int $perpage = 0): array {
+        global $DB;
+
+        $roleids = implode(',', $roleids);
+
+        $sql = "SELECT distinct ra.userid
+                  FROM {role_assignments} ra
+                  JOIN {role} r ON r.id = ra.roleid
+                 WHERE r.id in ($roleids)";
+
+        $usersbyroles = $DB->get_recordset_sql($sql, [], $page * $perpage, $perpage);
+        return self::get_users_external($usersbyroles);
+    }
+
+    /**
+     * Call get_users external function.
+     *
+     * @param \moodle_recordset $useridsset
+     * @return array
+     */
+    private static function get_users_external(\moodle_recordset $useridsset): array {
+        $users = [];
+        foreach ($useridsset as $useridindex => $userid) {
+            $searchparams = [['key' => 'id', 'value' => $useridindex], ];
+            $user = \core_user_external::get_users($searchparams)['users'];
+
+            if (isset($user[0])) {
+                $users[] = $user[0];
+            }
+        }
+        $useridsset->close();
+        return $users;
+    }
 }
 
 
