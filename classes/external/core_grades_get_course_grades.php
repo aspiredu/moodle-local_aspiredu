@@ -111,6 +111,7 @@ class core_grades_get_course_grades extends external_api {
      */
     public static function execute($courseid, $userids = []) {
         global $CFG;
+        require_once("$CFG->libdir/gradelib.php");
         require_once($CFG->dirroot . '/grade/querylib.php');
 
         $params = self::validate_parameters(self::execute_parameters(),
