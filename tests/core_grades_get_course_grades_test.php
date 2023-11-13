@@ -27,26 +27,25 @@
 
 namespace local_aspiredu;
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
 
 use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_grades_get_course_grades;
 
-defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
+/**
+ * @covers \local_aspiredu\external\core_grades_get_course_grades
+ */
 class core_grades_get_course_grades_test extends externallib_advanced_testcase {
-    /**
-     * Basic setup for these tests.
-     */
     protected function setUp(): void {
         $this->resetAfterTest();
     }
 
     /**
-     * Test get_courses
+     * @runInSeparateProcess
      */
     public function test_get_courses() {
         $course = self::getDataGenerator()->create_course();

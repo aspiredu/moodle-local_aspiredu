@@ -15,23 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The external function get_plugin_info test class.
+ * AspirEDU Integration
  *
  * @package    local_aspiredu
- * @copyright  2022 AspirEDU
- * @author     Tim Schilling <tim@aspiredu.com>
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-global $CFG;
-
-use local_aspiredu\external\get_plugin_info;
+namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
+use external_api;
+use externallib_advanced_testcase;
+use local_aspiredu\external\get_plugin_info;
+
+global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
+/**
+ * @covers \local_aspiredu\external\get_plugin_info
+ */
 class get_plugin_info_test extends externallib_advanced_testcase {
+    /**
+     * @runInSeparateProcess
+     */
     public function test_get_plugin_info() {
         $response = get_plugin_info::execute();
 

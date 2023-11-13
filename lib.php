@@ -27,8 +27,6 @@
 
 use local_aspiredu\local\lib;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Display the AspirEdu settings in the course settings block
  *

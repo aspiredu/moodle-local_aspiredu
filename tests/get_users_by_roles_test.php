@@ -16,9 +16,9 @@
 
 namespace local_aspiredu;
 
-use local_aspiredu\external\get_users_by_roles;
-
 defined('MOODLE_INTERNAL') || die();
+
+use local_aspiredu\external\get_users_by_roles;
 
 global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
@@ -30,13 +30,12 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2022 3ipunt
  * @author     Guillermo gomez Arias <3ipunt@tresipunt.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \local_aspiredu\external\get_users_by_roles
  */
 class get_users_by_roles_test extends \externallib_advanced_testcase {
 
     /**
-     * Tests initial setup.
-     *
-     * @covers ::get_users_by_roles
+     * @runInSeparateProcess
      */
     public function test_get_users_by_capabilities() {
         $this->resetAfterTest();

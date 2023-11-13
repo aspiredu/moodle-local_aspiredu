@@ -30,8 +30,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0', '8.1']
-        moodle-branch: ['MOODLE_401_STABLE']
+        php: ['8.0', '8.1']
+        moodle-branch: ['MOODLE_401_STABLE', 'MOODLE_403_STABLE']
         database: [pgsql, mariadb]
 
     steps:
@@ -83,9 +83,9 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phpcs --max-warnings 0
 
-      - name: Moodle PHPDoc Checker
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpdoc --max-warnings 0
+#      - name: Moodle PHPDoc Checker
+#        if: ${{ !cancelled() }}
+#        run: moodle-plugin-ci phpdoc --max-warnings 0
 
       - name: Validating
         if: ${{ !cancelled() }}

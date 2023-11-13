@@ -45,6 +45,9 @@ global $CFG;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
+/**
+ * @covers \local_aspiredu\external\core_grades_get_grades
+ */
 class core_grades_get_grades_test extends externallib_advanced_testcase {
 
     /**
@@ -132,7 +135,7 @@ class core_grades_get_grades_test extends externallib_advanced_testcase {
                 'itemmodule' => 'assign',
                 'iteminstance' => $assignment->id,
                 'itemnumber' => 0,
-                'courseid' => $course->id
+                'courseid' => $course->id,
             ]
         );
         $outcomegradeitem->set_parent($assignmentgradeitem->categoryid);
@@ -142,7 +145,7 @@ class core_grades_get_grades_test extends externallib_advanced_testcase {
     }
 
     /**
-     * Test get_grades()
+     * @runInSeparateProcess
      */
     public function test_get_grades() {
         global $CFG;

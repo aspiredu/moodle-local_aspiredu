@@ -16,6 +16,11 @@
 
 namespace local_aspiredu\external;
 
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot.'/user/externallib.php');
+require_once("$CFG->dirroot/lib/externallib.php");
+
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
@@ -23,10 +28,6 @@ use external_single_structure;
 use external_value;
 use external_warnings;
 use local_aspiredu\local\lib;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot.'/user/externallib.php');
 
 /**
  * Get users by capability external function.
@@ -77,7 +78,7 @@ class get_users_by_capabilities extends external_api {
 
         return [
             'users' => $users,
-            'warnings' => $warnings
+            'warnings' => $warnings,
         ];
     }
 
