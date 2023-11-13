@@ -19,6 +19,9 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -42,15 +45,15 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_aspiredu/secret',
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
-    $options = array(
-        0 => new lang_string('disabled', 'local_aspiredu'),
-        1 => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
-        2 => new lang_string('adminacccinstcourse', 'local_aspiredu'),
-        3 => new lang_string('admincourseinstcourse', 'local_aspiredu'),
-        4 => new lang_string('adminacccourse', 'local_aspiredu'),
-        5 => new lang_string('adminacc', 'local_aspiredu'),
-        6 => new lang_string('instcourse', 'local_aspiredu'),
-    );
+    $options = [
+        \local_aspiredu\local\lib::ASPIREDU_DISABLED => new lang_string('disabled', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCINSTCOURSE => new lang_string('adminacccinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINCOURSEINSTCOURSE => new lang_string('admincourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSE => new lang_string('adminacccourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACC => new lang_string('adminacc', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_INSTCOURSE => new lang_string('instcourse', 'local_aspiredu'),
+    ];
     $default = 1;
 
     $settings->add(new admin_setting_configselect('local_aspiredu/dropoutdetectivelinks',
@@ -58,14 +61,5 @@ if ($hassiteconfig) {
 
     $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
         new lang_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
-
-
-    $default = 1;
-    $options = array(
-        0 => new lang_string('no'),
-        1 => new lang_string('yes')
-    );
-    $settings->add(new admin_setting_configselect('local_aspiredu/showcoursesettings',
-        new lang_string('showcoursesettings', 'local_aspiredu'), '', $default, $options));
 
 }

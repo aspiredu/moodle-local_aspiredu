@@ -16,10 +16,12 @@
 
 namespace local_aspiredu\privacy;
 
+use context;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
+use core_privacy\local\request\core_userlist_provider;
 use core_privacy\local\request\userlist;
 
 /**
@@ -32,18 +34,18 @@ use core_privacy\local\request\userlist;
  */
 class provider implements
     \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\core_userlist_provider,
+    core_userlist_provider,
     \core_privacy\local\request\plugin\provider {
 
 
     /**
      * Return the fields which contain personal data.
      *
-     * @param collection $items a reference to the collection to use to store the metadata.
+     * @param collection $collection a reference to the collection to use to store the metadata.
      * @return collection the updated collection of metadata items.
      */
-    public static function get_metadata(collection $items) : collection {
-        $items->add_external_location_link(
+    public static function get_metadata(collection $collection): collection {
+        $collection->add_external_location_link(
             'aspiredu_provider',
             [
                 'userid' => 'privacy:metadata:aspiredu_provider:userid',
@@ -61,7 +63,7 @@ class provider implements
             'privacy:metadata:aspiredu_provider'
         );
 
-        return $items;
+        return $collection;
     }
 
     /**
@@ -93,9 +95,9 @@ class provider implements
     /**
      * Delete all data for all users in the specified context.
      *
-     * @param \context $context
+     * @param context $context
      */
-    public static function delete_data_for_all_users_in_context(\context $context) {
+    public static function delete_data_for_all_users_in_context(context $context) {
     }
 
     /**

@@ -19,11 +19,13 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
 require_once($CFG->dirroot . '/mod/lti/OAuth.php');
 
 use moodle\mod\lti as lti;
@@ -34,6 +36,7 @@ $product = required_param('product', PARAM_ALPHA);
 if ($id == SITEID) {
     $course = get_site();
     $context = context_system::instance();
+    $PAGE->set_context($context);
     require_login();
 } else {
     $course = get_course($id);
@@ -41,6 +44,7 @@ if ($id == SITEID) {
     require_login($course);
 }
 
+$PAGE->set_url(new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]));
 
 if ($product == 'dd') {
     require_capability('local/aspiredu:viewdropoutdetective', $context);
@@ -54,7 +58,7 @@ $key = get_config('local_aspiredu', 'key');
 $secret = get_config('local_aspiredu', 'secret');
 
 // Ensure parameters set.
-if ($launchurl and $key and $secret) {
+if ($launchurl && $key && $secret) {
 
     // Account level.
     if ($id == SITEID) {
@@ -64,7 +68,7 @@ if ($launchurl and $key and $secret) {
         $resourcelinkid = $course->id;
     }
 
-    $requestparams = array(
+    $requestparams = [
         'resource_link_id' => $resourcelinkid,
         'custom_moodle_course_id' => $resourcelinkid,
         'resource_link_title' => $course->fullname,
@@ -84,7 +88,7 @@ if ($launchurl and $key and $secret) {
         'lti_message_type' => 'basic-lti-launch-request',
         'lis_person_name_given' => $USER->firstname,
         'lis_person_name_family' => $USER->lastname,
-    );
+    ];
 
     $hmacmethod = new lti\OAuthSignatureMethod_HMAC_SHA1();
     $testconsumer = new lti\OAuthConsumer($key, $secret, null);
@@ -106,8 +110,8 @@ if ($launchurl and $key and $secret) {
     }
 
     // Print form.
-    echo "<form action=\"".$launchurl."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" " .
-         "method=\"post\" encType=\"application/x-www-form-urlencoded\">\n";
+    echo "<form action=\"" . $launchurl . "\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" " .
+        "method=\"post\" encType=\"application/x-www-form-urlencoded\">\n";
     // Contruct html for the launch parameters.
     foreach ($parms as $key => $value) {
         $key = htmlspecialchars($key);

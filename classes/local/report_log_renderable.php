@@ -19,22 +19,26 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+namespace local_aspiredu\local;
 
-require_once($CFG->dirroot.'/report/log/classes/renderable.php');
+use report_log_table_log;
+use stdClass;
 
-class local_report_log_renderable extends report_log_renderable {
+defined('MOODLE_INTERNAL') || die();
 
-    /**
-     * Setup table log.
-     */
+require_once($CFG->dirroot . '/report/log/classes/renderable.php');
+
+class report_log_renderable extends \report_log_renderable {
     public function setup_table() {
         $readers = $this->get_readers();
 
-        $filter = new \stdClass();
+        $filter = new stdClass();
         if (!empty($this->course)) {
             $filter->courseid = $this->course->id;
         } else {
@@ -50,17 +54,17 @@ class local_report_log_renderable extends report_log_renderable {
         $filter->date = $this->date;
         $filter->orderby = $this->order;
         $filter->origin = $this->origin;
-        $filter->anonymous = 0;
         // If showing site_errors.
         if ('site_errors' === $this->modid) {
             $filter->siteerrors = true;
             $filter->modid = 0;
         }
 
+        $filter->anonymous = 0; // Only difference to base implementation...
+
         $this->tablelog = new report_log_table_log('report_log', $filter);
         $this->tablelog->define_baseurl($this->url);
         $this->tablelog->is_downloadable(true);
-        $this->tablelog->show_download_buttons_at(array(TABLE_P_BOTTOM));
+        $this->tablelog->show_download_buttons_at([TABLE_P_BOTTOM]);
     }
-
 }

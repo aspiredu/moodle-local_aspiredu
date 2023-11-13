@@ -15,10 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service template plugin related strings
- * @package   local_aspiredu
- * @author    AspirEDU
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * AspirEDU Integration
+ *
+ * @package    local_aspiredu
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['pluginname'] = 'AspirEDU';
@@ -41,7 +45,6 @@ $string['admincourseinstcourse'] = 'Administrators with course and instructors w
 $string['adminacccourse'] = 'Only Administrators with account plus course';
 $string['adminacc'] = 'Only Administrators with account';
 $string['instcourse'] = 'Only instructors with course';
-$string['showcoursesettings'] = 'Show AspirEDU specific course settings?';
 $string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
 $string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
 // Privacy.

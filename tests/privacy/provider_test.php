@@ -14,27 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace local_aspiredu\privacy;
-
 /**
- * Privacy api tests.
+ * AspirEDU Integration
  *
  * @package    local_aspiredu
- * @copyright  2022 3ipunt
- * @author     Guillermo gomez Arias <3ipunt@tresipunt.com>
+ * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider_test extends \core_privacy\tests\provider_testcase {
+
+namespace local_aspiredu\privacy;
+
+use core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\types\external_location;
+use core_privacy\tests\provider_testcase;
+
+class provider_test extends provider_testcase {
 
     /**
      * Test for provider::get_metadata().
      */
     public function test_get_metadata() {
-        $collection = new \core_privacy\local\metadata\collection('local_aspiredu');
+        $collection = new collection('local_aspiredu');
         $collection = provider::get_metadata($collection);
-        $this->assertNotEmpty($collection);
+        static::assertNotEmpty($collection);
         $items = $collection->get_collection();
-        $this->assertEquals(1, count($items));
-        $this->assertInstanceOf(\core_privacy\local\metadata\types\external_location::class, $items[0]);
+        static::assertEquals(1, count($items));
+        static::assertInstanceOf(external_location::class, $items[0]);
     }
 }

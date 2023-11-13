@@ -19,14 +19,16 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version  = 2023051700;
-// Version 3.8.
-$plugin->requires = 2019111809;
+$plugin->version = 2023051709;
+$plugin->requires = 2022112800.00;
 $plugin->component = 'local_aspiredu';
-$plugin->release = '4.0.1';
+$plugin->release = '4.1.0';
 $plugin->maturity = MATURITY_STABLE;

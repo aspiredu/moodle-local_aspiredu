@@ -19,13 +19,13 @@
  *
  * @package    local_aspiredu
  * @author     AspirEDU
+ * @author Andrew Hancox <andrewdchancox@googlemail.com>
+ * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
+ * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->dirroot.'/local/aspiredu/futurelib.php');
-
-use moodle\mod\lti as lti;
 
 $id = required_param('id', PARAM_INT);
 $product = required_param('product', PARAM_ALPHA);
@@ -35,7 +35,8 @@ $context = context_course::instance($course->id);
 
 require_login($course);
 
-$url = new moodle_url('/local/aspiredu/aspiredu.php', array('id' => $id, 'product' => $product));
+$url = new moodle_url('/local/aspiredu/aspiredu.php', ['id' => $id, 'product' => $product]);
+
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('incourse');
 
@@ -46,13 +47,16 @@ if ($product == 'dd') {
     require_capability('local/aspiredu:viewinstructorinsight', $context);
     $pagetitle = get_string('instructorinsight', 'local_aspiredu');
 }
+
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
+
 echo $OUTPUT->header();
 
-echo '<iframe id="contentframe" style="border: none" height="800px" width="100%" src="lti.php?id='.$id.'&product='.$product.'">
-        </iframe>';
+echo html_writer::tag('iframe', '', [
+    'src' => new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]),
+    'id' => 'contentframe',
+    'class' => 'local_aspiredu_lti_wrapper'
+]);
 
 echo $OUTPUT->footer();
-
-

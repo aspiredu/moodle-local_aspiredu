@@ -15,35 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * AspirEDU Integration
+ * The external function get_plugin_info test class.
  *
  * @package    local_aspiredu
- * @author     AspirEDU
- * @author Andrew Hancox <andrewdchancox@googlemail.com>
- * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
- * @link https://opensourcelearning.co.uk
+ * @copyright  2022 AspirEDU
+ * @author     Tim Schilling <tim@aspiredu.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+global $CFG;
 
-$capabilities = [
+use local_aspiredu\external\get_plugin_info;
 
-    'local/aspiredu:viewdropoutdetective' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
-    ],
+defined('MOODLE_INTERNAL') || die();
 
-    'local/aspiredu:viewinstructorinsight' => [
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => [
-            'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
-    ]
-];
+require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+
+class get_plugin_info_test extends externallib_advanced_testcase {
+    public function test_get_plugin_info() {
+        $response = get_plugin_info::execute();
+
+        external_api::clean_returnvalue(get_plugin_info::execute_returns(), $response);
+
+        $releaseelems = explode('.', $response['release']);
+        foreach ($releaseelems as $elem) {
+            $this->assertIsNumeric($elem);
+        }
+    }
+}
