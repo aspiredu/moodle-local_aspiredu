@@ -3,14 +3,14 @@
 AspirEDU Integration
 ===========================
 
-Aocal plugin for Moodle which provides a set of webservices, a webservice function and an LTI gateway to power the Aspiredu product suite.
+A local plugin for Moodle which provides a set of web services, a web service function and an LTI gateway to power the AspirEDU product suite.
 
 Installation
 ===========
 
 There are two methods for installing the plugin, in both cases you will need to have your product URL and key.
 
-Method 1 - upoload via Moodle UI:
+Method 1 - upload via Moodle UI:
 
 Login as a site admin and navigate to:\
 ```Site administration > Plugins > Install plugins```\
