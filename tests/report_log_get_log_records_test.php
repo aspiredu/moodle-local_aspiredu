@@ -27,35 +27,37 @@
 
 namespace local_aspiredu;
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
+require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 use context_course;
 use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\report_log_get_log_records;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
+/**
+ * @covers \local_aspiredu\external\report_log_get_log_records
+ */
 class report_log_get_log_records_test extends externallib_advanced_testcase {
     /**
      * Basic setup for these tests.
      */
     protected function setUp(): void {
         $this->resetAfterTest();
+        $this->preventResetByRollback();
 
         set_config('enabled_stores', 'logstore_standard', 'tool_log');
         set_config('buffersize', 0, 'logstore_standard');
+        set_config('logguests', 1, 'logstore_standard');
     }
 
     /**
-     * Test get_courses
+     * @runInSeparateProcess
      */
     public function test_get_courses() {
         global $DB;
-
-        $this->resetAfterTest();
 
         static::setAdminUser();
 

@@ -23,9 +23,18 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->dirroot/grade/querylib.php");
+require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_course;
 use context_module;
@@ -43,14 +52,8 @@ use grade_item;
 use moodle_exception;
 use stdClass;
 
-global $CFG;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/course/externallib.php");
-require_once("$CFG->dirroot/grade/querylib.php");
-
-// NOTE - this function is based on a forward-port of a deprecated function - see MDL-51373
+// NOTE - this function is based on a forward-port of a deprecated function - see MDL-51373.
 
 class core_grades_get_grades extends external_api {
 
@@ -148,7 +151,7 @@ class core_grades_get_grades extends external_api {
                             ),
                         ]
                     ), 'An array of outcomes associated with the grade items', VALUE_OPTIONAL
-                )
+                ),
             ]
         );
     }
@@ -163,7 +166,7 @@ class core_grades_get_grades extends external_api {
                 'userids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'user ID'),
                     'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, []
-                )
+                ),
             ]
         );
     }
@@ -303,7 +306,7 @@ class core_grades_get_grades extends external_api {
                                 $gradegradeinstance = grade_grade::fetch(
                                     [
                                         'userid' => $studentid,
-                                        'itemid' => $gradeiteminstance->id
+                                        'itemid' => $gradeiteminstance->id,
                                     ]
                                 );
                                 // The grade grade may be legitimately missing if the student has no grade.
@@ -340,7 +343,7 @@ class core_grades_get_grades extends external_api {
                         // Additional data added by local_aspiredu.
                         $gradesarray['items'][$cm->id]['instance'] = $cm->instance;
                         $gradesarray['items'][$cm->id]['modname'] = $cm->modname;
-                        // END
+                        // END.
                     }
                 }
 
@@ -363,7 +366,7 @@ class core_grades_get_grades extends external_api {
                                 $gradegradeinstance = grade_grade::fetch(
                                     [
                                         'userid' => $studentid,
-                                        'itemid' => $gradeiteminstance->id
+                                        'itemid' => $gradeiteminstance->id,
                                     ]
                                 );
                                 // The grade grade may be legitimately missing if the student has no grade.
@@ -415,7 +418,7 @@ class core_grades_get_grades extends external_api {
         } else {
             $gradeiteminstance = grade_item::fetch(
                 ['courseid' => $courseid, 'itemtype' => $itemtype,
-                    'itemmodule' => $itemmodule, 'iteminstance' => $iteminstance, 'itemnumber' => $itemnumber]);
+                    'itemmodule' => $itemmodule, 'iteminstance' => $iteminstance, 'itemnumber' => $itemnumber, ]);
         }
         return $gradeiteminstance;
     }

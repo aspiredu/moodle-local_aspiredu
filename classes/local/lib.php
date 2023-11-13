@@ -66,7 +66,7 @@ class lib {
         }
 
         // Site permissions.
-        if ($context->contextlevel == CONTEXT_SYSTEM or $COURSE->id == SITEID) {
+        if ($context->contextlevel == CONTEXT_SYSTEM || $COURSE->id == SITEID) {
             if ($isadmin && $settings != self::ASPIREDU_ADMINCOURSEINSTCOURSE) {
                 return true;
             }
@@ -141,7 +141,7 @@ class lib {
     private static function get_users_external(\moodle_recordset $useridsset): array {
         $users = [];
         foreach ($useridsset as $useridindex => $userid) {
-            $searchparams = [['key' => 'id', 'value' => $useridindex], ];
+            $searchparams = [['key' => 'id', 'value' => $useridindex] ];
             $user = \core_user_external::get_users($searchparams)['users'];
 
             if (isset($user[0])) {

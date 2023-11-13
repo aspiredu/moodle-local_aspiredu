@@ -31,6 +31,9 @@ use core_privacy\local\metadata\collection;
 use core_privacy\local\metadata\types\external_location;
 use core_privacy\tests\provider_testcase;
 
+/**
+ * @covers \local_aspiredu\privacy\provider
+ */
 class provider_test extends provider_testcase {
 
     /**

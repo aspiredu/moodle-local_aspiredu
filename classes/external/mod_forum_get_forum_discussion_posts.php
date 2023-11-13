@@ -23,9 +23,18 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->dirroot/report/log/classes/renderable.php");
+require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_module;
 use core_user\fields;
@@ -43,14 +52,7 @@ use moodle_exception;
 use stdClass;
 use user_picture;
 
-global $CFG;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/course/externallib.php");
-require_once("$CFG->dirroot/report/log/classes/renderable.php");
-
-// NOTE - this function is based on a forward-port of a deprecated function - see MDL-65252
+// NOTE - this function is based on a forward-port of a deprecated function - see MDL-65252.
 
 class mod_forum_get_forum_discussion_posts extends external_api {
     public static function execute_returns() {
@@ -76,7 +78,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
                                     [
                                         'filename' => new external_value(PARAM_FILE, 'file name'),
                                         'mimetype' => new external_value(PARAM_RAW, 'mime type'),
-                                        'fileurl' => new external_value(PARAM_URL, 'file download url')
+                                        'fileurl' => new external_value(PARAM_URL, 'file download url'),
                                     ]
                                 ), 'attachments', VALUE_OPTIONAL
                             ),
@@ -90,7 +92,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
                         ], 'post'
                     )
                 ),
-                'warnings' => new external_warnings()
+                'warnings' => new external_warnings(),
             ]
         );
     }
@@ -101,7 +103,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
                 'discussionid' => new external_value(PARAM_INT, 'discussion ID', VALUE_REQUIRED),
                 'sortby' => new external_value(PARAM_ALPHA,
                     'sort by this element: id, created or modified', VALUE_DEFAULT, 'created'),
-                'sortdirection' => new external_value(PARAM_ALPHA, 'sort direction: ASC or DESC', VALUE_DEFAULT, 'DESC')
+                'sortdirection' => new external_value(PARAM_ALPHA, 'sort direction: ASC or DESC', VALUE_DEFAULT, 'DESC'),
             ]
         );
     }
@@ -125,7 +127,7 @@ class mod_forum_get_forum_discussion_posts extends external_api {
             [
                 'discussionid' => $discussionid,
                 'sortby' => $sortby,
-                'sortdirection' => $sortdirection]);
+                'sortdirection' => $sortdirection, ]);
 
         // Compact/extract functions are not recommended.
         $discussionid = $params['discussionid'];

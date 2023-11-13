@@ -58,7 +58,7 @@ $functions = [
             no courses are provided then all the forum instances the user has access to will be
             returned.',
         'type' => 'read',
-        'capabilities' => 'mod/forum:viewdiscussion'
+        'capabilities' => 'mod/forum:viewdiscussion',
     ],
     // Will need to be replaced or cloned when https://tracker.moodle.org/browse/MDL-70483 is done and final deprecation happens.
     'local_aspiredu_mod_forum_get_forum_discussions_paginated' => [
@@ -88,7 +88,7 @@ $functions = [
         'methodname' => 'get_assignments',
         'classpath' => 'mod/assign/externallib.php',
         'description' => 'Returns the courses and assignments for the users capability',
-        'type' => 'read'
+        'type' => 'read',
     ],
     'local_aspiredu_mod_assign_get_submissions' => [
         'classname' => 'mod_assign_external',
@@ -109,7 +109,7 @@ $functions = [
         'methodname' => 'get_course_module',
         'classpath' => 'course/externallib.php',
         'description' => 'Return information about a course module',
-        'type' => 'read'
+        'type' => 'read',
     ],
 
     'local_aspiredu_core_course_get_course_module_from_instance' => [
@@ -117,14 +117,14 @@ $functions = [
         'methodname' => 'get_course_module_by_instance',
         'classpath' => 'course/externallib.php',
         'description' => 'Return information about a course module',
-        'type' => 'read'
+        'type' => 'read',
     ],
 
     'local_aspiredu_core_grades_get_course_grades' => [
         'classname' => '\local_aspiredu\external\core_grades_get_course_grades',
         'methodname' => 'execute',
         'description' => 'Return the final course grade for the given users',
-        'type' => 'read'
+        'type' => 'read',
     ],
     'local_aspiredu_get_plugin_info' => [
         'classname' => 'local_aspiredu\external\get_plugin_info',
@@ -138,14 +138,14 @@ $functions = [
         'methodname'  => 'execute',
         'description'  => 'Return a list of users given a list of roles',
         'type'         => 'read',
-        'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
+        'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail',
     ],
     'local_aspiredu_get_users_by_capabilities' => [
         'classname'    => 'local_aspiredu\external\get_users_by_capabilities',
         'methodname'  => 'execute',
         'description'  => 'Return a list of users given a list of capabilities',
         'type'         => 'read',
-        'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail'
+        'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail',
     ],
 ];
 
@@ -190,5 +190,5 @@ $services = [
         ],
         'restrictedusers' => 1,
         'enabled' => 1,
-    ]
+    ],
 ];

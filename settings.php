@@ -23,6 +23,7 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2022 AspirEDU
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -46,13 +47,20 @@ if ($hassiteconfig) {
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
     $options = [
-        \local_aspiredu\local\lib::ASPIREDU_DISABLED => new lang_string('disabled', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE => new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCINSTCOURSE => new lang_string('adminacccinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINCOURSEINSTCOURSE => new lang_string('admincourseinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSE => new lang_string('adminacccourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACC => new lang_string('adminacc', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_INSTCOURSE => new lang_string('instcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_DISABLED =>
+            new lang_string('disabled', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE =>
+            new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCINSTCOURSE =>
+            new lang_string('adminacccinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINCOURSEINSTCOURSE =>
+            new lang_string('admincourseinstcourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSE =>
+            new lang_string('adminacccourse', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_ADMINACC =>
+            new lang_string('adminacc', 'local_aspiredu'),
+        \local_aspiredu\local\lib::ASPIREDU_INSTCOURSE =>
+            new lang_string('instcourse', 'local_aspiredu'),
     ];
     $default = 1;
 

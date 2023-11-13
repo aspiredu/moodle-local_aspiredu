@@ -27,6 +27,8 @@
 
 namespace local_aspiredu;
 
+defined('MOODLE_INTERNAL') || die();
+
 use context_module;
 use external_api;
 use externallib_advanced_testcase;
@@ -36,18 +38,19 @@ use moodle_url;
 use stdClass;
 use user_picture;
 
-defined('MOODLE_INTERNAL') || die();
-
 global $CFG;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 require_once($CFG->dirroot . '/mod/forum/lib.php');
 require_once($CFG->dirroot . '/mod/forum/externallib.php');
 
+/**
+ * @covers \local_aspiredu\external\mod_forum_get_forum_discussion_posts
+ */
 class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_testcase {
 
     /**
-     * Test get forum posts
+     * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts() {
         global $CFG, $PAGE;
@@ -191,7 +194,7 @@ class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_tes
                     'fileurl' => moodle_url::make_webservice_pluginfile_url($forum1context->id, 'mod_forum', 'attachment',
                         $discussion1reply1->id, '/', $filename)->out(false),
                     'mimetype' => 'image/jpeg',
-                ]
+                ],
             ],
             'totalscore' => $discussion1reply1->totalscore,
             'mailnow' => $discussion1reply1->mailnow,
@@ -244,11 +247,9 @@ class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_tes
     }
 
     /**
-     * Test get forum posts
+     * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts_deleted() {
-        global $CFG, $PAGE;
-
         $this->resetAfterTest();
         $generator = self::getDataGenerator()->get_plugin_generator('mod_forum');
 
@@ -322,7 +323,7 @@ class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_tes
     }
 
     /**
-     * Test get forum posts (qanda forum)
+     * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts_qanda() {
         global $CFG, $DB;

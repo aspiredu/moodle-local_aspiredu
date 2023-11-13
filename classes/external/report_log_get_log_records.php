@@ -23,9 +23,18 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->dirroot/report/log/classes/renderable.php");
+require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_course;
 use context_system;
@@ -43,13 +52,6 @@ use moodle_exception;
 use moodle_url;
 use required_capability_exception;
 use restricted_context_exception;
-
-global $CFG;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/course/externallib.php");
-require_once("$CFG->dirroot/report/log/classes/renderable.php");
 
 class report_log_get_log_records extends external_api {
     public static function execute_returns() {
@@ -210,7 +212,7 @@ class report_log_get_log_records extends external_api {
 
         return [
             'logs' => $logsrecords,
-            'warnings' => $warnings
+            'warnings' => $warnings,
         ];
     }
 }

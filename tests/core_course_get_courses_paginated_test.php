@@ -27,6 +27,8 @@
 
 namespace local_aspiredu;
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG;
 
 use context_course;
@@ -35,21 +37,22 @@ use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_course_get_courses_paginated;
 
-defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
+/**
+ * @covers \local_aspiredu\external\core_course_get_courses_paginated
+ */
 class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
 
-    /**
-     * Basic setup for these tests.
-     */
     protected function setUp(): void {
+        global $CFG;
+        require_once("$CFG->dirroot/lib/externallib.php");
+
         $this->resetAfterTest();
     }
 
     /**
-     * Test get_courses
+     * @runInSeparateProcess
      */
     public function test_get_courses() {
         global $DB;
@@ -67,7 +70,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
             ['name' => 'Other fields']);
 
         $customfield = ['shortname' => 'test', 'name' => 'Custom field', 'type' => 'text',
-            'categoryid' => $fieldcategory->get('id')];
+            'categoryid' => $fieldcategory->get('id'), ];
         $field = self::getDataGenerator()->create_custom_field($customfield);
 
         $customfieldvalue = ['shortname' => 'test', 'value' => 'Test value'];
@@ -148,7 +151,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
             }
         }
 
-        // Get all courses in the DB
+        // Get all courses in the DB.
         $courses = core_course_get_courses_paginated::execute();
 
         // We need to execute the return values cleaning process to simulate the web service server.
@@ -158,7 +161,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
     }
 
     /**
-     * Test retrieving courses returns custom field data
+     * @runInSeparateProcess
      */
     public function test_get_courses_customfields(): void {
         $this->resetAfterTest();
@@ -177,7 +180,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
                 'shortname' => $datefield->get('shortname'),
                 'value' => 1580389200, // 30/01/2020 13:00 GMT.
             ],
-        ]]);
+        ], ]);
 
         $courses = external_api::clean_returnvalue(
             core_course_get_courses_paginated::execute_returns(),
@@ -201,7 +204,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
     }
 
     /**
-     * Test get_courses without capability
+     * @runInSeparateProcess
      */
     public function test_get_courses_without_capability() {
         $this->resetAfterTest();

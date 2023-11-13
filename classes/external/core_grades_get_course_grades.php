@@ -23,9 +23,18 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+require_once("$CFG->dirroot/lib/externallib.php");
+require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->libdir/gradelib.php");
+require_once($CFG->dirroot . '/grade/querylib.php');
 
 use context_course;
 use external_api;
@@ -34,12 +43,6 @@ use external_multiple_structure;
 use external_single_structure;
 use external_value;
 use stdClass;
-
-global $CFG;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/course/externallib.php");
 
 class core_grades_get_course_grades extends external_api {
     public static function execute_returns() {
@@ -97,7 +100,7 @@ class core_grades_get_course_grades extends external_api {
                 'userids' => new external_multiple_structure(
                     new external_value(PARAM_INT, 'user ID'),
                     'An array of user IDs, leave empty to just retrieve grade item information', VALUE_DEFAULT, []
-                )
+                ),
             ]
         );
     }
@@ -110,10 +113,6 @@ class core_grades_get_course_grades extends external_api {
      * @return stdClass             Array of grades
      */
     public static function execute($courseid, $userids = []) {
-        global $CFG;
-        require_once("$CFG->libdir/gradelib.php");
-        require_once($CFG->dirroot . '/grade/querylib.php');
-
         $params = self::validate_parameters(self::execute_parameters(),
             ['courseid' => $courseid, 'userids' => $userids]);
 

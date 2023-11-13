@@ -56,7 +56,7 @@ echo $OUTPUT->header();
 echo html_writer::tag('iframe', '', [
     'src' => new moodle_url('/local/aspiredu/lti.php', ['id' => $id, 'product' => $product]),
     'id' => 'contentframe',
-    'class' => 'local_aspiredu_lti_wrapper'
+    'class' => 'local_aspiredu_lti_wrapper',
 ]);
 
 echo $OUTPUT->footer();

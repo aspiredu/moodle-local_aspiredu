@@ -23,9 +23,17 @@
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;
+
+defined('MOODLE_INTERNAL') || die();
+
+global $CFG;
+
+require_once("$CFG->dirroot/course/externallib.php");
+require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_course;
 use core_course\customfield\course_handler;
@@ -37,12 +45,6 @@ use external_single_structure;
 use external_value;
 use external_warnings;
 use invalid_parameter_exception;
-
-global $CFG;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/course/externallib.php");
 
 class core_course_get_courses_paginated extends external_api {
     public static function execute_parameters() {
@@ -78,7 +80,7 @@ class core_course_get_courses_paginated extends external_api {
                 'sortby' => $sortby,
                 'sortdirection' => $sortdirection,
                 'page' => $page,
-                'perpage' => $perpage
+                'perpage' => $perpage,
             ]
         );
 
@@ -110,7 +112,8 @@ class core_course_get_courses_paginated extends external_api {
         $sort = $sortby . ' ' . $sortdirection;
 
         $courses = enrol_get_my_courses(
-            ['format', 'summary', 'summaryformat', 'enddate', 'showgrades', 'showreports', 'newsitems', 'maxbytes', 'defaultgroupingid', 'lang', 'timecreated', 'timemodified', 'theme', 'enablecompletion', 'completionnotify'],
+            ['format', 'summary', 'summaryformat', 'enddate', 'showgrades', 'showreports', 'newsitems', 'maxbytes',
+                'defaultgroupingid', 'lang', 'timecreated', 'timemodified', 'theme', 'enablecompletion', 'completionnotify', ],
             $sort, $limitnum, [], true, $limitfrom);
 
         $coursesinfo = [];
@@ -143,7 +146,7 @@ class core_course_get_courses_paginated extends external_api {
                         'value' => $data->get_value(),
                         'valueraw' => $data->get_data_controller()->get_value(),
                         'name' => $data->get_name(),
-                        'shortname' => $data->get_shortname()
+                        'shortname' => $data->get_shortname(),
                     ];
                 }
             }
@@ -174,7 +177,7 @@ class core_course_get_courses_paginated extends external_api {
                 foreach ($courseformatoptions as $key => $value) {
                     $courseinfo['courseformatoptions'][] = [
                         'name' => $key,
-                        'value' => $value
+                        'value' => $value,
                     ];
                 }
             }
@@ -252,7 +255,7 @@ class core_course_get_courses_paginated extends external_api {
                             'courseformatoptions' => new external_multiple_structure(
                                 new external_single_structure(
                                     ['name' => new external_value(PARAM_ALPHANUMEXT, 'course format option name'),
-                                        'value' => new external_value(PARAM_RAW, 'course format option value')
+                                        'value' => new external_value(PARAM_RAW, 'course format option value'),
                                     ]), 'additional options for particular course format', VALUE_OPTIONAL
                             ),
                             'showactivitydates' => new external_value(
@@ -266,12 +269,12 @@ class core_course_get_courses_paginated extends external_api {
                                         'type' => new external_value(PARAM_COMPONENT,
                                             'The type of the custom field - text, checkbox...'),
                                         'valueraw' => new external_value(PARAM_RAW, 'The raw value of the custom field'),
-                                        'value' => new external_value(PARAM_RAW, 'The value of the custom field')]
+                                        'value' => new external_value(PARAM_RAW, 'The value of the custom field'), ]
                                 ), 'Custom fields and associated values', VALUE_OPTIONAL),
                         ], 'course'
                     )
                 ),
-                'warnings' => new external_warnings()
+                'warnings' => new external_warnings(),
             ]
         );
     }
