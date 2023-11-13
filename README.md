@@ -1,63 +1,52 @@
 ![Build Status](https://github.com/aspiredu/moodle-local_aspiredu/actions/workflows/master.yml/badge.svg?branch=dev)
 
-# AspirEDU Integration #
+AspirEDU Integration
 ===========================
 
-Local plugin for Moodle
+Aocal plugin for Moodle which provides a set of webservices, a webservice function and an LTI gateway to power the Aspiredu product suite.
 
-## Installation ##
+Installation
 ===========
 
-There are two methods for installing the plugin:
+There are two methods for installing the plugin, in both cases you will need to have your product URL and key.
 
-Method 1:
+Method 1 - upoload via Moodle UI:
 
-Site administration / Plugins / Install plugins
-(This method requires write permission in the /local directory in your Moodle installation)
+Login as a site admin and navigate to:\
+```Site administration > Plugins > Install plugins```\
+This method may not be available depending on your hosting solution as it requires the web server process to have write permission in the /local directory in your Moodle installation.
 
 Method 2:
 
 Download the plugin from: https://moodle.org/plugins/view/local_aspiredu
 
-Unzip the plugin inside the /local/ directory in Moodle
+Extract the contents into Extract the contents into /wwwroot/local then visit admin/upgrade.php at which point you will be asked to enter the product URL and key.
 
-A new directory named aspiredu will be created /local/aspiredu
-
-Go to Administration -> Notifications
-
-In both cases you will be requested to enter the product URL and key.
-
-## Enabling Web Services ##
+Enabling and configuration Web Services
 =============================
-
-1. Create a new user to be used as "Web Services User", in Site administration / Users / Permissions / Assign system
-   roles
-   Assign a role with enough privileges (manager or admin). Ensure that the role has the capabilities in Define Roles:
-   webservice/rest:use
-2. Administration / Advanced features. Enable web services
-3. Administration / Plugins / Web Services/ Manage protocols. Enable REST depending your client implementation
-4. Administration / Plugins / Web Services / External Services. Go to Authorized users for the "AspirEDU Service"
-   service
-5. Add there the user created in step 1
-6. Administration / Plugins / Web Services / Manage tokens.
-   Create a token for the user created in step 3 for the service "AspirEDU Services"
-7. The token created is used as an authentication token in your client
-
-## Sample calls ##
-============
-
-Site information
-
-```
-curl 'http://yoursite.com/webservice/rest/server.php?moodlewsrestformat=json'
---data 'wsfunction=core_webservice_get_site_info&wstoken=yourtoken' --compressed
-```
-
-Python
-
-```
->>> import requests
->>> payload = {"wsfunction": "core_webservice_get_site_info", "wstoken": "yourtoken", "moodlewsrestformat": "json"}
->>> r = requests.post("http://yoursite.com/webservice/rest/server.php", payload)
->>> print(r.text)
-```
+- Access ''Administration > Site administration > Advanced features''
+  - Check 'Enable web services' then click 'Save Changes'
+- Access ''Administration > Site administration > Server > Web services > Manage protocols''
+  - Enable the REST protocol
+- Access ''Site administration > Users > Accounts > Add a new user''
+  - Create a new user which will be used by the AspireEDU platform to make the web service calls, the details are not important but make a note of the username.
+- To configure the role
+  - Access ''Site administration > Server > Web Services > External Services'' and click on ''Functions in the AspirEDU Services'' row.
+  - In a new browser tab Access ''Site administration / Users / Permissions / Define roles''
+  - Click ''Add a new role'' check ''Use role or archetype'' is set to ''None'' and continue
+  - On the next form:
+    - Choose an appropriate name for the role
+    - 'Context types where this role may be assigned' - Check the 'System' option
+    - In the list of capabilities, check the ''Allow'' box for ''Use REST protocol'' and then for each capablity listed in the ''Required capabilities'' column on the table in the previous browser window.
+    - Click ''Create this role'''
+  - Access ''Site administration / Users / Permissions / Assign system roles'''
+    - Assign the role that was just created to the user that was just created. 
+- Administration / Plugins / Web Services / External Services
+  - Go to Authorized users for the "AspirEDU Service"
+   service 
+  - Add there the user created in step 1 
+- Administration / Plugins / Web Services / Manage tokens
+  - Click ''Create token''
+  - Select the user that was previously created and the 'AspirEdu' service
+  - Click ''Save changes''
+  - Make a note of the token that was created and use it to compelete the configuration of the platform
