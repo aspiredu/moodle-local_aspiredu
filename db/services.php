@@ -114,7 +114,6 @@ $services = [
             'local_aspiredu_mod_forum_get_forum_discussion_posts',
             'local_aspiredu_core_grades_get_grades',
             'local_aspiredu_report_log_get_log_records',
-            'local_aspiredu_get_custom_course_settings',
             'local_aspiredu_core_course_get_courses_paginated',
             'local_aspiredu_core_grades_get_course_grades',
             'local_aspiredu_get_plugin_info',
