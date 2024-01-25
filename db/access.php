@@ -46,4 +46,15 @@ $capabilities = [
             'manager' => CAP_ALLOW,
         ],
     ],
+    // This role isn't used in the plugin, but by the AspirEDU
+    // server to identify which users should be pulled into the
+    // Access Management area of the products for further permission
+    // configuration.
+    'local/aspiredu:inaccessmanagement' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 ];
