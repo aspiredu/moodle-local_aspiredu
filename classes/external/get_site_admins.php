@@ -59,7 +59,7 @@ class get_site_admins extends external_api {
         global $CFG, $DB;
 
         return [
-            'users' => lib::get_users($DB->get_records_list('user','id', explode(',', $CFG->siteadmins))),
+            'users' => lib::get_users($DB->get_records_list('user', 'id', explode(',', $CFG->siteadmins))),
             'warnings' => [],
         ];
     }

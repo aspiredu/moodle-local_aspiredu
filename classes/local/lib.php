@@ -149,7 +149,7 @@ class lib {
         require_once($CFG->dirroot . "/user/lib.php");
 
         // Finally retrieve each users information.
-        $returnedusers = array();
+        $returnedusers = [];
         foreach ($users as $user) {
             $details = user_get_user_details_courses($user);
 
