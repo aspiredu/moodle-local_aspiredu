@@ -83,6 +83,13 @@ $functions = [
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail',
     ],
+    'local_aspiredu_get_site_admins' => [
+        'classname'    => '\local_aspiredu\external\get_site_admins',
+        'methodname'  => 'execute',
+        'description'  => 'Return a list of users who are site admins',
+        'type'         => 'read',
+        'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail',
+    ],
 ];
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -119,6 +126,7 @@ $services = [
             'local_aspiredu_get_plugin_info',
             'local_aspiredu_get_users_by_roles',
             'local_aspiredu_get_users_by_capabilities',
+            'local_aspiredu_get_site_admins',
         ],
         'restrictedusers' => 1,
         'enabled' => 1,
