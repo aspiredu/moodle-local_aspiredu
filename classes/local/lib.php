@@ -28,6 +28,7 @@
 namespace local_aspiredu\local;
 
 use context_system;
+use moodle_exception;
 
 class lib {
     const ASPIREDU_DISABLED = 0;
@@ -97,14 +98,15 @@ class lib {
         if (strlen($capabilitiesids) > 1) {
             $capabilitiesids = substr($capabilitiesids, 0, -1);
 
-            $sql = 'SELECT distinct ra.userid
+            $sql = 'SELECT * FROM {user} WHERE id IN (SELECT ra.userid
                       FROM {role_assignments} ra
                       JOIN {role_capabilities} rc ON rc.roleid = ra.roleid
                       JOIN {capabilities} c ON c.name = rc.capability
-                     WHERE c.id IN (' . $capabilitiesids . ')';
+                     WHERE c.id IN (' . $capabilitiesids . ')
+                     GROUP BY ra.userid
+                     )';
 
-            $usersbycapabilities = $DB->get_recordset_sql($sql, [], $page * $perpage, $perpage);
-            return self::get_users_external($usersbycapabilities);
+            return self::get_users($DB->get_recordset_sql($sql, [], $page * $perpage, $perpage));
         }
 
         return [];
@@ -123,34 +125,41 @@ class lib {
 
         $roleids = implode(',', $roleids);
 
-        $sql = "SELECT distinct ra.userid
+        $sql = "SELECT * FROM {user} WHERE id IN (SELECT ra.userid
                   FROM {role_assignments} ra
                   JOIN {role} r ON r.id = ra.roleid
-                 WHERE r.id in ($roleids)";
+                 WHERE r.id in ($roleids)
+                 GROUP BY ra.userid
+                 )";
 
-        $usersbyroles = $DB->get_recordset_sql($sql, [], $page * $perpage, $perpage);
-        return self::get_users_external($usersbyroles);
+        return self::get_users($DB->get_recordset_sql($sql, [], $page * $perpage, $perpage));
     }
 
     /**
-     * Call get_users external function.
+     * Retrieve matching user.
      *
-     * @param \moodle_recordset $useridsset
-     * @return array
+     * @throws moodle_exception
+     * @param array $userids the user ids to fetch.
+     * @return array An array of arrays containing user profiles.
+     * @since Moodle 2.5
      */
-    private static function get_users_external(\moodle_recordset $useridsset): array {
-        $users = [];
-        foreach ($useridsset as $useridindex => $userid) {
-            $searchparams = [['key' => 'id', 'value' => $useridindex] ];
-            $user = \core_user_external::get_users($searchparams)['users'];
+    public static function get_users($users): array {
+        global $CFG;
 
-            if (isset($user[0])) {
-                $users[] = $user[0];
+        require_once($CFG->dirroot . "/user/lib.php");
+
+        // Finally retrieve each users information.
+        $returnedusers = array();
+        foreach ($users as $user) {
+            $details = user_get_user_details_courses($user);
+
+            if (empty($details)) {
+                continue;
             }
+
+            $returnedusers[] = (object)$details;
         }
-        $useridsset->close();
-        return $users;
+
+        return $returnedusers;
     }
 }
-
-
