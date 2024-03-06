@@ -18,9 +18,12 @@ namespace local_aspiredu\external;
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
 require_once($CFG->dirroot . '/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
+use context_system;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
@@ -29,7 +32,7 @@ use external_warnings;
 use local_aspiredu\local\lib;
 
 /**
- * Get users by role external function.
+ * Get site admin users external function.
  *
  * @package    local_aspiredu
  * @copyright  2022 3ipunt
@@ -48,15 +51,16 @@ class get_site_admins extends external_api {
     }
 
     /**
-     * Returns a list of users given a list of roles.
+     * Returns a list of users who are site admins
      *
-     * @param array $roleids
-     * @param int|null $page current page
-     * @param int|null $perpage items per page
      * @return array of warnings and users
      */
     public static function execute(): array {
         global $CFG, $DB;
+        // Context validation.
+        $context = context_system::instance();
+        self::validate_context($context);
+        require_capability('moodle/site:configview', $context);
 
         return [
             'users' => lib::get_users($DB->get_records_list('user', 'id', explode(',', $CFG->siteadmins))),
@@ -65,7 +69,7 @@ class get_site_admins extends external_api {
     }
 
     /**
-     * Describes the get_users_by_roles return value.
+     * Describes the get_site_admins return value.
      *
      * @return external_single_structure
      */
