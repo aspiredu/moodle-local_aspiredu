@@ -18,8 +18,6 @@ namespace local_aspiredu\external;
 
 defined('MOODLE_INTERNAL') || die();
 
-global $CFG;
-
 require_once($CFG->dirroot.'/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
