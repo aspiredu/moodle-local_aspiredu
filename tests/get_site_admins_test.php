@@ -39,6 +39,7 @@ class get_site_admins_test extends \externallib_advanced_testcase {
      */
     public function test_get_site_admins() {
         $this->resetAfterTest();
+        static::setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
         $user = $datagenerator->create_user();
