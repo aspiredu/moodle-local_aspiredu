@@ -90,6 +90,13 @@ $functions = [
         'type'         => 'read',
         'capabilities' => 'moodle/user:viewdetails, moodle/user:viewhiddendetails, moodle/course:useremail',
     ],
+    'local_aspiredu_gradereport_user_get_grade_items' => [
+        'classname'    => '\local_aspiredu\external\gradereport_user_get_grade_items',
+        'methodname'  => 'execute',
+        'description' => 'Extends gradereport_user_get_grade_items, forcing some configuration of the report',
+        'type' => 'read',
+        'capabilities' => 'gradereport/user:view',
+    ],
 ];
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -127,6 +134,7 @@ $services = [
             'local_aspiredu_get_users_by_roles',
             'local_aspiredu_get_users_by_capabilities',
             'local_aspiredu_get_site_admins',
+            'local_aspiredu_gradereport_user_get_grade_items',
         ],
         'restrictedusers' => 1,
         'enabled' => 1,
