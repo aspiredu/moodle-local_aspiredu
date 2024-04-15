@@ -31,15 +31,48 @@ namespace local_aspiredu\local;
 use context_system;
 use moodle_exception;
 
+/**
+ * Library functions.
+ */
 class lib {
+    /**
+     * Disabled
+     */
     const ASPIREDU_DISABLED = 0;
+    /**
+     * Administrators with account plus course and Instructors with course.
+     */
     const ASPIREDU_ADMINACCCOURSEINSTCOURSE = 1;
+    /**
+     * Administrators with account and Instructors with course,
+     */
     const ASPIREDU_ADMINACCCINSTCOURSE = 2;
+    /**
+     * Administrators with course and instructors with course.
+     */
     const ASPIREDU_ADMINCOURSEINSTCOURSE = 3;
+    /**
+     * Only Administrators with account plus course.
+     */
     const ASPIREDU_ADMINACCCOURSE = 4;
+    /**
+     * 'Only Administrators with account.
+     */
     const ASPIREDU_ADMINACC = 5;
+    /**
+     * Only instructors with course.
+     */
     const ASPIREDU_INSTCOURSE = 6;
 
+    /**
+     * Check visibility of links.
+     *
+     * @param $context
+     * @param $settings
+     * @return bool
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public static function links_visibility_permission($context, $settings) {
         global $COURSE;
 

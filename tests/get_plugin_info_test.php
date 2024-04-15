@@ -38,10 +38,12 @@ global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
+ * Tests for get_plugin_info WS function.
  * @covers \local_aspiredu\external\get_plugin_info
  */
 class get_plugin_info_test extends externallib_advanced_testcase {
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_get_plugin_info() {

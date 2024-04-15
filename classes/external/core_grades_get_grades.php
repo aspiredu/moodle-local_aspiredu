@@ -52,9 +52,9 @@ use grade_item;
 use moodle_exception;
 use stdClass;
 
-
-// NOTE - this function is based on a forward-port of a deprecated function - see MDL-51373.
-
+/**
+ * Web serivce class.
+ */
 class core_grades_get_grades extends external_api {
 
     /**
@@ -156,6 +156,11 @@ class core_grades_get_grades extends external_api {
         );
     }
 
+    /**
+     * Parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters(
             [
@@ -173,6 +178,8 @@ class core_grades_get_grades extends external_api {
 
     /**
      * Retrieve grade items and, optionally, student grades
+     *
+     * NOTE - this function is based on a forward-port of a deprecated function - see MDL-51373.
      *
      * @param int $courseid Course id
      * @param string $component Component name

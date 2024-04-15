@@ -50,6 +50,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 class gradereport_user_get_grade_items_test extends externallib_advanced_testcase {
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_get_grade_items_force_inclusion_range_percentage() {

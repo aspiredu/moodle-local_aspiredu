@@ -44,7 +44,15 @@ use external_single_structure;
 use external_value;
 use stdClass;
 
+/**
+ * Web serivce class.
+ */
 class core_grades_get_course_grades extends external_api {
+    /**
+     * Describes the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
         return new external_single_structure(
             [
@@ -93,6 +101,11 @@ class core_grades_get_course_grades extends external_api {
         );
     }
 
+    /**
+     * Parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters(
             [

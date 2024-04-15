@@ -39,6 +39,9 @@ use external_function_parameters;
 use external_single_structure;
 use gradereport_user\external\user;
 
+/**
+ * Web serivce class.
+ */
 class gradereport_user_get_grade_items extends external_api {
 
     /**

@@ -42,6 +42,9 @@ use external_value;
 use external_warnings;
 use local_aspiredu\local\lib;
 
+/**
+ * Web serivce class.
+ */
 class get_role_users extends external_api {
 
     /**

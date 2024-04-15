@@ -39,7 +39,6 @@ require_once("$CFG->dirroot/lib/externallib.php");
 use context_module;
 use core_user\fields;
 use external_api;
-use external_description;
 use external_format_value;
 use external_function_parameters;
 use external_multiple_structure;
@@ -52,9 +51,15 @@ use moodle_exception;
 use stdClass;
 use user_picture;
 
-// NOTE - this function is based on a forward-port of a deprecated function - see MDL-65252.
-
+/**
+ * Web serivce class.
+ */
 class mod_forum_get_forum_discussion_posts extends external_api {
+    /**
+     * Describes the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
         return new external_single_structure(
             [
@@ -97,6 +102,11 @@ class mod_forum_get_forum_discussion_posts extends external_api {
         );
     }
 
+    /**
+     * Parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters (
             [
@@ -110,6 +120,8 @@ class mod_forum_get_forum_discussion_posts extends external_api {
 
     /**
      * Returns a list of forum posts for a discussion
+     *
+     * NOTE - this function is based on a forward-port of a deprecated function - see MDL-65252.
      *
      * @param int $discussionid the post ids
      * @param string $sortby sort by this element (id, created or modified)

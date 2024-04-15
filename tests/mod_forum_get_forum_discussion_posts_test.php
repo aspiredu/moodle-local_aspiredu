@@ -46,11 +46,13 @@ require_once($CFG->dirroot . '/mod/forum/lib.php');
 require_once($CFG->dirroot . '/mod/forum/externallib.php');
 
 /**
+ * Tests for mod_forum_get_forum_discussion_posts WS function.
  * @covers \local_aspiredu\external\mod_forum_get_forum_discussion_posts
  */
 class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_testcase {
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts() {
@@ -248,6 +250,7 @@ class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_tes
     }
 
     /**
+     * Test calling the function for deleted posts.
      * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts_deleted() {
@@ -324,6 +327,7 @@ class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_tes
     }
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_mod_forum_get_forum_discussion_posts_qanda() {
