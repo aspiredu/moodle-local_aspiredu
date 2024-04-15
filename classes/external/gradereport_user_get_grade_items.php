@@ -18,12 +18,12 @@
  * AspirEDU Integration
  *
  * @package    local_aspiredu
+ * @copyright  2024 AspirEDU
  * @author     AspirEDU
  * @author Andrew Hancox <andrewdchancox@googlemail.com>
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
  * @link https://opensourcelearning.co.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright  2023 AspirEDU
  */
 
 namespace local_aspiredu\external;

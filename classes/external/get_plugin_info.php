@@ -31,7 +31,7 @@ use external_warnings;
  * Get users by role external function.
  *
  * @package    local_aspiredu
- * @copyright  2022 AspirEDU
+ * @copyright  2024 AspirEDU
  * @author     Tim Schilling <tim@aspiredu.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
