@@ -47,6 +47,7 @@ global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
+ * Tests for core_grades_get_grades WS function.
  * @covers \local_aspiredu\external\core_grades_get_grades
  */
 class core_grades_get_grades_test extends externallib_advanced_testcase {
@@ -146,6 +147,7 @@ class core_grades_get_grades_test extends externallib_advanced_testcase {
     }
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_get_grades() {

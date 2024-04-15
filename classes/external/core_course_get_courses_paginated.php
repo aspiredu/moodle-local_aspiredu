@@ -46,7 +46,15 @@ use external_value;
 use external_warnings;
 use invalid_parameter_exception;
 
+/**
+ * Web serivce class.
+ */
 class core_course_get_courses_paginated extends external_api {
+    /**
+     * Parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters (
             [
@@ -191,8 +199,12 @@ class core_course_get_courses_paginated extends external_api {
         return $result;
     }
 
+    /**
+     * Describes the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
-
         return new external_single_structure(
             [
                 'courses' => new external_multiple_structure(

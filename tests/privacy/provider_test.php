@@ -33,13 +33,10 @@ use core_privacy\local\metadata\types\external_location;
 use core_privacy\tests\provider_testcase;
 
 /**
+ * Test for provider::get_metadata().
  * @covers \local_aspiredu\privacy\provider
  */
 class provider_test extends provider_testcase {
-
-    /**
-     * Test for provider::get_metadata().
-     */
     public function test_get_metadata() {
         $collection = new collection('local_aspiredu');
         $collection = provider::get_metadata($collection);

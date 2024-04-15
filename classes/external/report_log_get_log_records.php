@@ -40,7 +40,6 @@ use context_course;
 use context_system;
 use dml_exception;
 use external_api;
-use external_description;
 use external_function_parameters;
 use external_multiple_structure;
 use external_single_structure;
@@ -53,7 +52,15 @@ use moodle_url;
 use required_capability_exception;
 use restricted_context_exception;
 
+/**
+ * Web serivce class.
+ */
 class report_log_get_log_records extends external_api {
+    /**
+     * Describes the return value.
+     *
+     * @return external_single_structure
+     */
     public static function execute_returns() {
         return new external_single_structure(
             [
@@ -87,6 +94,11 @@ class report_log_get_log_records extends external_api {
         );
     }
 
+    /**
+     * Parameters.
+     *
+     * @return external_function_parameters
+     */
     public static function execute_parameters() {
         return new external_function_parameters(
             [

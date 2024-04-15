@@ -35,6 +35,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 class get_role_users_test extends \externallib_advanced_testcase {
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_get_role_users() {

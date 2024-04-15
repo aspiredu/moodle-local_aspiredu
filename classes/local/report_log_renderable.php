@@ -35,7 +35,13 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/report/log/classes/renderable.php');
 
+/**
+ * Customised extension of report log renderable class.
+ */
 class report_log_renderable extends \report_log_renderable {
+    /**
+     * Setup table log. Overridden value for filter->anonymous
+     */
     public function setup_table() {
         $readers = $this->get_readers();
 

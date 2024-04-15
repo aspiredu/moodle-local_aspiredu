@@ -41,6 +41,7 @@ use local_aspiredu\external\core_course_get_courses_paginated;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
+ * Tests for core_course_get_courses_paginated WS function.
  * @covers \local_aspiredu\external\core_course_get_courses_paginated
  */
 class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
@@ -53,6 +54,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
     }
 
     /**
+     * Test calling the function.
      * @runInSeparateProcess
      */
     public function test_get_courses() {
@@ -162,6 +164,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
     }
 
     /**
+     * Test calling the function on courses with custom fields.
      * @runInSeparateProcess
      */
     public function test_get_courses_customfields(): void {
@@ -205,6 +208,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
     }
 
     /**
+     * Test calling the function where the user does not have required capability on any courses.
      * @runInSeparateProcess
      */
     public function test_get_courses_without_capability() {
