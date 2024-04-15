@@ -18,6 +18,7 @@
  * AspirEDU Integration
  *
  * @package    local_aspiredu
+ * @copyright  2024 AspirEDU
  * @author     AspirEDU
  * @author Andrew Hancox <andrewdchancox@googlemail.com>
  * @author Open Source Learning <enquiries@opensourcelearning.co.uk>
