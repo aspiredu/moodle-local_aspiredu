@@ -40,6 +40,7 @@ class get_role_users_test extends \externallib_advanced_testcase {
      */
     public function test_get_role_users() {
         $this->resetAfterTest();
+        static::setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
         $user = $datagenerator->create_user();
