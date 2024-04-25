@@ -47,6 +47,7 @@ class get_plugin_info_test extends externallib_advanced_testcase {
      * @runInSeparateProcess
      */
     public function test_get_plugin_info() {
+        static::setAdminUser();
         $response = get_plugin_info::execute();
 
         external_api::clean_returnvalue(get_plugin_info::execute_returns(), $response);

@@ -21,6 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
+use context_system;
 use external_api;
 use external_function_parameters;
 use external_single_structure;
@@ -52,6 +53,11 @@ class get_plugin_info extends external_api {
      * @return array of warnings and info
      */
     public static function execute(): array {
+        // Context validation.
+        $context = context_system::instance();
+        self::validate_context($context);
+        require_capability('moodle/site:configview', $context);
+
         $warnings = [];
 
         $pluginmanager = \core_plugin_manager::instance();

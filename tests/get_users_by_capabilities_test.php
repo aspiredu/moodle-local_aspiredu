@@ -40,6 +40,7 @@ class get_users_by_capabilities_test extends \externallib_advanced_testcase {
      */
     public function test_get_users_by_capabilities() {
         $this->resetAfterTest();
+        static::setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
         $user = $datagenerator->create_user();
