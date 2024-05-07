@@ -21,6 +21,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
+use context_system;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
@@ -65,6 +66,11 @@ class get_users_by_roles extends external_api {
      * @return array of warnings and users
      */
     public static function execute(array $roleids, ?int $page = -1, ?int $perpage = 0): array {
+        // Context validation.
+        $context = context_system::instance();
+        self::validate_context($context);
+        require_capability('moodle/site:configview', $context);
+
         $warnings = [];
 
         $params = external_api::validate_parameters(self::execute_parameters(), [
