@@ -28,8 +28,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2024042400;
+$plugin->version = 2024050700;
 $plugin->requires = 2022041900.00;
 $plugin->component = 'local_aspiredu';
-$plugin->release = '5.2.2';
+$plugin->release = '5.2.3';
 $plugin->maturity = MATURITY_STABLE;
