@@ -41,7 +41,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Tests for core_grades_get_course_grades WS function.
  * @covers \local_aspiredu\external\core_grades_get_course_grades
  */
-class core_grades_get_course_grades_test extends externallib_advanced_testcase {
+final class core_grades_get_course_grades_test extends externallib_advanced_testcase {
     protected function setUp(): void {
         $this->resetAfterTest();
     }
@@ -50,7 +50,7 @@ class core_grades_get_course_grades_test extends externallib_advanced_testcase {
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_courses() {
+    public function test_get_courses(): void {
         $course = self::getDataGenerator()->create_course();
         $student1 = static::getDataGenerator()->create_and_enrol($course);
         $student2 = static::getDataGenerator()->create_and_enrol($course);

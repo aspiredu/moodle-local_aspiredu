@@ -42,7 +42,7 @@ use local_aspiredu\external\report_log_get_log_records;
  * Tests for report_log_get_log_records WS function.
  * @covers \local_aspiredu\external\report_log_get_log_records
  */
-class report_log_get_log_records_test extends externallib_advanced_testcase {
+final class report_log_get_log_records_test extends externallib_advanced_testcase {
     /**
      * Basic setup for these tests.
      */
@@ -59,7 +59,7 @@ class report_log_get_log_records_test extends externallib_advanced_testcase {
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_courses() {
+    public function test_get_courses(): void {
         global $DB;
 
         static::setAdminUser();
