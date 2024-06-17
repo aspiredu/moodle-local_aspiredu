@@ -26,30 +26,28 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'AspirEDU';
-$string['coursesettings'] = 'AspirEDU course settings';
-$string['coursestartdate'] = 'Course start date';
+$string['adminacc'] = 'Only Administrators with account';
+$string['adminacccinstcourse'] = 'Administrators with account and Instructors with course';
+$string['adminacccourse'] = 'Only Administrators with account plus course';
+$string['adminacccourseinstcourse'] = 'Administrators with account plus course and Instructors with course';
+$string['admincourseinstcourse'] = 'Administrators with course and instructors with course';
+$string['aspiredu:inaccessmanagement'] = 'Available as admin in Dropout Detective and Instructor Insight';
+$string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
+$string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
 $string['courseenddate'] = 'Course end date';
 $string['courseenddaterror'] = 'The end date must be higher than the start date';
+$string['coursesettings'] = 'AspirEDU course settings';
+$string['coursestartdate'] = 'Course start date';
+$string['disabled'] = 'No links';
 $string['dropoutdetective'] = 'Dropout Detective';
 $string['dropoutdetectivelinks'] = 'Dropout Detective links';
 $string['dropoutdetectiveurl'] = 'Dropout Detective URL';
+$string['instcourse'] = 'Only instructors with course';
 $string['instructorinsight'] = 'Instructor Insight';
 $string['instructorinsightlinks'] = 'Instructor Insight links';
 $string['instructorinsighturl'] = 'Instructor Insight URL';
 $string['key'] = 'Key';
-$string['secret'] = 'Secret';
-$string['disabled'] = 'No links';
-$string['adminacccourseinstcourse'] = 'Administrators with account plus course and Instructors with course';
-$string['adminacccinstcourse'] = 'Administrators with account and Instructors with course';
-$string['admincourseinstcourse'] = 'Administrators with course and instructors with course';
-$string['adminacccourse'] = 'Only Administrators with account plus course';
-$string['adminacc'] = 'Only Administrators with account';
-$string['instcourse'] = 'Only instructors with course';
-$string['aspiredu:viewdropoutdetective'] = 'View Dropout Detective';
-$string['aspiredu:viewinstructorinsight'] = 'View Instructor Insight';
-$string['aspiredu:inaccessmanagement'] = 'Available as admin in Dropout Detective and Instructor Insight';
-// Privacy.
+$string['pluginname'] = 'AspirEDU';
 $string['privacy:metadata:aspiredu_provider'] = 'The AspirEDU plugin provides user information and context to the AspirEDU servers.';
 $string['privacy:metadata:aspiredu_provider:courseid'] = 'The ID of the course the user is enrolled.';
 $string['privacy:metadata:aspiredu_provider:discussionid'] = 'The ID of the discussion the user has participated.';
@@ -61,3 +59,4 @@ $string['privacy:metadata:aspiredu_provider:fullname'] = 'The full name of the u
 $string['privacy:metadata:aspiredu_provider:lastname'] = 'The last name of the user.';
 $string['privacy:metadata:aspiredu_provider:userid'] = 'The ID of the user.';
 $string['privacy:metadata:aspiredu_provider:username'] = 'The username of the user.';
+$string['secret'] = 'Secret';

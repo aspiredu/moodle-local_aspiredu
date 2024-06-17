@@ -50,7 +50,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Tests for core_grades_get_grades WS function.
  * @covers \local_aspiredu\external\core_grades_get_grades
  */
-class core_grades_get_grades_test extends externallib_advanced_testcase {
+final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
     /**
      * Load initial test information
@@ -150,7 +150,7 @@ class core_grades_get_grades_test extends externallib_advanced_testcase {
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_grades() {
+    public function test_get_grades(): void {
         global $CFG;
 
         $this->resetAfterTest();

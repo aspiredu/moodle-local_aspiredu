@@ -32,13 +32,13 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later/**
  * @covers \local_aspiredu\external\get_users_by_capabilities
  */
-class get_users_by_capabilities_test extends \externallib_advanced_testcase {
+final class get_users_by_capabilities_test extends \externallib_advanced_testcase {
 
     /**
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_users_by_capabilities() {
+    public function test_get_users_by_capabilities(): void {
         $this->resetAfterTest();
         static::setAdminUser();
 

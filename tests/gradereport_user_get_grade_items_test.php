@@ -47,13 +47,13 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_aspiredu\external\gradereport_user_get_grade_items::execute
  */
-class gradereport_user_get_grade_items_test extends externallib_advanced_testcase {
+final class gradereport_user_get_grade_items_test extends externallib_advanced_testcase {
 
     /**
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_grade_items_force_inclusion_range_percentage() {
+    public function test_get_grade_items_force_inclusion_range_percentage(): void {
         global $DB;
 
         $this->resetAfterTest();

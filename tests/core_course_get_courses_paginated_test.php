@@ -44,7 +44,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Tests for core_course_get_courses_paginated WS function.
  * @covers \local_aspiredu\external\core_course_get_courses_paginated
  */
-class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
+final class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
 
     protected function setUp(): void {
         global $CFG;
@@ -57,7 +57,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
      * Test calling the function.
      * @runInSeparateProcess
      */
-    public function test_get_courses() {
+    public function test_get_courses(): void {
         global $DB;
 
         $generatedcourses = [];
@@ -211,7 +211,7 @@ class core_course_get_courses_paginated_test extends externallib_advanced_testca
      * Test calling the function where the user does not have required capability on any courses.
      * @runInSeparateProcess
      */
-    public function test_get_courses_without_capability() {
+    public function test_get_courses_without_capability(): void {
         $this->resetAfterTest();
 
         $course1 = static::getDataGenerator()->create_course();
