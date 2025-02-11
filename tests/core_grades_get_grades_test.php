@@ -65,7 +65,6 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
         // Adds a course, a teacher, 2 students, an assignment and grades for the students.
         $course = static::getDataGenerator()->create_course();
-        $coursecontext = context_course::instance($course->id);
 
         $studentrole = $DB->get_record('role', ['shortname' => 'student']);
 
@@ -205,7 +204,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
         // Student requesting another student's grade for the assignment (should fail).
         static::setUser($student1);
         try {
-            $grades = core_grades_get_grades::execute(
+            core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -218,7 +217,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
         // Parent requesting another student's grade for the assignment(should fail).
         try {
-            $grades = core_grades_get_grades::execute(
+            core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -231,7 +230,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
         // Student requesting all other student grades for the assignment (should fail).
         try {
-            $grades = core_grades_get_grades::execute(
+            core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id,
@@ -244,7 +243,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
         // Student requesting only grade item information (should fail).
         try {
-            $grades = core_grades_get_grades::execute(
+            core_grades_get_grades::execute(
                 $course->id,
                 'mod_assign',
                 $assigmentcm->id
@@ -275,7 +274,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
         $grades = external_api::clean_returnvalue(core_grades_get_grades::execute_returns(), $grades);
         $activity = $this->get_activity($grades, $assigmentcm->id);
         static::assertEquals($activity['name'], $assignmentname);
-        static::assertEquals(0, count($activity['grades']));
+        static::assertCount(0, $activity['grades']);
 
         // Teacher requesting all grade items in a course.
         $grades = core_grades_get_grades::execute(
@@ -286,7 +285,7 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
 
         $activity = $this->get_activity($grades, $assigmentcm->id);
         static::assertEquals($activity['name'], $assignmentname);
-        static::assertEquals(0, count($activity['grades']));
+        static::assertCount(0, $activity['grades']);
 
         $outcome = $this->get_outcome($grades, $assigmentcm->id);
         static::assertEquals('Team work', $outcome['name']);

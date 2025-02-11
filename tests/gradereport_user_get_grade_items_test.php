@@ -30,6 +30,7 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
+use external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\gradereport_user_get_grade_items;
 
@@ -77,7 +78,7 @@ final class gradereport_user_get_grade_items_test extends externallib_advanced_t
 
         $this->setAdminUser();
         $studentgrades = gradereport_user_get_grade_items::execute($course->id);
-        $studentgrades = \external_api::clean_returnvalue(gradereport_user_get_grade_items::execute_returns(), $studentgrades);
+        $studentgrades = external_api::clean_returnvalue(gradereport_user_get_grade_items::execute_returns(), $studentgrades);
         // No warnings returned.
         $this->assertCount(0, $studentgrades['warnings']);
 

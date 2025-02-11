@@ -33,6 +33,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
+use context;
 use context_system;
 use core_user_external;
 use external_api;
@@ -89,7 +90,7 @@ class get_role_users extends external_api {
             ['contextlevel' => $params['contextlevel'], 'instanceid' => $params['contextinstanceid']]
         );
 
-        $context = \context::instance_by_id($contextid);
+        $context = context::instance_by_id($contextid);
 
         $userids = get_role_users($roleid, $context, false, 'u.id', 'u.id');
 

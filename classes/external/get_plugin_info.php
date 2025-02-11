@@ -22,6 +22,7 @@ require_once($CFG->dirroot . '/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_system;
+use core_plugin_manager;
 use external_api;
 use external_function_parameters;
 use external_single_structure;
@@ -60,7 +61,7 @@ class get_plugin_info extends external_api {
 
         $warnings = [];
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = core_plugin_manager::instance();
         $plugin = $pluginmanager->get_plugin_info('local_aspiredu');
 
         return [

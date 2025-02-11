@@ -75,7 +75,7 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
 
         $customfield = ['shortname' => 'test', 'name' => 'Custom field', 'type' => 'text',
             'categoryid' => $fieldcategory->get('id'), ];
-        $field = self::getDataGenerator()->create_custom_field($customfield);
+        self::getDataGenerator()->create_custom_field($customfield);
 
         $customfieldvalue = ['shortname' => 'test', 'value' => 'Test value'];
 
@@ -105,7 +105,7 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
         $courses = external_api::clean_returnvalue(core_course_get_courses_paginated::execute_returns(), $courses)['courses'];
 
         // Check we retrieve the good total number of courses.
-        static::assertEquals(3, count($courses));
+        static::assertCount(3, $courses);
 
         foreach ($courses as $course) {
             $coursecontext = context_course::instance($course['id']);
@@ -161,7 +161,7 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
         // We need to execute the return values cleaning process to simulate the web service server.
         $courses = external_api::clean_returnvalue(core_course_get_courses_paginated::execute_returns(), $courses)['courses'];
 
-        static::assertEquals($DB->count_records('course') - 1, count($courses)); // Subtract one for the site home course.
+        static::assertCount($DB->count_records('course') - 1, $courses); // Subtract one for the site home course.
     }
 
     /**
@@ -215,13 +215,13 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
     public function test_get_courses_without_capability(): void {
         $this->resetAfterTest();
 
-        $course1 = static::getDataGenerator()->create_course();
+        static::getDataGenerator()->create_course();
         static::setUser(static::getDataGenerator()->create_user());
 
         // No permissions are required to get the site course.
         $courses = core_course_get_courses_paginated::execute('id', 'DESC', 0, 1);
         $courses = external_api::clean_returnvalue(core_course_get_courses_paginated::execute_returns(), $courses)['courses'];
 
-        static::assertEquals(0, count($courses));
+        static::assertCount(0, $courses);
     }
 }

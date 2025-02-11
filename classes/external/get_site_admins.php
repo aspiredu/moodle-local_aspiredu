@@ -24,6 +24,7 @@ require_once($CFG->dirroot . '/user/externallib.php');
 require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_system;
+use core_user_external;
 use external_api;
 use external_function_parameters;
 use external_multiple_structure;
@@ -76,7 +77,7 @@ class get_site_admins extends external_api {
     public static function execute_returns() {
         return new external_single_structure(
             [
-                'users' => new external_multiple_structure(\core_user_external::user_description()),
+                'users' => new external_multiple_structure(core_user_external::user_description()),
                 'warnings' => new external_warnings(),
             ]
         );

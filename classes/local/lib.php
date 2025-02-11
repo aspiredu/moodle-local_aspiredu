@@ -28,7 +28,9 @@
 
 namespace local_aspiredu\local;
 
+use coding_exception;
 use context_system;
+use dml_exception;
 use moodle_exception;
 
 /**
@@ -70,8 +72,8 @@ class lib {
      * @param $context
      * @param $settings
      * @return bool
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function links_visibility_permission($context, $settings) {
         global $COURSE;
@@ -173,7 +175,7 @@ class lib {
      * Retrieve matching user.
      *
      * @throws moodle_exception
-     * @param array $userids the user ids to fetch.
+     * @param array $users the users to fetch.
      * @return array An array of arrays containing user profiles.
      * @since Moodle 2.5
      */

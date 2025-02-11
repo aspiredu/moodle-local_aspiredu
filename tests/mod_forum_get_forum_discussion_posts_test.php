@@ -88,8 +88,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $record = new stdClass();
         $record->course = $course1->id;
         $forum2 = self::getDataGenerator()->create_module('forum', $record);
-        $forum2cm = get_coursemodule_from_id('forum', $forum2->cmid);
-        $forum2context = context_module::instance($forum2->cmid);
 
         // Add discussions to the forums.
         $record = new stdClass();
@@ -128,7 +126,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
             'filename' => $filename,
         ];
         $fs = get_file_storage();
-        $timepost = time();
         $fs->create_file_from_string($filerecordinline, 'image contents (not really)');
 
         $record->parent = $discussion1reply1->id;
@@ -138,7 +135,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $discussion1reply2 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post($record);
 
         // Enrol the user in the  course.
-        $enrol = enrol_get_plugin('manual');
         // Following line enrol and assign default role id to the user.
         // So the user automatically gets mod/forum:viewdiscussion on all forums of the course.
         static::getDataGenerator()->enrol_user($user1->id, $course1->id);
@@ -211,7 +207,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         // Test a discussion with two additional posts (total 3 posts).
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        static::assertEquals(3, count($posts['posts']));
+        static::assertCount(3, $posts['posts']);
 
         // Generate here the pictures because we need to wait to the external function to init the theme.
         $userpicture = new user_picture($user3);
@@ -229,7 +225,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         // Test discussion without additional posts. There should be only one post (the one created by the discussion).
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion2->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        static::assertEquals(1, count($posts['posts']));
+        static::assertCount(1, $posts['posts']);
 
         // Test posts have not been marked as read.
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
@@ -239,7 +235,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         }
 
         // Test discussion tracking on tracked forum.
-        $result = mod_forum_external::view_forum_discussion($discussion3->id);
+        mod_forum_external::view_forum_discussion($discussion3->id);
 
         // Test posts have been marked as read.
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion3->id, 'modified');
@@ -273,7 +269,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $forum1 = self::getDataGenerator()->create_module('forum', (object)[
             'course' => $course1->id,
         ]);
-        $forum1context = context_module::instance($forum1->cmid);
 
         // Add discussions to the forum.
         $discussion = $generator->create_discussion((object)[
@@ -282,7 +277,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
             'forum' => $forum1->id,
         ]);
 
-        $discussion2 = $generator->create_discussion((object)[
+        $generator->create_discussion((object)[
             'course' => $course1->id,
             'userid' => $user2->id,
             'forum' => $forum1->id,
@@ -303,7 +298,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
             'messageformat' => FORMAT_PLAIN,
             'deleted' => 1,
         ]);
-        $discussionreply3 = $generator->create_post((object)[
+        $generator->create_post((object)[
             'discussion' => $discussion->id,
             'parent' => $discussion->firstpost,
             'userid' => $user2->id,
@@ -352,7 +347,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $record->course = $course1->id;
         $record->type = 'qanda';
         $forum1 = self::getDataGenerator()->create_module('forum', $record);
-        $forum1context = context_module::instance($forum1->cmid);
 
         // Add discussions to the forums.
         $record = new stdClass();
@@ -366,12 +360,12 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $record->discussion = $discussion1->id;
         $record->parent = $discussion1->firstpost;
         $record->userid = $user2->id;
-        $discussion1reply1 = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post($record);
+        self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post($record);
 
         // We still see only the original post.
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        static::assertEquals(1, count($posts['posts']));
+        static::assertCount(1, $posts['posts']);
 
         // Add a new reply, the user is going to be able to see only the original post and their new post.
         $record = new stdClass();
@@ -382,7 +376,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
 
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        static::assertEquals(2, count($posts['posts']));
+        static::assertCount(2, $posts['posts']);
 
         // Now, we can fake the time of the user post, so he can se the rest of the discussion posts.
         $discussion1reply2->created -= $CFG->maxeditingtime * 2;
@@ -390,6 +384,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
 
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        static::assertEquals(3, count($posts['posts']));
+        static::assertCount(3, $posts['posts']);
     }
 }

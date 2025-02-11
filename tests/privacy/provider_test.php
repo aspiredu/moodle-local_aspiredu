@@ -42,7 +42,7 @@ final class provider_test extends provider_testcase {
         $collection = provider::get_metadata($collection);
         static::assertNotEmpty($collection);
         $items = $collection->get_collection();
-        static::assertEquals(1, count($items));
+        static::assertCount(1, $items);
         static::assertInstanceOf(external_location::class, $items[0]);
     }
 }

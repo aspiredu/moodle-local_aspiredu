@@ -18,6 +18,9 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
+use context_course;
+use external_api;
+use externallib_advanced_testcase;
 use local_aspiredu\external\get_role_users;
 
 global $CFG;
@@ -32,7 +35,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_aspiredu\external\get_role_users
  */
-final class get_role_users_test extends \externallib_advanced_testcase {
+final class get_role_users_test extends externallib_advanced_testcase {
 
     /**
      * Test calling the function.
@@ -47,23 +50,23 @@ final class get_role_users_test extends \externallib_advanced_testcase {
         $course = $datagenerator->create_course();
         $course2 = $datagenerator->create_course();
 
-        $context = \context_course::instance($course->id);
+        $context = context_course::instance($course->id);
         $roleid = $datagenerator->create_role(['shortname' => 'testroleshortname']);
 
         $users = get_role_users::execute('testroleshortname', CONTEXT_COURSE, $course->id);
-        $users = \external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(0, $users['users']);
 
         $datagenerator->role_assign($roleid, $user->id, $context->id);
 
         $users = get_role_users::execute('testroleshortname', CONTEXT_COURSE, $course->id);
-        $users = \external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(1, $users['users']);
 
         $users = get_role_users::execute('testroleshortname', CONTEXT_COURSE, $course2->id);
-        $users = \external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_role_users::execute_returns(), $users);
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(0, $users['users']);
     }
