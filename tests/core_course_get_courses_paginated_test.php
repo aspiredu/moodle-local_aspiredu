@@ -49,6 +49,7 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
     protected function setUp(): void {
         global $CFG;
         require_once("$CFG->dirroot/lib/externallib.php");
+        parent::setUp();
 
         $this->resetAfterTest();
     }

@@ -47,6 +47,7 @@ final class report_log_get_log_records_test extends externallib_advanced_testcas
      * Basic setup for these tests.
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
         $this->preventResetByRollback();
 

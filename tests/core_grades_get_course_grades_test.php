@@ -43,6 +43,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  */
 final class core_grades_get_course_grades_test extends externallib_advanced_testcase {
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
     }
 
