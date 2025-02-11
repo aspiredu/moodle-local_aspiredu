@@ -312,8 +312,8 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         // Test where some posts have been marked as deleted.
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
-        $deletedsubject = get_string('privacy:request:delete:post:subject', 'mod_forum');
-        $deletedmessage = get_string('privacy:request:delete:post:message', 'mod_forum');
+        $deletedsubject = get_string('forumsubjectdeleted', 'mod_forum');
+        $deletedmessage = get_string('forumbodydeleted', 'mod_forum');
 
         foreach ($posts['posts'] as $post) {
             if ($post['id'] == $discussionreply2->id) {
