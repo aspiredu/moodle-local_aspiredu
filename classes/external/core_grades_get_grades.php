@@ -41,6 +41,7 @@ use context_module;
 use context_user;
 use core_component;
 use core_external\external_api;
+use core_external\external_description;
 use core_external\external_function_parameters;
 use core_external\external_multiple_structure;
 use core_external\external_single_structure;
