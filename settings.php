@@ -49,7 +49,7 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_aspiredu/secret',
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
-    $options = [
+    $local_aspiredu_options = [
         lib::ASPIREDU_DISABLED =>
             new lang_string('disabled', 'local_aspiredu'),
         lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE =>
@@ -65,12 +65,11 @@ if ($hassiteconfig) {
         lib::ASPIREDU_INSTCOURSE =>
             new lang_string('instcourse', 'local_aspiredu'),
     ];
-    $default = 1;
 
     $settings->add(new admin_setting_configselect('local_aspiredu/dropoutdetectivelinks',
-        new lang_string('dropoutdetectivelinks', 'local_aspiredu'), '', $default, $options));
+        new lang_string('dropoutdetectivelinks', 'local_aspiredu'), '', 1, $local_aspiredu_options));
 
     $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
-        new lang_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
+        new lang_string('instructorinsightlinks', 'local_aspiredu'), '', 1, $local_aspiredu_options));
 
 }
