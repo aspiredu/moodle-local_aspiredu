@@ -141,63 +141,63 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
 
         // Create what we expect to be returned when querying the discussion.
         $expectedposts = [
-            'posts' => [],
-            'warnings' => [],
-        ];
-
-        // User pictures are initially empty, we should get the links once the external function is called.
-        $expectedposts['posts'][] = [
-            'id' => $discussion1reply2->id,
-            'discussion' => $discussion1reply2->discussion,
-            'parent' => $discussion1reply2->parent,
-            'userid' => (int)$discussion1reply2->userid,
-            'created' => $discussion1reply2->created,
-            'modified' => $discussion1reply2->modified,
-            'mailed' => $discussion1reply2->mailed,
-            'subject' => $discussion1reply2->subject,
-            'message' => file_rewrite_pluginfile_urls($discussion1reply2->message, 'pluginfile.php',
-                $forum1context->id, 'mod_forum', 'post', $discussion1reply2->id),
-            'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-            'messagetrust' => $discussion1reply2->messagetrust,
-            'attachment' => $discussion1reply2->attachment,
-            'totalscore' => $discussion1reply2->totalscore,
-            'mailnow' => $discussion1reply2->mailnow,
-            'children' => [],
-            'canreply' => true,
-            'postread' => false,
-            'userfullname' => fullname($user3),
-            'userpictureurl' => '',
-        ];
-
-        $expectedposts['posts'][] = [
-            'id' => $discussion1reply1->id,
-            'discussion' => $discussion1reply1->discussion,
-            'parent' => $discussion1reply1->parent,
-            'userid' => (int)$discussion1reply1->userid,
-            'created' => $discussion1reply1->created,
-            'modified' => $discussion1reply1->modified,
-            'mailed' => $discussion1reply1->mailed,
-            'subject' => $discussion1reply1->subject,
-            'message' => file_rewrite_pluginfile_urls($discussion1reply1->message, 'pluginfile.php',
-                $forum1context->id, 'mod_forum', 'post', $discussion1reply1->id),
-            'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-            'messagetrust' => $discussion1reply1->messagetrust,
-            'attachment' => $discussion1reply1->attachment,
-            'attachments' => [
+            'posts' => [
                 [
-                    'filename' => $filename,
-                    'fileurl' => moodle_url::make_webservice_pluginfile_url($forum1context->id, 'mod_forum', 'attachment',
-                        $discussion1reply1->id, '/', $filename)->out(false),
-                    'mimetype' => 'image/jpeg',
+                    'id' => $discussion1reply1->id,
+                    'discussion' => $discussion1reply1->discussion,
+                    'parent' => $discussion1reply1->parent,
+                    'userid' => (int)$discussion1reply1->userid,
+                    'created' => $discussion1reply1->created,
+                    'modified' => $discussion1reply1->modified,
+                    'mailed' => $discussion1reply1->mailed,
+                    'subject' => $discussion1reply1->subject,
+                    'message' => file_rewrite_pluginfile_urls($discussion1reply1->message, 'pluginfile.php',
+                        $forum1context->id, 'mod_forum', 'post', $discussion1reply1->id),
+                    'messageformat' => 1,   // This value is usually changed by external_format_text() function.
+                    'messagetrust' => $discussion1reply1->messagetrust,
+                    'attachment' => $discussion1reply1->attachment,
+                    'attachments' => [
+                        [
+                            'filename' => $filename,
+                            'fileurl' => moodle_url::make_webservice_pluginfile_url($forum1context->id,
+                                'mod_forum', 'attachment', $discussion1reply1->id, '/',
+                                $filename
+                            )->out(false),
+                            'mimetype' => 'image/jpeg',
+                        ],
+                    ],
+                    'totalscore' => $discussion1reply1->totalscore,
+                    'mailnow' => $discussion1reply1->mailnow,
+                    'children' => [$discussion1reply2->id],
+                    'canreply' => true,
+                    'postread' => false,
+                    'userfullname' => fullname($user2),
+                    'userpictureurl' => '',
+                ],
+                [
+                    'id' => $discussion1reply2->id,
+                    'discussion' => $discussion1reply2->discussion,
+                    'parent' => $discussion1reply2->parent,
+                    'userid' => (int)$discussion1reply2->userid,
+                    'created' => $discussion1reply2->created,
+                    'modified' => $discussion1reply2->modified,
+                    'mailed' => $discussion1reply2->mailed,
+                    'subject' => $discussion1reply2->subject,
+                    'message' => file_rewrite_pluginfile_urls($discussion1reply2->message, 'pluginfile.php',
+                        $forum1context->id, 'mod_forum', 'post', $discussion1reply2->id),
+                    'messageformat' => 1,   // This value is usually changed by external_format_text() function.
+                    'messagetrust' => $discussion1reply2->messagetrust,
+                    'attachment' => $discussion1reply2->attachment,
+                    'totalscore' => $discussion1reply2->totalscore,
+                    'mailnow' => $discussion1reply2->mailnow,
+                    'children' => [],
+                    'canreply' => true,
+                    'postread' => false,
+                    'userfullname' => fullname($user3),
+                    'userpictureurl' => '',
                 ],
             ],
-            'totalscore' => $discussion1reply1->totalscore,
-            'mailnow' => $discussion1reply1->mailnow,
-            'children' => [$discussion1reply2->id],
-            'canreply' => true,
-            'postread' => false,
-            'userfullname' => fullname($user2),
-            'userpictureurl' => '',
+            'warnings' => [],
         ];
 
         // Test a discussion with two additional posts (total 3 posts).
@@ -215,7 +215,7 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         $expectedposts['posts'][1]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
 
         // Unset the initial discussion post.
-        array_pop($posts['posts']);
+        array_shift($posts['posts']);
         static::assertEquals($expectedposts, $posts);
 
         // Test discussion without additional posts. There should be only one post (the one created by the discussion).
