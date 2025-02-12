@@ -37,6 +37,7 @@ use externallib_advanced_testcase;
 use local_aspiredu\external\core_grades_get_course_grades;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+require_once("$CFG->libdir/gradelib.php");
 /**
  * Tests for core_grades_get_course_grades WS function.
  * @covers \local_aspiredu\external\core_grades_get_course_grades
