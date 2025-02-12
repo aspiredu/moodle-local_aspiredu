@@ -196,6 +196,10 @@ class lib {
             $returnedusers[] = (object)$details;
         }
 
+        if (is_a($users, 'moodle_recordset')) {
+            $users->close();
+        }
+
         return $returnedusers;
     }
 }
