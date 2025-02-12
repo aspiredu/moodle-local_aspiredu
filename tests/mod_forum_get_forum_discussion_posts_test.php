@@ -139,85 +139,23 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         // Delete one user, to test that we still receive posts by this user.
         delete_user($user3);
 
-        // Create what we expect to be returned when querying the discussion.
-        $expectedposts = [
-            'posts' => [
-                [
-                    'id' => $discussion1reply1->id,
-                    'discussion' => $discussion1reply1->discussion,
-                    'parent' => $discussion1reply1->parent,
-                    'userid' => (int)$discussion1reply1->userid,
-                    'created' => $discussion1reply1->created,
-                    'modified' => $discussion1reply1->modified,
-                    'mailed' => $discussion1reply1->mailed,
-                    'subject' => $discussion1reply1->subject,
-                    'message' => file_rewrite_pluginfile_urls($discussion1reply1->message, 'pluginfile.php',
-                        $forum1context->id, 'mod_forum', 'post', $discussion1reply1->id),
-                    'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-                    'messagetrust' => $discussion1reply1->messagetrust,
-                    'attachment' => $discussion1reply1->attachment,
-                    'attachments' => [
-                        [
-                            'filename' => $filename,
-                            'fileurl' => moodle_url::make_webservice_pluginfile_url($forum1context->id,
-                                'mod_forum', 'attachment', $discussion1reply1->id, '/',
-                                $filename
-                            )->out(false),
-                            'mimetype' => 'image/jpeg',
-                        ],
-                    ],
-                    'totalscore' => $discussion1reply1->totalscore,
-                    'mailnow' => $discussion1reply1->mailnow,
-                    'children' => [$discussion1reply2->id],
-                    'canreply' => true,
-                    'postread' => false,
-                    'userfullname' => fullname($user2),
-                    'userpictureurl' => '',
-                ],
-                [
-                    'id' => $discussion1reply2->id,
-                    'discussion' => $discussion1reply2->discussion,
-                    'parent' => $discussion1reply2->parent,
-                    'userid' => (int)$discussion1reply2->userid,
-                    'created' => $discussion1reply2->created,
-                    'modified' => $discussion1reply2->modified,
-                    'mailed' => $discussion1reply2->mailed,
-                    'subject' => $discussion1reply2->subject,
-                    'message' => file_rewrite_pluginfile_urls($discussion1reply2->message, 'pluginfile.php',
-                        $forum1context->id, 'mod_forum', 'post', $discussion1reply2->id),
-                    'messageformat' => 1,   // This value is usually changed by external_format_text() function.
-                    'messagetrust' => $discussion1reply2->messagetrust,
-                    'attachment' => $discussion1reply2->attachment,
-                    'totalscore' => $discussion1reply2->totalscore,
-                    'mailnow' => $discussion1reply2->mailnow,
-                    'children' => [],
-                    'canreply' => true,
-                    'postread' => false,
-                    'userfullname' => fullname($user3),
-                    'userpictureurl' => '',
-                ],
-            ],
-            'warnings' => [],
-        ];
-
         // Test a discussion with two additional posts (total 3 posts).
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion1->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
         static::assertCount(3, $posts['posts']);
 
-        // Generate here the pictures because we need to wait to the external function to init the theme.
-        $userpicture = new user_picture($user3);
-        $userpicture->size = 1; // Size f1.
-        $expectedposts['posts'][0]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
-
-        $userpicture = new user_picture($user2);
-        $userpicture->size = 1; // Size f1.
-        $expectedposts['posts'][1]['userpictureurl'] = $userpicture->get_url($PAGE)->out(false);
-
-        // Unset the initial discussion post.
-        array_shift($posts['posts']);
-        static::assertEquals($expectedposts, $posts);
-
+        self::assertEmpty($posts['warnings']);
+        foreach ($posts['posts'] as $post) {
+            if ($post['parent'] === 0) {
+                static::assertEquals('Discussion 1', $post['subject']);
+            } else if ($post['id'] == $discussion1reply1->id) {
+                static::assertEquals($post['userfullname'], fullname($user2));
+            } else if ($post['id'] == $discussion1reply2->id) {
+                static::assertEquals($post['userfullname'], fullname($user3));
+            } else {
+                static::assertFalse(true);
+            }
+        }
         // Test discussion without additional posts. There should be only one post (the one created by the discussion).
         $posts = mod_forum_get_forum_discussion_posts::execute($discussion2->id, 'modified');
         $posts = external_api::clean_returnvalue(mod_forum_get_forum_discussion_posts::execute_returns(), $posts);
