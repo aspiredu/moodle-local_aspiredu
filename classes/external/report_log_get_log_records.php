@@ -34,23 +34,21 @@ global $CFG;
 
 require_once("$CFG->dirroot/course/externallib.php");
 require_once("$CFG->dirroot/report/log/classes/renderable.php");
-require_once("$CFG->dirroot/lib/externallib.php");
+
 
 use context_course;
 use context_system;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_multiple_structure;
+use core_external\external_single_structure;
+use core_external\external_value;
+use core_external\external_warnings;
 use dml_exception;
-use external_api;
-use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
-use external_warnings;
 use invalid_parameter_exception;
 use local_aspiredu\local\report_log_renderable;
 use moodle_exception;
 use moodle_url;
-use required_capability_exception;
-use restricted_context_exception;
 
 /**
  * Web serivce class.

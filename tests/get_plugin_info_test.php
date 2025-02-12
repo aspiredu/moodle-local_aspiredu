@@ -30,7 +30,7 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\get_plugin_info;
 
@@ -42,10 +42,6 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @covers \local_aspiredu\external\get_plugin_info
  */
 final class get_plugin_info_test extends externallib_advanced_testcase {
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_plugin_info(): void {
         $this->resetAfterTest();
         static::setAdminUser();

@@ -18,7 +18,7 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\get_site_admins;
 
@@ -36,10 +36,6 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  */
 final class get_site_admins_test extends externallib_advanced_testcase {
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_site_admins(): void {
         $this->resetAfterTest();
         static::setAdminUser();

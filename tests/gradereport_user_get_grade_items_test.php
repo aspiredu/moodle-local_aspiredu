@@ -30,7 +30,7 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\gradereport_user_get_grade_items;
 
@@ -50,10 +50,6 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  */
 final class gradereport_user_get_grade_items_test extends externallib_advanced_testcase {
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_grade_items_force_inclusion_range_percentage(): void {
         global $DB;
 

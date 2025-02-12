@@ -31,12 +31,11 @@ namespace local_aspiredu\external;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/user/externallib.php');
-require_once("$CFG->dirroot/lib/externallib.php");
 
 use cache;
-use external_api;
-use external_function_parameters;
-use external_single_structure;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_single_structure;
 use gradereport_user\external\user;
 
 /**

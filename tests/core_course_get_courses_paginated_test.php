@@ -34,7 +34,8 @@ global $CFG;
 
 use context_course;
 use context_system;
-use external_api;
+use core_external\external_api;
+use core_external\util;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_course_get_courses_paginated;
 
@@ -47,17 +48,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 final class core_course_get_courses_paginated_test extends externallib_advanced_testcase {
 
     protected function setUp(): void {
-        global $CFG;
-        require_once("$CFG->dirroot/lib/externallib.php");
         parent::setUp();
 
         $this->resetAfterTest();
     }
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_courses(): void {
         global $DB;
 
@@ -111,13 +106,13 @@ final class core_course_get_courses_paginated_test extends externallib_advanced_
             $coursecontext = context_course::instance($course['id']);
             $dbcourse = $generatedcourses[$course['id']];
             static::assertEquals($course['idnumber'], $dbcourse->idnumber);
-            static::assertEquals($course['fullname'], external_format_string($dbcourse->fullname, $coursecontext->id));
-            static::assertEquals($course['displayname'], external_format_string(get_course_display_name_for_list($dbcourse),
+            static::assertEquals($course['fullname'], util::format_string($dbcourse->fullname, $coursecontext->id));
+            static::assertEquals($course['displayname'], util::format_string(get_course_display_name_for_list($dbcourse),
                 $coursecontext->id));
             // Summary was converted to the HTML format.
             static::assertEquals($course['summary'], format_text($dbcourse->summary, FORMAT_MOODLE, ['para' => false]));
             static::assertEquals(FORMAT_HTML, $course['summaryformat']);
-            static::assertEquals($course['shortname'], external_format_string($dbcourse->shortname, $coursecontext->id));
+            static::assertEquals($course['shortname'], util::format_string($dbcourse->shortname, $coursecontext->id));
             static::assertEquals($course['categoryid'], $dbcourse->category);
             static::assertEquals($course['format'], $dbcourse->format);
             static::assertEquals($course['showgrades'], $dbcourse->showgrades);

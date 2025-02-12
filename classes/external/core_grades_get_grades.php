@@ -34,19 +34,18 @@ global $CFG;
 
 require_once("$CFG->dirroot/course/externallib.php");
 require_once("$CFG->dirroot/grade/querylib.php");
-require_once("$CFG->dirroot/lib/externallib.php");
+
 
 use context_course;
 use context_module;
 use context_user;
 use core_component;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_multiple_structure;
+use core_external\external_single_structure;
+use core_external\external_value;
 use Exception;
-use external_api;
-use external_description;
-use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
 use grade_grade;
 use grade_item;
 use moodle_exception;
@@ -329,7 +328,7 @@ class core_grades_get_grades extends external_api {
 
                             if ($gradeiteminstance->itemtype != 'course' && !empty($studentgrade->feedback)) {
                                 list($studentgrade->feedback, $studentgrade->feedbackformat) =
-                                    external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
+                                    util::format_text($studentgrade->feedback, $studentgrade->feedbackformat,
                                         $context->id, $params['component'], 'feedback');
                             }
 
@@ -388,7 +387,7 @@ class core_grades_get_grades extends external_api {
 
                             if (!empty($studentgrade->feedback)) {
                                 list($studentgrade->feedback, $studentgrade->feedbackformat) =
-                                    external_format_text($studentgrade->feedback, $studentgrade->feedbackformat,
+                                    util::format_text($studentgrade->feedback, $studentgrade->feedbackformat,
                                         $context->id, $params['component'], 'feedback');
                             }
 

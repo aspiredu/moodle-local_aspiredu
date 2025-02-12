@@ -30,10 +30,9 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
-use context_course;
 use context_user;
+use core_external\external_api;
 use core_grades_external;
-use external_api;
 use externallib_advanced_testcase;
 use grade_item;
 use grade_outcome;
@@ -145,10 +144,6 @@ final class core_grades_get_grades_test extends externallib_advanced_testcase {
         return [$course, $assignment, $student1, $student2, $teacher, $parent];
     }
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_grades(): void {
         global $CFG;
 

@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\core_grades_get_course_grades;
 
@@ -47,10 +47,6 @@ final class core_grades_get_course_grades_test extends externallib_advanced_test
         $this->resetAfterTest();
     }
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_courses(): void {
         $course = self::getDataGenerator()->create_course();
         $student1 = static::getDataGenerator()->create_and_enrol($course);

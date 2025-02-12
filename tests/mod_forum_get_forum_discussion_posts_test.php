@@ -31,7 +31,7 @@ namespace local_aspiredu;
 defined('MOODLE_INTERNAL') || die();
 
 use context_module;
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\mod_forum_get_forum_discussion_posts;
 use mod_forum_external;
@@ -51,10 +51,6 @@ require_once($CFG->dirroot . '/mod/forum/externallib.php');
  */
 final class mod_forum_get_forum_discussion_posts_test extends externallib_advanced_testcase {
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_mod_forum_get_forum_discussion_posts(): void {
         global $CFG, $PAGE;
 
@@ -321,10 +317,6 @@ final class mod_forum_get_forum_discussion_posts_test extends externallib_advanc
         }
     }
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_mod_forum_get_forum_discussion_posts_qanda(): void {
         global $CFG, $DB;
 
