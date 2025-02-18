@@ -18,6 +18,9 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
+use context_course;
+use core_external\external_api;
+use externallib_advanced_testcase;
 use local_aspiredu\external\get_users_by_roles;
 
 global $CFG;
@@ -32,12 +35,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_aspiredu\external\get_users_by_roles
  */
-final class get_users_by_roles_test extends \externallib_advanced_testcase {
+final class get_users_by_roles_test extends externallib_advanced_testcase {
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_users_by_capabilities(): void {
         $this->resetAfterTest();
         static::setAdminUser();
@@ -47,12 +46,12 @@ final class get_users_by_roles_test extends \externallib_advanced_testcase {
         $course = $datagenerator->create_course();
 
         // Assign role to the user in a course context.
-        $context = \context_course::instance($course->id);
+        $context = context_course::instance($course->id);
         $roleid = $datagenerator->create_role();
         $datagenerator->role_assign($roleid, $user->id, $context->id);
 
         $users = get_users_by_roles::execute([$roleid]);
-        $users = \external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
 
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(1, $users['users']);
@@ -62,7 +61,7 @@ final class get_users_by_roles_test extends \externallib_advanced_testcase {
         $datagenerator->role_assign($roleid2, $user->id, $context->id);
 
         $users = get_users_by_roles::execute([$roleid, $roleid2]);
-        $users = \external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
 
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(1, $users['users']);
@@ -72,7 +71,7 @@ final class get_users_by_roles_test extends \externallib_advanced_testcase {
         $datagenerator->role_assign($roleid2, $user2->id, $context->id);
 
         $users = get_users_by_roles::execute([$roleid, $roleid2]);
-        $users = \external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_users_by_roles::execute_returns(), $users);
 
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(2, $users['users']);

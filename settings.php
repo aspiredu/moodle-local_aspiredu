@@ -27,6 +27,8 @@
  * @copyright  2022 AspirEDU
  */
 
+use local_aspiredu\local\lib;
+
 defined('MOODLE_INTERNAL') || die;
 
 // Needs $hassiteconfig or there is error on login page.
@@ -47,28 +49,27 @@ if ($hassiteconfig) {
     $settings->add(new admin_setting_configtext('local_aspiredu/secret',
         new lang_string('secret', 'local_aspiredu'), '', '', PARAM_TEXT));
 
-    $options = [
-        \local_aspiredu\local\lib::ASPIREDU_DISABLED =>
+    $localaspireduoptions = [
+        lib::ASPIREDU_DISABLED =>
             new lang_string('disabled', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE =>
+        lib::ASPIREDU_ADMINACCCOURSEINSTCOURSE =>
             new lang_string('adminacccourseinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCINSTCOURSE =>
+        lib::ASPIREDU_ADMINACCCINSTCOURSE =>
             new lang_string('adminacccinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINCOURSEINSTCOURSE =>
+        lib::ASPIREDU_ADMINCOURSEINSTCOURSE =>
             new lang_string('admincourseinstcourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACCCOURSE =>
+        lib::ASPIREDU_ADMINACCCOURSE =>
             new lang_string('adminacccourse', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_ADMINACC =>
+        lib::ASPIREDU_ADMINACC =>
             new lang_string('adminacc', 'local_aspiredu'),
-        \local_aspiredu\local\lib::ASPIREDU_INSTCOURSE =>
+        lib::ASPIREDU_INSTCOURSE =>
             new lang_string('instcourse', 'local_aspiredu'),
     ];
-    $default = 1;
 
     $settings->add(new admin_setting_configselect('local_aspiredu/dropoutdetectivelinks',
-        new lang_string('dropoutdetectivelinks', 'local_aspiredu'), '', $default, $options));
+        new lang_string('dropoutdetectivelinks', 'local_aspiredu'), '', 1, $localaspireduoptions));
 
     $settings->add(new admin_setting_configselect('local_aspiredu/instructorinsightlinks',
-        new lang_string('instructorinsightlinks', 'local_aspiredu'), '', $default, $options));
+        new lang_string('instructorinsightlinks', 'local_aspiredu'), '', 1, $localaspireduoptions));
 
 }

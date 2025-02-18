@@ -33,17 +33,17 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once("$CFG->dirroot/course/externallib.php");
-require_once("$CFG->dirroot/lib/externallib.php");
 
 use context_course;
 use core_course\customfield\course_handler;
-use external_api;
-use external_format_value;
-use external_function_parameters;
-use external_multiple_structure;
-use external_single_structure;
-use external_value;
-use external_warnings;
+use core_external\external_api;
+use core_external\external_format_value;
+use core_external\external_function_parameters;
+use core_external\external_multiple_structure;
+use core_external\external_single_structure;
+use core_external\external_value;
+use core_external\external_warnings;
+use core_external\util;
 use invalid_parameter_exception;
 
 /**
@@ -138,11 +138,11 @@ class core_course_get_courses_paginated extends external_api {
             $courseinfo['showactivitydates'] = $course->showactivitydates;
             $courseinfo['showcompletionconditions'] = $course->showcompletionconditions;
             $courseinfo['categoryid'] = $course->category;
-            $courseinfo['fullname'] = external_format_string($course->fullname, $context->id);
-            $courseinfo['shortname'] = external_format_string($course->shortname, $context->id);
-            $courseinfo['displayname'] = external_format_string(get_course_display_name_for_list($course), $context->id);
+            $courseinfo['fullname'] = util::format_string($course->fullname, $context);
+            $courseinfo['shortname'] = util::format_string($course->shortname, $context);
+            $courseinfo['displayname'] = util::format_string(get_course_display_name_for_list($course), $context);
             list($courseinfo['summary'], $courseinfo['summaryformat']) =
-                external_format_text($course->summary, $course->summaryformat, $context->id, 'course', 'summary', 0);
+                util::format_text($course->summary, $course->summaryformat, $context, 'course');
             $courseinfo['numsections'] = course_get_format($course)->get_last_section_number();
 
             $handler = course_handler::create();

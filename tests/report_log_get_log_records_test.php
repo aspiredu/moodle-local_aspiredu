@@ -34,7 +34,7 @@ global $CFG;
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 use context_course;
-use external_api;
+use core_external\external_api;
 use externallib_advanced_testcase;
 use local_aspiredu\external\report_log_get_log_records;
 
@@ -47,6 +47,7 @@ final class report_log_get_log_records_test extends externallib_advanced_testcas
      * Basic setup for these tests.
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
         $this->preventResetByRollback();
 
@@ -55,10 +56,6 @@ final class report_log_get_log_records_test extends externallib_advanced_testcas
         set_config('logguests', 1, 'logstore_standard');
     }
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_courses(): void {
         global $DB;
 

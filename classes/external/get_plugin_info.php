@@ -19,14 +19,15 @@ namespace local_aspiredu\external;
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/user/externallib.php');
-require_once("$CFG->dirroot/lib/externallib.php");
+
 
 use context_system;
-use external_api;
-use external_function_parameters;
-use external_single_structure;
-use external_value;
-use external_warnings;
+use core_external\external_api;
+use core_external\external_function_parameters;
+use core_external\external_single_structure;
+use core_external\external_value;
+use core_external\external_warnings;
+use core_plugin_manager;
 
 /**
  * Get users by role external function.
@@ -60,7 +61,7 @@ class get_plugin_info extends external_api {
 
         $warnings = [];
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = core_plugin_manager::instance();
         $plugin = $pluginmanager->get_plugin_info('local_aspiredu');
 
         return [

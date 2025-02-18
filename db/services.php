@@ -110,6 +110,7 @@ $functions = [
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = [
     'AspirEDU Services' => [
+        'shortname' => 'local_aspiredu_services',
         'functions' => [
             'core_webservice_get_site_info',
             'core_cohort_get_cohorts',

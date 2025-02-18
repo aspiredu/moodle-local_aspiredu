@@ -18,6 +18,8 @@ namespace local_aspiredu;
 
 defined('MOODLE_INTERNAL') || die();
 
+use core_external\external_api;
+use externallib_advanced_testcase;
 use local_aspiredu\external\get_site_admins;
 
 global $CFG;
@@ -32,22 +34,18 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \local_aspiredu\external\get_site_admins
  */
-final class get_site_admins_test extends \externallib_advanced_testcase {
+final class get_site_admins_test extends externallib_advanced_testcase {
 
-    /**
-     * Test calling the function.
-     * @runInSeparateProcess
-     */
     public function test_get_site_admins(): void {
         $this->resetAfterTest();
         static::setAdminUser();
 
         $datagenerator = $this->getDataGenerator();
-        $user = $datagenerator->create_user();
-        $user2 = $datagenerator->create_user();
+        $datagenerator->create_user();
+        $datagenerator->create_user();
 
         $users = get_site_admins::execute();
-        $users = \external_api::clean_returnvalue(get_site_admins::execute_returns(), $users);
+        $users = external_api::clean_returnvalue(get_site_admins::execute_returns(), $users);
 
         $this->assertCount(0, $users['warnings']);
         $this->assertCount(1, $users['users']);
